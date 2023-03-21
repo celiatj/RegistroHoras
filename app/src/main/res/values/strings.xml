@@ -1,0 +1,26 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" translatable="false">CalculadorHoras</string>
+    <string name="nombre_canal" translatable="false">Canal de notificaciones único</string>
+    <string name="descripcion_canal" translatable="false">A través de este canal se publicarán todas las notificaciones de la app</string>
+
+    <string-array name="array_paises">
+
+        <item>Español</item>
+        <item>Ingles</item>
+        <item>Aleman</item>
+        <item>Frances</item>
+        <item>Italiano</item>
+    </string-array>
+
+    <string name="txt_salir_app_mensaje" translatable="false">Adios!</string>
+    <string name="txt_salir_app_titulo" translatable="false">¿Salir?</string>
+    <string name="txt_si" translatable="false">si</string>
+    <string name="txt_no" translatable="false">no</string>
+
+    <string name="nav_open" translatable="false">Open</string>
+    <string name="nav_close" translatable="false">Close</string>
+    <string name="aviso_cambio_idioma_mensaje" translatable="false">El cambio de idioma tendrá efecto completo en el siguiente reinicio de la app</string>
+    <string name="aviso_cambio_idioma_aceptar" translatable="false">De acuerdo</string>
+    <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->
+
+</resources>

@@ -1,9 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:paddingTop="40dp"
     tools:context=".FirebaseActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#4BFFFFFF"
+        android:orientation="vertical">
+
+
+        <EditText
+            android:id="@+id/edCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Correo"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/edContraseya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Contraseña"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="login" />
+
+        <Button
+            android:id="@+id/btnregistro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Registro" />
+
+        <EditText
+            android:id="@+id/edtnombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
+        <EditText
+            android:id="@+id/edtap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="apellido" />
+    </LinearLayout>
+</LinearLayout>

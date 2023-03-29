@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,6 +72,7 @@ public class FirebaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity.class);
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -101,11 +103,11 @@ public class FirebaseActivity extends Activity {
                 datos.put("apellidos", ap);
                 datos.put("correo", corr);
                 datos.put("contraseña", cont);
-                databaseReference.child("usuarios").child("usuario").setValue(datos);
+                databaseReference.child("usuarios").child("usuario").push().setValue(datos);
 
 
                 mAuth.signInWithEmailAndPassword(corr, cont)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(FirebaseActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
@@ -118,6 +120,7 @@ public class FirebaseActivity extends Activity {
 
                             }
                         });
+                startActivity(objetoMensajero);
             }
         });
 
@@ -141,6 +144,12 @@ public class FirebaseActivity extends Activity {
                     // authenticate with your backend server, if you have one. Use
                     // FirebaseUser.getIdToken() instead.
                     String uid = user.getUid();
+                    if(emailVerified==true){
+
+                        startActivity(objetoMensajero);
+                    }else{
+                        System.out.println("no se encontro el usuario");
+                    }
                 }
 
             }

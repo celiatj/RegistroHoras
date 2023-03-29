@@ -30,7 +30,7 @@ public class splashActivity extends AppCompatActivity {
         LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animationView);
         animationView.playAnimation();
 
-
+/*
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -40,6 +40,7 @@ public class splashActivity extends AppCompatActivity {
         datos.put("apellidos", "Pruebas");
 
         databaseReference.child("usuarios").child("123").setValue(datos);
+    */
     }
 
     @Override
@@ -52,7 +53,7 @@ public class splashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity.class);
+                Intent objetoMensajero = new Intent(getApplicationContext(), FirebaseActivity.class);
                 startActivity(objetoMensajero);
             }
 

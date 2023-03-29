@@ -1,10 +1,12 @@
 package com.example.calculadorhoras;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -20,6 +22,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Locale;
 
@@ -38,8 +46,30 @@ public class MainActivityConf extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ap1 = findViewById(R.id.etAp1);
-        nombre=findViewById(R.id.etnombre);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference reference = database.getReference().child("usuarios").child("usuario");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Recuperar datos del usuario
+                String name = dataSnapshot.child("nombre").getValue(String.class);
+                String subname = dataSnapshot.child("apellidos").getValue(String.class);
+
+                // Hacer algo con los datos recuperados, por ejemplo, mostrarlos en TextViews
+                ap1 = findViewById(R.id.etAp1);
+                nombre=findViewById(R.id.etnombre);
+                nombre.setText(name);
+                ap1.setText(subname);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Manejar errores de lectura de la base de datos
+            }
+        });
+/**/
+
+
         // Configuración de idioma
         SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferenciasCompartidas.edit();
@@ -146,6 +176,15 @@ public class MainActivityConf extends AppCompatActivity {
         ap1 = findViewById(R.id.etAp1);
         String nombreGuardado = preferenciasCompartidas.getString("nombre", "");
         String ap1Guardado = preferenciasCompartidas.getString("ap1", "");
+
+        // Recuperar valores del Intent
+        Intent intent = getIntent();
+        String nomb = intent.getStringExtra("nombre");
+        String apellido = intent.getStringExtra("apellido");
+
+        nombre.setText(nomb);
+        ap1.setText(apellido);
+
         ap1.setText(ap1Guardado);
         nombre.setText(nombreGuardado);
 
@@ -162,6 +201,8 @@ public class MainActivityConf extends AppCompatActivity {
                 editorPreferencias.apply();
 
                 Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_LONG).show();
+
+
             }
 
         });

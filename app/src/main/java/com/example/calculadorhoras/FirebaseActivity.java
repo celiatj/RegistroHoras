@@ -7,6 +7,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,6 +37,7 @@ public class FirebaseActivity extends Activity {
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
 
+    int contador = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,17 +76,48 @@ public class FirebaseActivity extends Activity {
     protected void onResume() {
         super.onResume();
         Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity.class);
+        Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
+
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
+// Agregar un escuchador de eventos para el campo de texto de correo electrónico
+        correo.addTextChangedListener(new TextWatcher() {
+                                          @Override
+                                          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                                              // No se necesita implementación aquí
+                                          }
+
+                                          @Override
+                                          public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                              // Actualizar el estado del botón de registro
+                                              if (s.toString().trim().length() > 0) {
+                                                  registro.setEnabled(true);
+                                              } else {
+                                                  registro.setEnabled(false);
+                                              }
+                                          }
+
+                                          @Override
+                                          public void afterTextChanged(Editable s) {
+
+                                          }
+                                      });
+// fin de la escucha
         registro.setOnClickListener(new View.OnClickListener() {
-            // if(correo.isNotEmpty()){}
+
+
             @Override
             public void onClick(View view) {
-                nombre.setVisibility(View.VISIBLE);
-                apellido.setVisibility(View.VISIBLE);
+                 contador++;
 
+                if (contador == 1) {
+                    nombre.setVisibility(View.VISIBLE);
+                    apellido.setVisibility(View.VISIBLE);
+                    // Avisa al usuario que tiene que pulsar de nuevo
+                    Toast.makeText(getApplicationContext(), "Pulse de nuevo para completar el registro", Toast.LENGTH_SHORT).show();
+                } else if (contador == 2) {
 
                 String nom = nombre.getText().toString();
                 String ap = apellido.getText().toString();
@@ -120,9 +154,16 @@ public class FirebaseActivity extends Activity {
 
                             }
                         });
-                startActivity(objetoMensajero);
-            }
+                    objetoMensajero.putExtra("nombre", nombre.getText().toString());
+                    objetoMensajero.putExtra("apellido", apellido.getText().toString());
+                    startActivity(objetoMensajeroDatos);
+                    // Reinicia el contador para permitir la próxima secuencia de pulsaciones
+                    contador = 0;
+                    Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+                    startActivity(objetoMensajero);
+            }}
         });
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +189,7 @@ public class FirebaseActivity extends Activity {
 
                         startActivity(objetoMensajero);
                     }else{
+                        Toast.makeText(getApplicationContext(), "No se encontro el usuario", Toast.LENGTH_SHORT).show();
                         System.out.println("no se encontro el usuario");
                     }
                 }

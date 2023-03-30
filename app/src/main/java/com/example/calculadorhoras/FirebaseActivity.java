@@ -75,7 +75,7 @@ public class FirebaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity.class);
+        Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity3.class);
         Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
 
         // Inicializar aplicación de Firebase
@@ -83,7 +83,7 @@ public class FirebaseActivity extends Activity {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
 // Agregar un escuchador de eventos para el campo de texto de correo electrónico
-        correo.addTextChangedListener(new TextWatcher() {
+       /* correo.addTextChangedListener(new TextWatcher() {
                                           @Override
                                           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                                               // No se necesita implementación aquí
@@ -104,7 +104,7 @@ public class FirebaseActivity extends Activity {
 
                                           }
                                       });
-// fin de la escucha
+*/// fin de la escucha
         registro.setOnClickListener(new View.OnClickListener() {
 
 
@@ -154,13 +154,14 @@ public class FirebaseActivity extends Activity {
 
                             }
                         });
-                    objetoMensajero.putExtra("nombre", nombre.getText().toString());
-                    objetoMensajero.putExtra("apellido", apellido.getText().toString());
-                    startActivity(objetoMensajeroDatos);
+                    objetoMensajeroDatos.putExtra("nombre", nombre.getText().toString());
+                    objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
+
                     // Reinicia el contador para permitir la próxima secuencia de pulsaciones
                     contador = 0;
                     Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
                     startActivity(objetoMensajero);
+                    //startActivity(objetoMensajeroDatos);
             }}
         });
 
@@ -168,10 +169,12 @@ public class FirebaseActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                  /*
                 String corr = correo.getText().toString();
                 String cont = contraseya.getText().toString();
+
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
                 if (user != null) {
                     // Name, email address, and profile photo Url
                     String name = user.getDisplayName();
@@ -193,8 +196,33 @@ public class FirebaseActivity extends Activity {
                         System.out.println("no se encontro el usuario");
                     }
                 }
+*/
+
+                        String correoText = correo.getText().toString();
+                        String contrasenaText = contraseya.getText().toString();
+
+                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                        mAuth.signInWithEmailAndPassword(correoText, contrasenaText)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            if (user.isEmailVerified()) {
+                                                startActivity(objetoMensajero);
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "El usuario no ha verificado su correo electrónico", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "El correo o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                    }
+                });
+
+
 
             }
-        });
-    }
+
 }

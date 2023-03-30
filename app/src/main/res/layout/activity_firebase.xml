@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/wallpaper13"
     android:gravity="center"
     android:orientation="vertical"
     android:padding="20dp"
@@ -14,6 +15,7 @@
         android:id="@+id/login"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="140dp"
         android:background="#4BFFFFFF"
         android:orientation="vertical">
 
@@ -34,6 +36,22 @@
             android:hint="Contraseña"
             android:inputType="textPassword" />
 
+        <EditText
+            android:id="@+id/edtnombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Nombre"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/edtap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Apellidos"
+            android:inputType="textPersonName" />
+
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="match_parent"
@@ -45,21 +63,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Registro" />
-
-        <EditText
-            android:id="@+id/edtnombre"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
-
-        <EditText
-            android:id="@+id/edtap"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="apellido" />
     </LinearLayout>
 </LinearLayout>

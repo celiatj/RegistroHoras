@@ -29,7 +29,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class MainActivityConf extends AppCompatActivity {
 
@@ -46,8 +48,9 @@ public class MainActivityConf extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String correo = getIntent().getStringExtra("correo");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference().child("usuarios").child("usuario");
+        DatabaseReference reference = database.getReference().child("usuarios").child(correo);
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -177,13 +180,7 @@ public class MainActivityConf extends AppCompatActivity {
         String nombreGuardado = preferenciasCompartidas.getString("nombre", "");
         String ap1Guardado = preferenciasCompartidas.getString("ap1", "");
 
-        // Recuperar valores del Intent
-        Intent intent = getIntent();
-        String nomb = intent.getStringExtra("nombre");
-        String apellido = intent.getStringExtra("apellido");
 
-        nombre.setText(nomb);
-        ap1.setText(apellido);
 
         ap1.setText(ap1Guardado);
         nombre.setText(nombreGuardado);
@@ -192,6 +189,7 @@ public class MainActivityConf extends AppCompatActivity {
         guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String correo = getIntent().getStringExtra("correo");
                 String nom = nombre.getText().toString();
                 String ap = ap1.getText().toString();
 
@@ -201,7 +199,12 @@ public class MainActivityConf extends AppCompatActivity {
                 editorPreferencias.apply();
 
                 Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_LONG).show();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("usuarios").child(correo);
 
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("nombre", nom);
+                updates.put("apellido", ap);
+                ref.updateChildren(updates);
 
             }
 

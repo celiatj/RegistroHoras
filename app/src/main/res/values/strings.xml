@@ -17,10 +17,16 @@
     <string name="txt_si" translatable="false">si</string>
     <string name="txt_no" translatable="false">no</string>
 
-    <string name="nav_open" translatable="false">Open</string>
-    <string name="nav_close" translatable="false">Close</string>
-    <string name="aviso_cambio_idioma_mensaje" translatable="false">El cambio de idioma tendrá efecto completo en el siguiente reinicio de la app</string>
-    <string name="aviso_cambio_idioma_aceptar" translatable="false">De acuerdo</string>
+    <string name="nav_open" >Open</string>
+    <string name="nav_close" >Close</string>
+    <string name="aviso_cambio_idioma_mensaje" >El cambio de idioma tendrá efecto completo en el siguiente reinicio de la app</string>
+    <string name="aviso_cambio_idioma_aceptar" >De acuerdo</string>
+    <string name="toast_registro_fallo">Fallo en el registro</string>
+    <string name="toast_registro_exito">Registro guardado</string>
+    <string name="toast_introducir_password">Introduce una contraseña</string>
+    <string name="toast_identificacion_fallo">Fallo de identificacion</string>
+    <string name="toast_identificacion_exito">Identificacion correcta</string>
+    <string name="toast_introducir_email">Introduce un email</string>
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->
 
 </resources>

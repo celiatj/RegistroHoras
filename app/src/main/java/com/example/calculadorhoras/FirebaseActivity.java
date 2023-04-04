@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +38,7 @@ public class FirebaseActivity extends Activity {
     private Button login;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
-
+    private FirebaseDatabase db;
     int contador = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,30 +83,8 @@ public class FirebaseActivity extends Activity {
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance();
 
-// Agregar un escuchador de eventos para el campo de texto de correo electrónico
-       /* correo.addTextChangedListener(new TextWatcher() {
-                                          @Override
-                                          public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                                              // No se necesita implementación aquí
-                                          }
-
-                                          @Override
-                                          public void onTextChanged(CharSequence s, int start, int before, int count) {
-                                              // Actualizar el estado del botón de registro
-                                              if (s.toString().trim().length() > 0) {
-                                                  registro.setEnabled(true);
-                                              } else {
-                                                  registro.setEnabled(false);
-                                              }
-                                          }
-
-                                          @Override
-                                          public void afterTextChanged(Editable s) {
-
-                                          }
-                                      });
-*/// fin de la escucha
         registro.setOnClickListener(new View.OnClickListener() {
 
 
@@ -123,45 +103,67 @@ public class FirebaseActivity extends Activity {
                 String ap = apellido.getText().toString();
                 String corr = correo.getText().toString();
                 String cont = contraseya.getText().toString();
-/*
-            mAuth = FirebaseAuth.getInstance().createUserWithEmailAndPassword(corr,cont).addnCompleteListener{
-                if(this.isSuccessful){
-//intent pasa nombre a otra activity
-                }else{
-                    //show alert error
-                }
-*/
-                Map<String, String> datos = new HashMap<>();
 
-                datos.put("nombre", nom);
-                datos.put("apellidos", ap);
-                datos.put("correo", corr);
-                datos.put("contraseña", cont);
-                databaseReference.child("usuarios").child("usuario").push().setValue(datos);
+                if (TextUtils.isEmpty(cont)) {
+                        Toast.makeText(getApplicationContext(),
+                                        getText(R.string.toast_introducir_password).toString(),
+                                        Toast.LENGTH_LONG)
+                                .show();
+                        return;
+                    }
+
+                    // create new user or register new user
+                    mAuth
+                            .createUserWithEmailAndPassword(corr, cont)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task)
+                                {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(getApplicationContext(),
+                                                        getText(R.string.toast_registro_exito).toString(),
+                                                        Toast.LENGTH_LONG)
+                                                .show();
+
+                                        // Creamos ese usuario en la base de datos en tiempo real de Firebase
+                                        // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
+                                        DatabaseReference refUsuario = db.getReference("usuarios").child(corr.replace(".", ""));
+
+                                        // Crear un nuevo objeto de datos en formato JSON
+
+                                        Map<String, String> datos = new HashMap<>();
+
+                                        datos.put("nombre", nom);
+                                        datos.put("apellidos", ap);
+                                        datos.put("correo", corr);
+                                        databaseReference.child("usuarios").child(corr.replace(".", "")).setValue(datos);
 
 
-                mAuth.signInWithEmailAndPassword(corr, cont)
-                        .addOnCompleteListener(FirebaseActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    FirebaseUser user = mAuth.getCurrentUser();
-                                    updateUI(user);
+                                    }
+                                    else {
 
+                                        // Registro fallido
+                                        Toast.makeText(
+                                                        getApplicationContext(),
+                                                        getText(R.string.toast_registro_fallo).toString(),
+                                                        Toast.LENGTH_LONG)
+                                                .show();
+                                    }
                                 }
+                            });
 
-                            }
-                        });
-                    objetoMensajeroDatos.putExtra("nombre", nombre.getText().toString());
+
+                    objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
+                    startActivity(objetoMensajeroDatos);
+                    /*
                     objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
-
+*/
                     // Reinicia el contador para permitir la próxima secuencia de pulsaciones
                     contador = 0;
-                    Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+
                     startActivity(objetoMensajero);
-                    //startActivity(objetoMensajeroDatos);
             }}
         });
 
@@ -169,60 +171,64 @@ public class FirebaseActivity extends Activity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                  /*
-                String corr = correo.getText().toString();
-                String cont = contraseya.getText().toString();
 
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                String correoText = correo.getText().toString();
+                String contrasenaText = contraseya.getText().toString();
 
-                if (user != null) {
-                    // Name, email address, and profile photo Url
-                    String name = user.getDisplayName();
-                    String email = user.getEmail();
-                    Uri photoUrl = user.getPhotoUrl();
 
-                    // Check if user's email is verified
-                    boolean emailVerified = user.isEmailVerified();
-
-                    // The user's ID, unique to the Firebase project. Do NOT use this value to
-                    // authenticate with your backend server, if you have one. Use
-                    // FirebaseUser.getIdToken() instead.
-                    String uid = user.getUid();
-                    if(emailVerified==true){
-
-                        startActivity(objetoMensajero);
-                    }else{
-                        Toast.makeText(getApplicationContext(), "No se encontro el usuario", Toast.LENGTH_SHORT).show();
-                        System.out.println("no se encontro el usuario");
-                    }
+                // validations for input email and password
+                if (TextUtils.isEmpty(correoText)) {
+                    Toast.makeText(getApplicationContext(),
+                                    getText(R.string.toast_introducir_email).toString(),
+                                    Toast.LENGTH_LONG)
+                            .show();
+                    return;
                 }
-*/
 
-                        String correoText = correo.getText().toString();
-                        String contrasenaText = contraseya.getText().toString();
+                if (TextUtils.isEmpty(contrasenaText)) {
+                    Toast.makeText(getApplicationContext(),
+                                    getText(R.string.toast_introducir_password).toString(),
+                                    Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
 
-                        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                        mAuth.signInWithEmailAndPassword(correoText, contrasenaText)
-                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                // signin existing user
+                mAuth.signInWithEmailAndPassword(correoText, contrasenaText)
+                        .addOnCompleteListener(
+                                new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                    public void onComplete(
+                                            @NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            FirebaseUser user = mAuth.getCurrentUser();
-                                            if (user.isEmailVerified()) {
-                                                startActivity(objetoMensajero);
-                                            } else {
-                                                Toast.makeText(getApplicationContext(), "El usuario no ha verificado su correo electrónico", Toast.LENGTH_SHORT).show();
-                                            }
+                                            Toast.makeText(getApplicationContext(),
+                                                            getText(R.string.toast_identificacion_exito).toString() + " " + correoText,
+                                                            Toast.LENGTH_LONG)
+                                                    .show();
+
+                                            // Guardar correo en las SharedPreferences para posterior uso
+                                            SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                                            SharedPreferences.Editor editorPreferencias = preferencias.edit();
+                                            editorPreferencias.putString("email", correoText);
+                                            editorPreferencias.commit();
+
+                                            // Como el login es exitoso, ir a la Activity principal
+                                            startActivity(objetoMensajero);
+                                            objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
+                                            startActivity(objetoMensajeroDatos);
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "El correo o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+
+                                            // sign-in failed
+                                            Toast.makeText(getApplicationContext(),
+                                                            getText(R.string.toast_identificacion_fallo).toString(),
+                                                            Toast.LENGTH_LONG)
+                                                    .show();
                                         }
                                     }
                                 });
-                    }
-                });
 
 
-
-            }
-
+            }});
+    }
 }
+

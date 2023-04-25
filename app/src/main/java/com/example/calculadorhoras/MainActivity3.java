@@ -139,6 +139,7 @@ public class MainActivity3 extends AppCompatActivity {
                 contadorE++;
                 Calendar c = Calendar.getInstance();
                 dia = Integer.toString(c.get(Calendar.DATE));
+                String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 horaE = c.get(Calendar.HOUR_OF_DAY);
                 minE = c.get(Calendar.MINUTE);
                 entrada.setText(String.format("%02d:%02d", horaE, minE));
@@ -155,7 +156,7 @@ public class MainActivity3 extends AppCompatActivity {
                 int posicionInci = spInci.getSelectedItemPosition();
                 datos.put("tipo", "entrada");
                 datos.put("incidencia", inci[posicionInci]);
-                db.getReference("usuarios").child(corr).child("Registros").child(dia + horaE + minE).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%s%02d%02d", fecha, horaE, minE)).setValue(datos);
                 //separar
 
                         /*

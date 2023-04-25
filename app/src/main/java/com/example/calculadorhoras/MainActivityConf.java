@@ -63,13 +63,16 @@ public class MainActivityConf extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         usuarioRef = database.getReference("usuarios").child(corr);
 
-// Rellenamos el Spinner
+        // Rellenamos el Spinner
         spIdiomas = (Spinner) findViewById(R.id.idiomas);
         Resources res = getResources();
         arrayIdiomas = res.getStringArray(R.array.array_paises);
 
         adaptadorIdiomas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayIdiomas);
         spIdiomas.setAdapter(adaptadorIdiomas);
+
+        int idioma = preferencias.getInt("idioma", 0);
+        spIdiomas.setSelection(idioma);
 
         // Obtener referencias a las vistas
         ap1 = findViewById(R.id.etAp1);
@@ -113,8 +116,6 @@ public class MainActivityConf extends AppCompatActivity {
         spIdiomas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                // SharedPreferences.Editor editorPreferencias = preferencias.edit();
 
                 int idiomaAnterior = preferencias.getInt("idioma", 0);
                 int idiomaActual = spIdiomas.getSelectedItemPosition();
@@ -128,8 +129,7 @@ public class MainActivityConf extends AppCompatActivity {
                     AlertDialog dialogoAvisoCambioIdioma = constructorDialogo.create();
                     dialogoAvisoCambioIdioma.show();
                 }
-                //int idioma = preferencias.getInt("idioma", 0);
-                //spIdiomas.setSelection(idioma);
+
 
             }
 
@@ -146,7 +146,6 @@ public class MainActivityConf extends AppCompatActivity {
         super.onPause();
 
         // Guardar los valores de los EditTexts en SharedPreferences
-        //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
         editorPreferencias.putString("nombre", nombre.getText().toString());
         editorPreferencias.putString("apellidos", ap1.getText().toString());
@@ -160,10 +159,10 @@ public class MainActivityConf extends AppCompatActivity {
                 editorPreferencias.putString("codigo_idioma", "es");
                 break;
             case 1:
-                editorPreferencias.putString("codigo_idioma", "ca");
+                editorPreferencias.putString("codigo_idioma", "en");
                 break;
             case 2:
-                editorPreferencias.putString("codigo_idioma", "en");
+                editorPreferencias.putString("codigo_idioma", "fr");
                 break;
             default:
                 editorPreferencias.putString("codigo_idioma", "es");

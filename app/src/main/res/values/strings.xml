@@ -7,10 +7,8 @@
     <string-array name="array_paises">
 
         <item>Español</item>
-        <item>Ingles</item>
-        <item>Aleman</item>
-        <item>Frances</item>
-        <item>Italiano</item>
+        <item>Inglés</item>
+        <item>Francés</item>
     </string-array>
 
     <string-array name="array_inci">

@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity3"
+    android:background="@drawable/wallpaper13"
     android:orientation="vertical"
+    tools:context=".MainActivity3"
     tools:ignore="ExtraText">
 
     <TextView
@@ -28,22 +29,13 @@
         android:backgroundTint="#6BF1EAEA"
         android:fontFamily="sans-serif"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="24sp" />
+        android:textSize="24sp" /><![CDATA[
 
-    <Button
-        android:id="@+id/btnRegistroEntrada2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:backgroundTint="#2241F1"
-        android:foregroundGravity="center"
-        android:gravity="center"
-        android:padding="30dp"
-        android:text="Entrada"
-        android:textSize="30sp"
-        app:iconGravity="start" />/>
+    />
+
+
+    ]]>
+
     <TextView
         android:id="@+id/tvS2"
         android:layout_width="match_parent"
@@ -66,20 +58,46 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/btnRegistroSalida2"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linear_layout_configu"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:backgroundTint="#2241F1"
-        android:foregroundGravity="center"
-        android:gravity="center"
-        android:padding="30dp"
-        android:text="Salida"
-        android:textSize="30sp"
-        app:iconGravity="start" />
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:background="#4BFFFFFF">
+
+        <Button
+            android:id="@+id/btnRegistroEntrada2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#2241F1"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:padding="30dp"
+            android:text="@string/entrada"
+            android:textSize="20sp"
+            app:icon="@android:drawable/ic_menu_rotate"
+            app:iconGravity="start" />
+
+        <Button
+            android:id="@+id/btnRegistroSalida2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:backgroundTint="#2241F1"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:padding="30dp"
+            android:text="@string/salida"
+            android:textSize="20sp"
+            app:icon="@android:drawable/ic_menu_rotate"
+            app:iconGravity="start" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/textViewTotal2"
@@ -93,6 +111,12 @@
         android:text="Total:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+    <Spinner
+        android:id="@+id/spnIncidencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="@string/incidencia" />
+
     <LinearLayout
         android:id="@+id/linear_layout_confiuj2"
         android:layout_width="match_parent"
@@ -104,7 +128,6 @@
 
         <Button
             android:id="@+id/btnCalcular2"
-            app:iconGravity="start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -113,7 +136,8 @@
             android:backgroundTint="#2241F1"
             android:foregroundGravity="center"
             android:gravity="center"
-            android:text="Calcular" />
+            android:text="Calcular"
+            app:iconGravity="start" />
 
         <Button
             android:id="@+id/btnGuardar2"
@@ -127,6 +151,7 @@
             android:text="Guardar" />
 
     </LinearLayout>
+
     <Button
         android:id="@+id/btnSalir2"
         android:layout_width="wrap_content"

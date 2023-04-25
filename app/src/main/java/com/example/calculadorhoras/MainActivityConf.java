@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
@@ -35,73 +36,47 @@ import java.util.Map;
 
 public class MainActivityConf extends AppCompatActivity {
 
-    String ap, nom;
-    private Spinner spPais;
     private EditText nombre;
     private EditText ap1;
-    private String[] arrayPaises;
-    private ArrayAdapter<String> adaptadorPaises;
     private Switch swNotificaciones;
     private Button guardar;
+    private Spinner spIdiomas;
+    private String[] arrayIdiomas;
+    private ArrayAdapter<String> adaptadorIdiomas;
+    private DatabaseReference usuarioRef; // Referencia a los datos del usuario en Firebase
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String correo = getIntent().getStringExtra("correo");
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference reference = database.getReference().child("usuarios").child(correo);
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Recuperar datos del usuario
-                String name = dataSnapshot.child("nombre").getValue(String.class);
-                String subname = dataSnapshot.child("apellidos").getValue(String.class);
-
-                // Hacer algo con los datos recuperados, por ejemplo, mostrarlos en TextViews
-                ap1 = findViewById(R.id.etAp1);
-                nombre=findViewById(R.id.etnombre);
-                nombre.setText(name);
-                ap1.setText(subname);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Manejar errores de lectura de la base de datos
-            }
-        });
-/**/
-
-
         // Configuración de idioma
         SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferenciasCompartidas.edit();
-
-        editor.apply();
-
         String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
         setAppLocale(codigoIdioma);
-        setContentView(R.layout.activity_main_conf);
 
+        setContentView(R.layout.activity_main_conf); // Asignar el layout correspondiente
+        getSupportActionBar().setTitle(R.string.configuracion);
+        //SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        String corr = preferenciasCompartidas.getString("email", "");
+        // Obtener la referencia a los datos del usuario en Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        usuarioRef = database.getReference("usuarios").child(corr);
 
-        getSupportActionBar().setTitle("Configuracion");
-
-        // Rellenamos el Spinner
-        spPais = (Spinner) findViewById(R.id.idiomas);
+// Rellenamos el Spinner
+        spIdiomas = (Spinner) findViewById(R.id.idiomas);
         Resources res = getResources();
-        arrayPaises = res.getStringArray(R.array.array_paises);
-        adaptadorPaises = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayPaises);
-        spPais.setAdapter(adaptadorPaises);
+        arrayIdiomas = res.getStringArray(R.array.array_paises);
 
+        adaptadorIdiomas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayIdiomas);
+        spIdiomas.setAdapter(adaptadorIdiomas);
 
-        spPais.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {  // Idioma
+        spIdiomas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                SharedPreferences.Editor editorPreferencias = preferencias.edit();
+               // SharedPreferences.Editor editorPreferencias = preferencias.edit();
 
                 int idiomaAnterior = preferencias.getInt("idioma", 0);
-                int idiomaActual = spPais.getSelectedItemPosition();
+                int idiomaActual = spIdiomas.getSelectedItemPosition();
 
                 if (idiomaAnterior != idiomaActual) {
                     AlertDialog.Builder constructorDialogo = new AlertDialog.Builder(MainActivityConf.this);
@@ -112,116 +87,94 @@ public class MainActivityConf extends AppCompatActivity {
                     AlertDialog dialogoAvisoCambioIdioma = constructorDialogo.create();
                     dialogoAvisoCambioIdioma.show();
                 }
+                int idioma = preferenciasCompartidas.getInt("idioma", 0);
+                spIdiomas.setSelection(idioma);
+
+
+                // Obtener referencias a las vistas
+                ap1 = findViewById(R.id.etAp1);
+                nombre = findViewById(R.id.etnombre);
+                guardar = findViewById(R.id.guardar);
+
+                // Recuperar datos del usuario y mostrarlos en los EditTexts correspondientes
+                usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        String name = dataSnapshot.child("nombre").getValue(String.class);
+                        String subname = dataSnapshot.child("apellidos").getValue(String.class);
+                        nombre.setText(name);
+                        ap1.setText(subname);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Manejar errores de lectura de la base de datos
+                    }
+
+                });
+
+                // Configurar el botón "guardar"
+                guardar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        // Obtener los valores de los EditTexts
+                        String nom = nombre.getText().toString();
+                        String ap = ap1.getText().toString();
+
+                        // Guardar los valores en Firebase
+                        usuarioRef.child("nombre").setValue(nom);
+                        usuarioRef.child("apellidos").setValue(ap);
+
+                        // Mostrar un mensaje de confirmación
+                        Toast.makeText(MainActivityConf.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
+
 
             @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
+            public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
-        // Idioma
-        int idioma = preferenciasCompartidas.getInt("idioma", 0);
-        spPais.setSelection(idioma);
-
-        //nombres
-        String nombreGuardado = preferenciasCompartidas.getString("nombre", "");
-        String ap1Guardado = preferenciasCompartidas.getString("ap1", "");
+        });}
 
 
-}
 
-
-    @Override
+            @Override
     protected void onPause() {
         super.onPause();
-        // Guardamos las opciones seleccionadas por la persona usuaria en las SharedPreferences
+
+        // Guardar los valores de los EditTexts en SharedPreferences
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-        // Creación de un objeto Editor para escribir en las preferencias
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
-
-        int idioma = (int) spPais.getSelectedItemId();
-        editorPreferencias.putInt("idioma", idioma);
-        // Código de idioma
-        switch (idioma) {
-            case 0:
-                editorPreferencias.putString("codigo_idioma", "es");
-                break;
-            case 1:
-                editorPreferencias.putString("codigo_idioma", "ca");
-                break;
-            case 2:
-                editorPreferencias.putString("codigo_idioma", "en");
-                break;
-            default:
-                editorPreferencias.putString("codigo_idioma", "es");
-                break;
-        }
-        // Una vez hechos los cambios, debemos confirmarlos o consolidarlos
-        String nom = nombre.getText().toString();
-        String ap = ap1.getText().toString();
-        editorPreferencias.putString("nombre", nom);
-        editorPreferencias.putString("ap1", ap);
+        editorPreferencias.putString("nombre", nombre.getText().toString());
+        editorPreferencias.putString("apellidos", ap1.getText().toString());
         editorPreferencias.apply();
-
-        editorPreferencias.commit();
-
     }
-
 
     @Override
     protected void onResume() {
         super.onResume();
-       //Guardamos las prefencias
-        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-        guardar = findViewById(R.id.guardar);
-        nombre = findViewById(R.id.etnombre);
-        ap1 = findViewById(R.id.etAp1);
-        String nombreGuardado = preferenciasCompartidas.getString("nombre", "");
-        String ap1Guardado = preferenciasCompartidas.getString("ap1", "");
 
+        // Recuperar los valores de los EditTexts desde SharedPreferences
+        SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        String nombreGuardado = preferencias.getString("nombre", "");
+        String apellidoGuardado = preferencias.getString("apellidos", "");
 
-
-        ap1.setText(ap1Guardado);
-        nombre.setText(nombreGuardado);
-
-        // Guardamos los valores de nombre y apallido
-        guardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String correo = getIntent().getStringExtra("correo");
-                String nom = nombre.getText().toString();
-                String ap = ap1.getText().toString();
-
-                SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
-                editorPreferencias.putString("nombre", nom);
-                editorPreferencias.putString("ap1", ap);
-                editorPreferencias.apply();
-
-                Toast.makeText(getApplicationContext(), "Guardado", Toast.LENGTH_LONG).show();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("usuarios").child(correo);
-
-                Map<String, Object> updates = new HashMap<>();
-                updates.put("nombre", nom);
-                updates.put("apellido", ap);
-                ref.updateChildren(updates);
-
-            }
-
-        });
+        // Mostrar los valores recuperados en los EditTexts correspondientes
+//        nombre.setText(nombreGuardado);
+//        ap1.setText(apellidoGuardado);
     }
-
-            private void setAppLocale(String localeCode) {
-                Locale myLocale = new Locale(localeCode);
-                Resources res = getResources();
-                DisplayMetrics dm = res.getDisplayMetrics();
-                Configuration conf = res.getConfiguration();
-                conf.locale = myLocale;
-                Locale.setDefault(myLocale);
-                conf.setLayoutDirection(myLocale);
-                res.updateConfiguration(conf, dm);
-            }
-
-
+    private void setAppLocale(String localeCode){
+        Locale myLocale = new Locale(localeCode);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        Locale.setDefault(myLocale);
+        conf.setLayoutDirection(myLocale);
+        res.updateConfiguration(conf, dm);
+    }
 
 }

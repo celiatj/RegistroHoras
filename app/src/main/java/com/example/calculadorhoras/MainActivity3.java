@@ -21,7 +21,10 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +33,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,6 +53,8 @@ import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
+
 public class MainActivity3 extends AppCompatActivity {
     public TextView total;
     public TextView entrada;
@@ -54,14 +66,19 @@ public class MainActivity3 extends AppCompatActivity {
     FileOutputStream stream = null;
     String dia;
     int horaE,horaS,minE,minS;
-
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase db;
+    private Spinner spInci;
+    private String[] inci;
+    private ArrayAdapter<String> adaptadorInci;
     final static String CHANNEL_ID = "NOTIFICACIONES";
-
+    int contadorE;
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
+        getSupportActionBar().setTitle(R.string.app_name);
                 total = findViewById(R.id.textViewTotal2);
 
                 // Crear canal de notificaciones
@@ -85,6 +102,30 @@ public class MainActivity3 extends AppCompatActivity {
                 salida = findViewById(R.id.textViewS2);
                 registroSalida = findViewById(R.id.btnRegistroSalida2);
 
+
+        // Rellenamos el Spinner
+        spInci = (Spinner) findViewById(R.id.spnIncidencia);
+        Resources res = getResources();
+        inci = res.getStringArray(R.array.array_inci);
+
+        adaptadorInci = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item,inci);
+        spInci.setAdapter(adaptadorInci);
+
+        spInci.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+            {
+                SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                SharedPreferences.Editor editorPreferencias = preferencias.edit();
+
+                }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+        });
+
                 Context contexto = getApplicationContext();
                 File path = contexto.getFilesDir();
                 File file = new File(path, "registros.csv");
@@ -97,18 +138,59 @@ public class MainActivity3 extends AppCompatActivity {
                 registroEntrada.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        horaE = c.get(Calendar.HOUR);
+                        contadorE++;
+                        horaE = c.get(Calendar.HOUR_OF_DAY);
                         minE= c.get(Calendar.MINUTE);
                         entrada.setText(String.format("%02d:%02d", horaE, minE));;
-                    }
+                     //   FirebaseUser currentUser = mAuth.getCurrentUser();
+                        // Inicializar aplicación de Firebase
+                        FirebaseApp.initializeApp(getApplicationContext());
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                        db = FirebaseDatabase.getInstance();
+                       // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                        String corr = preferenciasCompartidas.getString("email", "");
+
+                        Map<String, String> datos = new HashMap<>();
+                        int posicionInci = spInci.getSelectedItemPosition();
+                        datos.put("tipo", "entrada");
+                        datos.put("incidencia", inci[posicionInci]);
+                        db.getReference("usuarios").child(corr).child("Registros").child(dia+horaE+minE).setValue(datos);
+                        //separar
+
+                        /*
+                        String cadena = "231337";
+String dia = cadena.substring(0, 2);
+String horas = cadena.substring(2, 4);
+String minutos = cadena.substring(4, 6);
+
+System.out.println("Día: " + dia);
+System.out.println("Horas: " + horas);
+System.out.println("Minutos: " + minutos);
+*/
+registroEntrada.setEnabled(false);}
                 });
                 registroSalida.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        horaS = c.get(Calendar.HOUR);
+                        contadorE=0;
+                        registroEntrada.setEnabled(true);
+                        horaS = c.get(Calendar.HOUR_OF_DAY);
                         minS= c.get(Calendar.MINUTE);
                         salida.setText(String.format("%02d:%02d", horaS, minS));
+                        // Inicializar aplicación de Firebase
+                        FirebaseApp.initializeApp(getApplicationContext());
+                        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                        db = FirebaseDatabase.getInstance();
+                        //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                        String corr = preferenciasCompartidas.getString("email", "");
+
+                        Map<String, String> datos = new HashMap<>();
+
+                        datos.put("tipo", "salida");
+                        datos.put("incidencia", "NO");
+                        db.getReference("usuarios").child(corr).child("Registros").child(dia+horaE+minE).setValue(datos);
                     }
+
                 });
 
 
@@ -166,6 +248,14 @@ public class MainActivity3 extends AppCompatActivity {
                         try {
                             horasTotal += "\r\n";
                             stream.write(horasTotal.getBytes());
+                            FirebaseUser currentUser = mAuth.getCurrentUser();
+                            // Inicializar aplicación de Firebase
+                            FirebaseApp.initializeApp(getApplicationContext());
+                            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                            db = FirebaseDatabase.getInstance();
+                            SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+
+
                             // Una vez usado el botón de Guardar, lo vuelvo a desactivar (hasta que se haga Calcular de nuevo)
                             view.setEnabled(false);
                         } catch (

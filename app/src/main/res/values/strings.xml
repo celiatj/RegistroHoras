@@ -1,5 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">CalculadorHoras</string>
+    <string name="opcion_name" translatable="false">Opciones</string>
     <string name="nombre_canal" translatable="false">Canal de notificaciones único</string>
     <string name="descripcion_canal" translatable="false">A través de este canal se publicarán todas las notificaciones de la app</string>
 
@@ -10,6 +11,13 @@
         <item>Aleman</item>
         <item>Frances</item>
         <item>Italiano</item>
+    </string-array>
+
+    <string-array name="array_inci">
+        <item>Sin incidencias</item>
+        <item>Asuntos propios</item>
+        <item>Medico</item>
+        <item>Accidente Laboral</item>
     </string-array>
 
     <string name="txt_salir_app_mensaje" translatable="false">Adios!</string>
@@ -27,6 +35,19 @@
     <string name="toast_identificacion_fallo">Fallo de identificacion</string>
     <string name="toast_identificacion_exito">Identificacion correcta</string>
     <string name="toast_introducir_email">Introduce un email</string>
+
+    <string name="name" >Nombre</string>
+    <string name="ap" >Apellidos</string>
+    <string name="correo" >Correo</string>
+    <string name="contrasenya" >Contraseña</string>
+    <string name="login">Login</string>
+    <string name="configuracion">Configuración</string>
+    <string name="registro">Registro</string>
+    <string name="salida">Salida</string>
+    <string name="entrada">Entrada</string>
+    <string name="incidencia">Incidencia</string>
+
+
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->
 
 </resources>

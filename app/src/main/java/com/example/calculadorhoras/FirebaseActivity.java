@@ -29,7 +29,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-public class FirebaseActivity extends Activity {
+public class FirebaseActivity  extends AppCompatActivity {
+
     private EditText correo;
     private EditText contraseya;
     private EditText nombre;
@@ -40,10 +41,18 @@ public class FirebaseActivity extends Activity {
     private static final String TAG = "EmailPassword";
     private FirebaseDatabase db;
     int contador = 0;
+    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase);
+        
+        // Inicializar aplicación de Firebase
+        FirebaseApp.initializeApp(getApplicationContext());
+       
+        db = FirebaseDatabase.getInstance();
+        getSupportActionBar().setTitle(R.string.login);
+
         mAuth = FirebaseAuth.getInstance();
 
         contraseya = findViewById(R.id.edContraseya);
@@ -56,11 +65,13 @@ public class FirebaseActivity extends Activity {
 
         registro = findViewById(R.id.btnregistro);
         login = findViewById(R.id.btnlogin);
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -77,14 +88,16 @@ public class FirebaseActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Guardar correo en las SharedPreferences para posterior uso
+        SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        SharedPreferences.Editor editorPreferencias = preferencias.edit();
         Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity3.class);
-        Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
+       // Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
 
-        // Inicializar aplicación de Firebase
-        FirebaseApp.initializeApp(getApplicationContext());
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-        db = FirebaseDatabase.getInstance();
 
+
+
+       
         registro.setOnClickListener(new View.OnClickListener() {
 
 
@@ -154,15 +167,16 @@ public class FirebaseActivity extends Activity {
                             });
 
 
-                    objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
-                    startActivity(objetoMensajeroDatos);
+                   // objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
+                   // startActivity(objetoMensajeroDatos);
                     /*
                     objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
 */
                     // Reinicia el contador para permitir la próxima secuencia de pulsaciones
                     contador = 0;
-                   // Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+                    editorPreferencias.putString("email", corr.replace(".", ""));
+                    editorPreferencias.commit();
                     startActivity(objetoMensajero);
             }}
         });
@@ -206,16 +220,14 @@ public class FirebaseActivity extends Activity {
                                                             Toast.LENGTH_LONG)
                                                     .show();
 
-                                            // Guardar correo en las SharedPreferences para posterior uso
-                                            SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                                            SharedPreferences.Editor editorPreferencias = preferencias.edit();
-                                            editorPreferencias.putString("email", correoText);
+
+                                            editorPreferencias.putString("email", correoText.replace(".", ""));
                                             editorPreferencias.commit();
 
                                             // Como el login es exitoso, ir a la Activity principal
                                             startActivity(objetoMensajero);
-                                            objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
-                                            startActivity(objetoMensajeroDatos);
+                                           // objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
+                                           // startActivity(objetoMensajeroDatos);
                                         } else {
 
                                             // sign-in failed

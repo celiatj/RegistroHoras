@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Correo"
+            android:hint="@string/correo"
             android:inputType="textEmailAddress" />
 
         <EditText
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Contraseña"
+            android:hint="@string/contrasenya"
             android:inputType="textPassword" />
 
         <EditText
@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Nombre"
+            android:hint="@string/name"
             android:inputType="textPersonName" />
 
         <EditText
@@ -49,19 +49,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Apellidos"
+            android:hint="@string/ap"
             android:inputType="textPersonName" />
 
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="login" />
+            android:text="@string/login" />
 
         <Button
             android:id="@+id/btnregistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Registro" />
+            android:text="@string/registro" />
     </LinearLayout>
 </LinearLayout>

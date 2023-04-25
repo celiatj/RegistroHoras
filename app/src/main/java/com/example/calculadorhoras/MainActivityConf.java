@@ -45,18 +45,20 @@ public class MainActivityConf extends AppCompatActivity {
     private ArrayAdapter<String> adaptadorIdiomas;
     private DatabaseReference usuarioRef; // Referencia a los datos del usuario en Firebase
 
+    SharedPreferences preferencias;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Configuración de idioma
-        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-        String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
+        preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        String codigoIdioma = preferencias.getString("codigo_idioma", "es");
         setAppLocale(codigoIdioma);
 
         setContentView(R.layout.activity_main_conf); // Asignar el layout correspondiente
         getSupportActionBar().setTitle(R.string.configuracion);
         //SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-        String corr = preferenciasCompartidas.getString("email", "");
+        String corr = preferencias.getString("email", "");
         // Obtener la referencia a los datos del usuario en Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         usuarioRef = database.getReference("usuarios").child(corr);
@@ -69,11 +71,50 @@ public class MainActivityConf extends AppCompatActivity {
         adaptadorIdiomas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayIdiomas);
         spIdiomas.setAdapter(adaptadorIdiomas);
 
+        // Obtener referencias a las vistas
+        ap1 = findViewById(R.id.etAp1);
+        nombre = findViewById(R.id.etnombre);
+        guardar = findViewById(R.id.guardar);
+
+        // Recuperar datos del usuario y mostrarlos en los EditTexts correspondientes
+        usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                String name = dataSnapshot.child("nombre").getValue(String.class);
+                String subname = dataSnapshot.child("apellidos").getValue(String.class);
+                nombre.setText(name);
+                ap1.setText(subname);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Manejar errores de lectura de la base de datos
+            }
+
+        });
+
+        // Configurar el botón "guardar"
+        guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Obtener los valores de los EditTexts
+                String nom = nombre.getText().toString();
+                String ap = ap1.getText().toString();
+
+                // Guardar los valores en Firebase
+                usuarioRef.child("nombre").setValue(nom);
+                usuarioRef.child("apellidos").setValue(ap);
+
+                // Mostrar un mensaje de confirmación
+                Toast.makeText(MainActivityConf.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         spIdiomas.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-               // SharedPreferences.Editor editorPreferencias = preferencias.edit();
+                // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                // SharedPreferences.Editor editorPreferencias = preferencias.edit();
 
                 int idiomaAnterior = preferencias.getInt("idioma", 0);
                 int idiomaActual = spIdiomas.getSelectedItemPosition();
@@ -87,70 +128,53 @@ public class MainActivityConf extends AppCompatActivity {
                     AlertDialog dialogoAvisoCambioIdioma = constructorDialogo.create();
                     dialogoAvisoCambioIdioma.show();
                 }
-                int idioma = preferenciasCompartidas.getInt("idioma", 0);
-                spIdiomas.setSelection(idioma);
-
-
-                // Obtener referencias a las vistas
-                ap1 = findViewById(R.id.etAp1);
-                nombre = findViewById(R.id.etnombre);
-                guardar = findViewById(R.id.guardar);
-
-                // Recuperar datos del usuario y mostrarlos en los EditTexts correspondientes
-                usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String name = dataSnapshot.child("nombre").getValue(String.class);
-                        String subname = dataSnapshot.child("apellidos").getValue(String.class);
-                        nombre.setText(name);
-                        ap1.setText(subname);
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Manejar errores de lectura de la base de datos
-                    }
-
-                });
-
-                // Configurar el botón "guardar"
-                guardar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        // Obtener los valores de los EditTexts
-                        String nom = nombre.getText().toString();
-                        String ap = ap1.getText().toString();
-
-                        // Guardar los valores en Firebase
-                        usuarioRef.child("nombre").setValue(nom);
-                        usuarioRef.child("apellidos").setValue(ap);
-
-                        // Mostrar un mensaje de confirmación
-                        Toast.makeText(MainActivityConf.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                //int idioma = preferencias.getInt("idioma", 0);
+                //spIdiomas.setSelection(idioma);
 
             }
-
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });}
+        });
+    }
 
 
-
-            @Override
+    @Override
     protected void onPause() {
         super.onPause();
 
         // Guardar los valores de los EditTexts en SharedPreferences
-        SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
         editorPreferencias.putString("nombre", nombre.getText().toString());
         editorPreferencias.putString("apellidos", ap1.getText().toString());
-        editorPreferencias.apply();
+
+        // Idioma
+        int idioma = (int) spIdiomas.getSelectedItemId();
+        editorPreferencias.putInt("idioma", idioma);
+        // Código de idioma
+        switch (idioma) {
+            case 0:
+                editorPreferencias.putString("codigo_idioma", "es");
+                break;
+            case 1:
+                editorPreferencias.putString("codigo_idioma", "ca");
+                break;
+            case 2:
+                editorPreferencias.putString("codigo_idioma", "en");
+                break;
+            default:
+                editorPreferencias.putString("codigo_idioma", "es");
+                break;
+        }
+// Notificaciones
+//                boolean notificaciones = swNotificaciones.isChecked();
+        //           editorPreferencias.putBoolean("notificaciones", notificaciones);
+
+        // Una vez hechos los cambios, debemos confirmarlos o consolidarlos
+        editorPreferencias.commit();
     }
 
     @Override
@@ -166,7 +190,8 @@ public class MainActivityConf extends AppCompatActivity {
 //        nombre.setText(nombreGuardado);
 //        ap1.setText(apellidoGuardado);
     }
-    private void setAppLocale(String localeCode){
+
+    private void setAppLocale(String localeCode) {
         Locale myLocale = new Locale(localeCode);
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();

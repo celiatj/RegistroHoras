@@ -108,10 +108,10 @@ public class FirebaseActivity  extends AppCompatActivity {
                 if (contador == 1) {
                     nombre.setVisibility(View.VISIBLE);
                     apellido.setVisibility(View.VISIBLE);
+                    login.setEnabled(false);
                     // Avisa al usuario que tiene que pulsar de nuevo
                     Toast.makeText(getApplicationContext(), "Pulse de nuevo para completar el registro", Toast.LENGTH_SHORT).show();
-                } else if (contador == 2) {
-
+                } else if (contador >= 2) {
                 String nom = nombre.getText().toString();
                 String ap = apellido.getText().toString();
                 String corr = correo.getText().toString();

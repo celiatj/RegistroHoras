@@ -3,11 +3,11 @@
     <item
         android:id="@+id/configuracion"
         android:icon="@android:drawable/ic_menu_manage"
-        android:title="Configuracion" />
+        android:title="@string/configuracion" />
     <item
         android:id="@+id/registro"
         android:icon="@drawable/clock_icon_design_element_logo_element_illustration_clock_symbol_icon_free_vector"
         android:orderInCategory="2"
-        android:title="Registro" />
+        android:title="@string/registro" />
 
 </menu>

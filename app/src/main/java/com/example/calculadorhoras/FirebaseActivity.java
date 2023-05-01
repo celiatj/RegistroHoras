@@ -28,6 +28,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FirebaseActivity  extends AppCompatActivity {
 
@@ -42,6 +44,16 @@ public class FirebaseActivity  extends AppCompatActivity {
     private FirebaseDatabase db;
     int contador = 0;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private static final String EMAIL_PATTERN =
+            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+    private static final Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+
+    public static boolean validarCorreo(String correo) {
+        Matcher matcher = pattern.matcher(correo);
+        return matcher.matches();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +106,6 @@ public class FirebaseActivity  extends AppCompatActivity {
         Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity3.class);
        // Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
 
-
-
-
-       
         registro.setOnClickListener(new View.OnClickListener() {
 
 
@@ -117,9 +125,41 @@ public class FirebaseActivity  extends AppCompatActivity {
                 String corr = correo.getText().toString();
                 String cont = contraseya.getText().toString();
 
-                if (TextUtils.isEmpty(cont)) {
+                if (TextUtils.isEmpty(nom)) {
+                    Toast.makeText(getApplicationContext(),
+                                    getText(R.string.toast_introducir_nombre).toString(),
+                                    Toast.LENGTH_LONG)
+                            .show();return;}
+                    if (TextUtils.isEmpty(corr)) {
+                        Toast.makeText(getApplicationContext(),
+                                        getText(R.string.toast_introducir_correo).toString(),
+                                        Toast.LENGTH_LONG)
+                                .show();
+                        return;}
+                        if (TextUtils.isEmpty(ap)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_apellido).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;}
+                            if (TextUtils.isEmpty(cont)) {
+
                         Toast.makeText(getApplicationContext(),
                                         getText(R.string.toast_introducir_password).toString(),
+                                        Toast.LENGTH_LONG)
+                                .show();
+                        return;
+                    }
+                if(cont.length()<6){
+                    Toast.makeText(getApplicationContext(),
+                                    getText(R.string.toast_introducir_longitud).toString(),
+                                    Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                }
+                    if (!validarCorreo(corr)) {
+                        Toast.makeText(getApplicationContext(),
+                                        getText(R.string.correo_Invalido).toString(),
                                         Toast.LENGTH_LONG)
                                 .show();
                         return;

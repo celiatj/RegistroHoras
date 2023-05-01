@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CalculadorHoras</string>
+    <string name="opcion_name">Options</string>
+    <string name="nombre_canal">Single notification channel</string>
+    <string name="descripcion_canal">All app notifications will be published through this channel</string>
+    <string name="txt_salir_app_mensaje">Good by!</string>
+    <string name="txt_salir_app_titulo">Exit?</string>
+    <string name="txt_si">Yes</string>
+    <string name="txt_no">No</string>
+    <string name="nav_open">Open</string>
+    <string name="nav_close">Close</string>
+    <string name="aviso_cambio_idioma_mensaje">The language change will take full effect on the next restart of the app</string>
+    <string name="aviso_cambio_idioma_aceptar">Agreed</string>
+    <string name="toast_registro_fallo">Registration failed</string>
+    <string name="toast_registro_exito">Record saved</string>
+    <string name="toast_introducir_password">" Enter a password"</string>
+    <string name="toast_identificacion_fallo">Identification failure</string>
+    <string name="toast_identificacion_exito">Correct identification</string>
+    <string name="toast_introducir_email">" Enter an email"</string>
+    <string name="name">Name</string>
+    <string name="ap">Last name</string>
+    <string name="correo">Email</string>
+    <string name="contrasenya">Password</string>
+    <string name="login">Login</string>
+    <string name="configuracion">" Setting"</string>
+    <string name="registro">" Record"</string>
+    <string name="salida">" Exit"</string>
+    <string name="entrada">Entry</string>
+    <string name="salir">go out</string>
+    <string name="incidencia">Incidence</string>
+    <string name="toast_introducir_nombre">" You must enter a name"</string>
+    <string name="toast_introducir_correo">Enter an email</string>
+    <string name="toast_introducir_apellido">Enter a last name</string>
+    <string name="toast_introducir_longitud">The password must have 6 characters</string>
+    <string name="correo_Invalido">" Invalid email"</string>
+
+    <string-array name="array_inci">
+        <item>No incidents</item>
+        <item>Personal affairs</item>
+        <item>Medical appointment</item>
+        <item>Work accident</item>
+    </string-array>
+
+    <string-array name="array_paises">
+        <item>Español</item>
+        <item>Inglés</item>
+        <item>Francés</item>
+    </string-array>
 </resources>

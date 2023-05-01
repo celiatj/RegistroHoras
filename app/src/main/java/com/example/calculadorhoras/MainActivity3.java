@@ -1,5 +1,6 @@
 package com.example.calculadorhoras;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -164,7 +165,6 @@ public class MainActivity3 extends AppCompatActivity {
 String dia = cadena.substring(0, 2);
 String horas = cadena.substring(2, 4);
 String minutos = cadena.substring(4, 6);
-
 System.out.println("Día: " + dia);
 System.out.println("Horas: " + horas);
 System.out.println("Minutos: " + minutos);
@@ -275,6 +275,7 @@ System.out.println("Minutos: " + minutos);
             }
         });
 
+
         // Salir de la app
         botonSalir.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -331,7 +332,7 @@ System.out.println("Minutos: " + minutos);
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Control de opciones de la action bar
         int id = item.getItemId();
         if (id == R.id.configuracion) {
@@ -386,6 +387,5 @@ System.out.println("Minutos: " + minutos);
     }
 
 }
-
 
 

@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CalculadorHoras</string>
+    <string name="opcion_name">Choix</string>
+    <string name="nombre_canal">Canal de notification unique</string>
+    <string name="descripcion_canal">Toutes les notifications d\'application seront publiées via ce canal</string>
+    <string name="txt_salir_app_mensaje">"Adieu!"</string>
+    <string name="txt_salir_app_titulo">"Sortir?"</string>
+    <string name="txt_si">"Ouais"</string>
+    <string name="txt_no">"Non"</string>
+    <string name="nav_open">"Ouvrir"</string>
+    <string name="nav_close">"Fermer"</string>
+    <string name="aviso_cambio_idioma_mensaje">Le changement de langue prendra pleinement effet au prochain redémarrage de l\'application</string>
+    <string name="aviso_cambio_idioma_aceptar">D\'accord</string>
+    <string name="toast_registro_fallo">Échec de l\'enregistrement</string>
+    <string name="toast_registro_exito">Enregistrement enregistré</string>
+    <string name="toast_introducir_password">Enter a mot de passe</string>
+    <string name="toast_identificacion_fallo">Échec d\'identification</string>
+    <string name="toast_identificacion_exito">Pièce d\'identité correcte</string>
+    <string name="toast_introducir_email">" Entrez un e-mail"</string>
+    <string name="name">Nom</string>
+    <string name="ap">Nom de famille</string>
+    <string name="correo">" e-mail"</string>
+    <string name="contrasenya">Mot de passe</string>
+    <string name="login">" Accès"</string>
+    <string name="configuracion">Paramètre</string>
+    <string name="registro">" Enregistrer"</string>
+    <string name="salida">Sortie</string>
+    <string name="entrada">Entrée</string>
+    <string name="incidencia">Incidence</string>
+    <string name="toast_introducir_nombre">Vous devez entrer un nom</string>
+    <string name="toast_introducir_correo">Entrez un e-mail</string>
+    <string name="toast_introducir_apellido">Entrer un nom de famille</string>
+    <string name="toast_introducir_longitud">Le mot de passe doit comporter 6 caractères</string>
+    <string name="correo_Invalido">" Email invalide"</string>
+
+    <string-array name="array_inci">
+        <item>Aucun incident</item>
+        <item>Affaires personnelles</item>
+        <item>Rendez-vous médical</item>
+        <item>Accident du travail</item>
+    </string-array>
+
+    <string-array name="array_paises">
+        <item>Español</item>
+        <item>Inglés</item>
+        <item>Francés</item>
+    </string-array>
+    <string name="salir">" sortir"</string>
 </resources>

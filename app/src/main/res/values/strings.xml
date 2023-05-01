@@ -1,11 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="false">CalculadorHoras</string>
-    <string name="opcion_name" translatable="false">Opciones</string>
-    <string name="nombre_canal" translatable="false">Canal de notificaciones único</string>
-    <string name="descripcion_canal" translatable="false">A través de este canal se publicarán todas las notificaciones de la app</string>
+    <string name="app_name" translatable="true">CalculadorHoras</string>
+    <string name="opcion_name">Opciones</string>
+    <string name="nombre_canal">Canal de notificaciones único</string>
+    <string name="descripcion_canal">A través de este canal se publicarán todas las notificaciones de la app</string>
 
     <string-array name="array_paises">
-
         <item>Español</item>
         <item>Inglés</item>
         <item>Francés</item>
@@ -18,32 +17,38 @@
         <item>Accidente Laboral</item>
     </string-array>
 
-    <string name="txt_salir_app_mensaje" translatable="false">Adios!</string>
-    <string name="txt_salir_app_titulo" translatable="false">¿Salir?</string>
-    <string name="txt_si" translatable="false">si</string>
-    <string name="txt_no" translatable="false">no</string>
+    <string name="txt_salir_app_mensaje" translatable="true">¡Adios!</string>
+    <string name="txt_salir_app_titulo">¿Salir?</string>
+    <string name="txt_si">Si</string>
+    <string name="txt_no">No</string>
 
-    <string name="nav_open" >Open</string>
-    <string name="nav_close" >Close</string>
-    <string name="aviso_cambio_idioma_mensaje" >El cambio de idioma tendrá efecto completo en el siguiente reinicio de la app</string>
-    <string name="aviso_cambio_idioma_aceptar" >De acuerdo</string>
+    <string name="aviso_cambio_idioma_mensaje">El cambio de idioma tendrá efecto completo en el siguiente reinicio de la app</string>
+    <string name="aviso_cambio_idioma_aceptar">De acuerdo</string>
     <string name="toast_registro_fallo">Fallo en el registro</string>
     <string name="toast_registro_exito">Registro guardado</string>
     <string name="toast_introducir_password">Introduce una contraseña</string>
     <string name="toast_identificacion_fallo">Fallo de identificacion</string>
     <string name="toast_identificacion_exito">Identificacion correcta</string>
-    <string name="toast_introducir_email">Introduce un email</string>
 
-    <string name="name" >Nombre</string>
-    <string name="ap" >Apellidos</string>
-    <string name="correo" >Correo</string>
-    <string name="contrasenya" >Contraseña</string>
-    <string name="login">Login</string>
-    <string name="configuracion">Configuración</string>
+    <string name="name">Nombre</string>
+    <string name="ap">Apellidos</string>
+    <string name="correo">Correo electronico</string>
+    <string name="contrasenya">Contraseña</string>
+    <string name="configuracion">configuración</string>
     <string name="registro">Registro</string>
-    <string name="salida">Salida</string>
     <string name="entrada">Entrada</string>
     <string name="incidencia">Incidencia</string>
+    <string name="toast_introducir_nombre">Debe introducir un nombre</string>
+    <string name="toast_introducir_correo">Introduce un correo</string>
+    <string name="toast_introducir_apellido">Introduce un apellido</string>
+    <string name="toast_introducir_longitud">La contrasela tiene que tener 6 caracteres</string>
+    <string name="correo_Invalido">Correo invalido</string>
+    <string name="salida">Salida</string>
+    <string name="login">" Acceso"</string>
+    <string name="toast_introducir_email">Introduce un correo</string>
+    <string name="nav_close">Cerrar</string>
+    <string name="nav_open">Abrir</string>
+    <string name="salir">Salir</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

@@ -60,7 +60,7 @@ public class Administrador extends AppCompatActivity {
                 // Recorrer los datos y obtener los nombres de usuario
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String nombre = snapshot.child("nombre").getValue(String.class);
-                    //String apellidos = snapshot.child("apellidos").getValue(String.class);
+                   // String apellidos = snapshot.child("apellidos").getValue(String.class);
                     listaNombres.add(nombre);
                 }
 

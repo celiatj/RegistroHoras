@@ -60,8 +60,8 @@ public class Administrador extends AppCompatActivity {
                 // Recorrer los datos y obtener los nombres de usuario
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String nombre = snapshot.child("nombre").getValue(String.class);
-                    String apellidos = snapshot.child("apellidos").getValue(String.class);
-                    listaNombres.add(nombre+" "+apellidos);
+                    //String apellidos = snapshot.child("apellidos").getValue(String.class);
+                    listaNombres.add(nombre);
                 }
 
                 // Inicializar el adaptador y configurarlo en el RecyclerView

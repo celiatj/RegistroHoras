@@ -281,6 +281,39 @@ public class FirebaseActivity  extends AppCompatActivity {
 
 
             }});
+
+
+        /*
+        mAuth
+                .createUserWithEmailAndPassword("celiatoribio95@gmail.com", "practicas")
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task)
+                    {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_registro_exito).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+
+                            // Creamos ese usuario en la base de datos en tiempo real de Firebase
+                            // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
+                            DatabaseReference refUsuario = db.getReference("usuarios").child("celiatoribio95@gmail.com".replace(".", ""));
+
+                            // Crear un nuevo objeto de datos en formato JSON
+
+                            Map<String, String> datos = new HashMap<>();
+
+                            datos.put("nombre", "CELIA");
+                            datos.put("apellidos", "TORIBIO");
+                            datos.put("correo", "celiatoribio95@gmail.com");
+                            datos.put("Admin","administrador");
+                            databaseReference.child("usuarios").child("celiatoribio95@gmail.com".replace(".", "")).setValue(datos);
+
+                        }}});
+                        */
+
     }
 }
 

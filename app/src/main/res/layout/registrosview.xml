@@ -6,31 +6,23 @@
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/tvDia"
-        android:layout_width="0dp"
+        android:id="@+id/incidenciaTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        android:text="TextView" />
 
     <TextView
-        android:id="@+id/tvHoraEntrada"
-        android:layout_width="0dp"
+        android:id="@+id/tipoTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="?android:textAppearanceMedium"/>
+        android:text="TextView" />
 
     <TextView
-        android:id="@+id/tvHoraSalida"
-        android:layout_width="0dp"
+        android:id="@+id/idTextView"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="?android:textAppearanceMedium"/>
-
-    <TextView
-        android:id="@+id/tvTiempoTotal"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textAppearance="?android:textAppearanceMedium"/>
-
+        android:text="TextView" />
 </LinearLayout>

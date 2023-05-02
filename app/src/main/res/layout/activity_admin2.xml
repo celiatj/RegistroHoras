@@ -4,26 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="30px"
     tools:context=".Admin2">
 
-    <LinearLayout
+
+    <TextView
+        android:id="@+id/tvNombreUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRegistros"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="40dp"
-        android:orientation="vertical"
-        tools:context=".MainActivity2">
-
-        <TextView
-            android:id="@+id/tvNombreEmpl"
-            android:layout_width="match_parent"
-            android:layout_height="65dp" />
-
-        <ListView
-            android:id="@+id/listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            android:background="#BAF8F2F2" />
-    </LinearLayout>
+        android:layout_marginTop="8dp"
+        android:scrollbars="horizontal|vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:listitem="@layout/registrosview" />
 </LinearLayout>

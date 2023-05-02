@@ -19,6 +19,7 @@ public class Administrador extends AppCompatActivity {
     private RecyclerView miRecyclerView;
     private FirebaseDatabase db;
     private ArrayList<String> listaNombres;
+    private MiAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,22 @@ public class Administrador extends AppCompatActivity {
         miRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         listaNombres = new ArrayList<>();
         mostrarDatos();
+
+        // Definir el listener de clics en los elementos del RecyclerView
+        MiAdapter.OnItemClickListener listener = new MiAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                String nombre = listaNombres.get(position);
+                Intent intent = new Intent(Administrador.this, Admin2.class);
+                intent.putExtra("nombre", nombre);
+                startActivity(intent);
+            }
+        };
+
+        // Llamar al método setOnItemClickListener del adaptador
+        MiAdapter adapter = new MiAdapter(listaNombres);
+        adapter.setOnItemClickListener(listener);
+        miRecyclerView.setAdapter(adapter);
     }
 
     private void mostrarDatos() {
@@ -47,10 +64,21 @@ public class Administrador extends AppCompatActivity {
                     listaNombres.add(nombre+" "+apellidos);
                 }
 
-                // Mostrar los nombres en el RecyclerView
-                MiAdapter adapter = new MiAdapter(listaNombres);
+                // Inicializar el adaptador y configurarlo en el RecyclerView
+                adapter = new MiAdapter(listaNombres);
+                adapter.setOnItemClickListener(new MiAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        String nombre = listaNombres.get(position);
+                        Intent intent = new Intent(Administrador.this, Admin2.class);
+                        intent.putExtra("nombre", nombre);
+                        startActivity(intent);
+                    }
+                });
                 miRecyclerView.setAdapter(adapter);
 
+                // Notificar al adaptador de que los datos han cambiado
+                adapter.notifyDataSetChanged();
             }
 
             @Override

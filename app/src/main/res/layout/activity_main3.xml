@@ -110,6 +110,12 @@
         android:text="Total:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/IndicaAntesBoton" />
+
     <Spinner
         android:id="@+id/spnIncidencia"
         android:layout_width="match_parent"
@@ -122,34 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
-        android:background="#4BFFFFFF">
-
-
-        <Button
-            android:id="@+id/btnCalcular2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:text="Calcular"
-            app:iconGravity="start" />
-
-        <Button
-            android:id="@+id/btnGuardar2"
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:text="Guardar" />
-
-    </LinearLayout>
+        android:background="#4BFFFFFF"/>
 
     <Button
         android:id="@+id/btnSalir2"

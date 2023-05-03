@@ -93,12 +93,8 @@ public class MainActivity3 extends AppCompatActivity {
         getSupportActionBar().setTitle(R.string.app_name);
 
         // Guardar debe estar desactivado hasta que se pulse Calcular
-        botonGuardar = findViewById(R.id.btnGuardar2);
-        botonGuardar.setEnabled(false);
 
         botonSalir = findViewById(R.id.btnSalir2);
-        botonGuardar = findViewById(R.id.btnGuardar2);
-        botonCalcular = findViewById(R.id.btnCalcular2);
         total = findViewById(R.id.textViewTotal2);
         registroEntrada = findViewById(R.id.btnRegistroEntrada2);
         entrada = findViewById(R.id.textViewE2);
@@ -204,6 +200,7 @@ System.out.println("Minutos: " + minutos);
 
 
         // gestion del boton calcular
+        /*
         botonCalcular.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -236,45 +233,7 @@ System.out.println("Minutos: " + minutos);
             }
         });
 
-        //boton Guardar
-
-        botonGuardar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(com.example.calculadorhoras.MainActivity3.this, RegistroActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, intent, 0);
-                NotificationManagerCompat gestorNotificaciones = NotificationManagerCompat.from(com.example.calculadorhoras.MainActivity3.this);
-                // Notificacion en la barra superior
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID).setSmallIcon(R.drawable.clock_icon_design_element_logo_element_illustration_clock_symbol_icon_free_vector).setContentTitle("Calculador Horas")
-                        .setContentText("Registro guardado!")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-
-                gestorNotificaciones.notify(1, builder.build());
-
-                try {
-                    horasTotal += "\r\n";
-                    stream.write(horasTotal.getBytes());
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    // Inicializar aplicación de Firebase
-                    FirebaseApp.initializeApp(getApplicationContext());
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                    db = FirebaseDatabase.getInstance();
-                    SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-
-
-                    // Una vez usado el botón de Guardar, lo vuelvo a desactivar (hasta que se haga Calcular de nuevo)
-                    view.setEnabled(false);
-                } catch (
-                        IOException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        });
-
+*/
 
         // Salir de la app
         botonSalir.setOnClickListener(new View.OnClickListener() {

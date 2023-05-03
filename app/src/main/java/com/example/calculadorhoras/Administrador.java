@@ -35,15 +35,19 @@ public class Administrador extends AppCompatActivity {
         MiAdapter.OnItemClickListener listener = new MiAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String nombre = listaNombres.get(position);
+                String nombreCompleto = listaNombres.get(position);
+                String[] partesNombre = nombreCompleto.split(" ");
+                String nombre = partesNombre[0];
+                String apellidos = partesNombre[1];
                 Intent intent = new Intent(Administrador.this, Admin2.class);
                 intent.putExtra("nombre", nombre);
+                intent.putExtra("apellidos", apellidos);
                 startActivity(intent);
             }
         };
 
         // Llamar al método setOnItemClickListener del adaptador
-        MiAdapter adapter = new MiAdapter(listaNombres);
+        adapter = new MiAdapter(listaNombres);
         adapter.setOnItemClickListener(listener);
         miRecyclerView.setAdapter(adapter);
     }
@@ -60,22 +64,10 @@ public class Administrador extends AppCompatActivity {
                 // Recorrer los datos y obtener los nombres de usuario
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     String nombre = snapshot.child("nombre").getValue(String.class);
-                   // String apellidos = snapshot.child("apellidos").getValue(String.class);
-                    listaNombres.add(nombre);
+                    String apellidos = snapshot.child("apellidos").getValue(String.class);
+                    String nombreCompleto = nombre + " " + apellidos;
+                    listaNombres.add(nombreCompleto);
                 }
-
-                // Inicializar el adaptador y configurarlo en el RecyclerView
-                adapter = new MiAdapter(listaNombres);
-                adapter.setOnItemClickListener(new MiAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(int position) {
-                        String nombre = listaNombres.get(position);
-                        Intent intent = new Intent(Administrador.this, Admin2.class);
-                        intent.putExtra("nombre", nombre);
-                        startActivity(intent);
-                    }
-                });
-                miRecyclerView.setAdapter(adapter);
 
                 // Notificar al adaptador de que los datos han cambiado
                 adapter.notifyDataSetChanged();
@@ -88,3 +80,4 @@ public class Administrador extends AppCompatActivity {
         });
     }
 }
+

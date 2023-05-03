@@ -49,6 +49,7 @@
     <string name="nav_close">Cerrar</string>
     <string name="nav_open">Abrir</string>
     <string name="salir">Salir</string>
+    <string name="falloEnLaBase">Fallo en la base de datos</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

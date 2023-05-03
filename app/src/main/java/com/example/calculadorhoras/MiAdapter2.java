@@ -17,7 +17,6 @@ import java.util.List;
 
     public class MiAdapter2 extends RecyclerView.Adapter<MiAdapter2.ViewHolder> {
 
-
         private ArrayList<Registro> mRegistros;
 
         // Clase interna para representar cada elemento del RecyclerView
@@ -51,7 +50,7 @@ import java.util.List;
             Registro registro = mRegistros.get(position);
             holder.mTipoTextView.setText(registro.getTipo());
             holder.mIncidenciaTextView.setText(registro.getIncidencia());
-        holder.midTextView.setText(registro.getId());
+            holder.midTextView.setText(registro.getTextoId());
         }
 
         @Override

@@ -22,8 +22,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
-    public class Admin2 extends AppCompatActivity {
-        private RecyclerView mRecyclerView;
+    public class Admin2 extends AppCompatActivity {    private RecyclerView mRecyclerView;
         private TextView tvnombre;
         private MiAdapter2 mAdapter;
         private ArrayList<Registro> mRegistros;
@@ -38,12 +37,19 @@ import java.util.ArrayList;
 
             // Obtener el correo electrónico del usuario desde los extras del intent
             String nombre = getIntent().getStringExtra("nombre");
-           tvnombre=findViewById(R.id.tvNombreUsuario);
-            tvnombre.setText(nombre);
+            String correo = getIntent().getStringExtra("correo");
+            tvnombre = findViewById(R.id.tvNombreUsuario);
+            tvnombre.setText(correo);
+
+            // Configurar el RecyclerView
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+            mAdapter = new MiAdapter2();
+            mRecyclerView.setAdapter(mAdapter);
+
             // Obtener la referencia a la base de datos
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference usuariosRef = database.getReference("usuarios");
-            Query query = usuariosRef.orderByChild("nombre").equalTo(nombre);
+            Query query = usuariosRef.orderByChild("correo").equalTo(correo);
 
             // Leer los datos de Firebase
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -52,10 +58,10 @@ import java.util.ArrayList;
                     // Recorre la lista de usuarios que coinciden con la consulta.
                     for (DataSnapshot usuarioSnapshot : dataSnapshot.getChildren()) {
                         // Obtén el correo electrónico del usuario.
-                        String correo = usuarioSnapshot.getKey();
+                       // String correo = usuarioSnapshot.getKey();
 
                         // Usa el correo para obtener los registros del usuario.
-                        DatabaseReference registrosRef = usuariosRef.child(correo).child("Registros");
+                        DatabaseReference registrosRef = usuariosRef.child(correo.replace(".", "")).child("Registros");
                         registrosRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -88,10 +94,5 @@ import java.util.ArrayList;
                     // Manejar errores de lectura de la base de datos.
                 }
             });
-
-            // Configurar el RecyclerView
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-            mAdapter = new MiAdapter2();
-            mRecyclerView.setAdapter(mAdapter);
         }
     }

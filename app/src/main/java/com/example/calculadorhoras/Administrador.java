@@ -16,6 +16,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 public class Administrador extends AppCompatActivity {
+
     private RecyclerView miRecyclerView;
     private FirebaseDatabase db;
     private ArrayList<String> listaNombres;
@@ -35,13 +36,9 @@ public class Administrador extends AppCompatActivity {
         MiAdapter.OnItemClickListener listener = new MiAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                String nombreCompleto = listaNombres.get(position);
-                String[] partesNombre = nombreCompleto.split(" ");
-                String nombre = partesNombre[0];
-                String apellidos = partesNombre[1];
+                String correo = listaNombres.get(position);
                 Intent intent = new Intent(Administrador.this, Admin2.class);
-                intent.putExtra("nombre", nombre);
-                intent.putExtra("apellidos", apellidos);
+                intent.putExtra("correo", correo);
                 startActivity(intent);
             }
         };
@@ -61,12 +58,14 @@ public class Administrador extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // Recorrer los datos y obtener los nombres de usuario
+                // Recorrer los datos y obtener los nombres y correos de usuario
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    String nombre = snapshot.child("nombre").getValue(String.class);
-                    String apellidos = snapshot.child("apellidos").getValue(String.class);
-                    String nombreCompleto = nombre + " " + apellidos;
-                    listaNombres.add(nombreCompleto);
+                    DataSnapshot registrosSnapshot = snapshot.child("Registros");
+                    if (registrosSnapshot.exists()) {
+                        String nombre = snapshot.child("nombre").getValue(String.class);
+                        String correo = snapshot.child("correo").getValue(String.class);
+                        listaNombres.add(correo);
+                    }
                 }
 
                 // Notificar al adaptador de que los datos han cambiado
@@ -78,6 +77,4 @@ public class Administrador extends AppCompatActivity {
                 // Manejar errores de lectura de la base de datos
             }
         });
-    }
-}
-
+    }}

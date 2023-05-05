@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/wallpaper13"
+    android:gravity="end"
     android:orientation="vertical"
     tools:context=".MainActivity3"
     tools:ignore="ExtraText">
 
     <TextView
         android:id="@+id/tvE2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:backgroundTint="#B7F1EAEA"
@@ -64,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
+        android:layout_weight="3"
         android:background="#4BFFFFFF">
 
         <Button
@@ -71,31 +73,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="30dp"
             android:backgroundTint="#2241F1"
             android:foregroundGravity="center"
-            android:gravity="center"
-            android:padding="20dp"
+            android:gravity="right"
+            android:paddingLeft="30dp"
+            android:paddingTop="40dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp"
             android:text="@string/entrada"
             android:textSize="20sp"
-            app:icon="@android:drawable/ic_menu_rotate"
-            app:iconGravity="start" />
+            app:icon="@drawable/e"
+            app:iconGravity="top"
+            app:iconSize="40dp" />
 
         <Button
             android:id="@+id/btnRegistroSalida2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="15dp"
             android:backgroundTint="#2241F1"
             android:foregroundGravity="center"
             android:gravity="center"
-            android:padding="20dp"
+            android:paddingStart="40dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="40dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp"
             android:text="@string/salida"
             android:textSize="20sp"
-            app:icon="@android:drawable/ic_menu_rotate"
-            app:iconGravity="start" />
+            app:icon="@drawable/s"
+            app:iconGravity="top"
+            app:iconSize="40dp" />
     </LinearLayout>
 
     <TextView
@@ -128,13 +138,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
-        android:background="#4BFFFFFF"/>
+        android:background="#4BFFFFFF" />
 
     <Button
         android:id="@+id/btnSalir2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:backgroundTint="#2241F1"
         android:text="Salir" />
 

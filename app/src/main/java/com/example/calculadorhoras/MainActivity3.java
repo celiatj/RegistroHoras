@@ -67,7 +67,7 @@ public class MainActivity3 extends AppCompatActivity {
     String horasTotal;
     FileOutputStream stream = null;
     String dia;
-    int horaE, horaS, minE, minS;
+    int horaE, horaS, minE, minS,anyoE,anyoS,mesE,mesS,diaE,diaS;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private Spinner spInci;
@@ -135,7 +135,9 @@ public class MainActivity3 extends AppCompatActivity {
             public void onClick(View view) {
                 contadorE++;
                 Calendar c = Calendar.getInstance();
-                dia = Integer.toString(c.get(Calendar.DATE));
+                diaE = c.get(Calendar.DATE);
+                anyoE = c.get(Calendar.YEAR);
+                mesE = c.get(Calendar.MONTH);
                 String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 horaE = c.get(Calendar.HOUR_OF_DAY);
                 minE = c.get(Calendar.MINUTE);
@@ -153,7 +155,7 @@ public class MainActivity3 extends AppCompatActivity {
                 int posicionInci = spInci.getSelectedItemPosition();
                 datos.put("tipo", "entrada");
                 datos.put("incidencia", inci[posicionInci]);
-                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%s%02d%02d", fecha, horaE, minE)).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE,mesE,diaE, horaE, minE)).setValue(datos);
                 //separar
 
                         /*
@@ -175,7 +177,10 @@ System.out.println("Minutos: " + minutos);
                 contadorE = 0;
                 Calendar c = Calendar.getInstance();
                 dia = Integer.toString(c.get(Calendar.DATE));
-
+                String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
+                diaS = c.get(Calendar.DATE);
+                anyoS = c.get(Calendar.YEAR);
+                mesS = c.get(Calendar.MONTH);
                 horaS = c.get(Calendar.HOUR_OF_DAY);
                 minS = c.get(Calendar.MINUTE);
                 salida.setText(String.format("%02d:%02d", horaS, minS));
@@ -190,7 +195,7 @@ System.out.println("Minutos: " + minutos);
 
                 datos.put("tipo", "salida");
                 datos.put("incidencia", "NO");
-                db.getReference("usuarios").child(corr).child("Registros").child(dia + horaE + minE).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS,mesS,diaS, horaS, minS)).setValue(datos);
 
                 registroEntrada.setEnabled(true);
                 registroSalida.setEnabled(false);

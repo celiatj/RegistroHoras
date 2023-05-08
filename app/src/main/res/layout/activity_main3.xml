@@ -84,9 +84,9 @@
             android:paddingBottom="40dp"
             android:text="@string/entrada"
             android:textSize="20sp"
-            app:icon="@drawable/e"
+            app:icon="@drawable/en"
             app:iconGravity="top"
-            app:iconSize="40dp" />
+            app:iconSize="50dp" />
 
         <Button
             android:id="@+id/btnRegistroSalida2"
@@ -103,9 +103,9 @@
             android:paddingBottom="40dp"
             android:text="@string/salida"
             android:textSize="20sp"
-            app:icon="@drawable/s"
+            app:icon="@drawable/sa"
             app:iconGravity="top"
-            app:iconSize="40dp" />
+            app:iconSize="50dp" />
     </LinearLayout>
 
     <TextView

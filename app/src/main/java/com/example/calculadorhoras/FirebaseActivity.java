@@ -30,8 +30,22 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 
 public class FirebaseActivity  extends AppCompatActivity {
+    public static class NetworkUtils {
+        public static boolean isNetworkAvailable(Context context) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager != null) {
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                return networkInfo != null && networkInfo.isConnected();
+            }
+            return false;
+        }
+    }
 
     private EditText correo;
     private EditText contraseya;
@@ -100,6 +114,10 @@ public class FirebaseActivity  extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        boolean isInternetAvailable = NetworkUtils.isNetworkAvailable(getApplicationContext());
+        if (isInternetAvailable) {
+            // Hay conexión a Internet, realiza las operaciones necesarias
+
         // Guardar correo en las SharedPreferences para posterior uso
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
@@ -315,5 +333,8 @@ public class FirebaseActivity  extends AppCompatActivity {
                         */
 
     }
-}
+     else {
+        // No hay conexión a Internet, toma las medidas adecuadas, como mostrar un mensaje de error
+    }
+}}
 

@@ -61,12 +61,13 @@ public class MainActivity3 extends AppCompatActivity {
     public TextView total;
     public TextView entrada;
     public TextView salida;
-    private Button botonCalcular, registroEntrada, registroSalida;
+    private Button registroEntrada, registroSalida;
     private Button botonSalir;
-    private Button botonGuardar;
+
     String horasTotal;
-    FileOutputStream stream = null;
+
     String dia;
+    String timeE,timeS;
     int horaE, horaS, minE, minS,anyoE,anyoS,mesE,mesS,diaE,diaS;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
@@ -74,7 +75,7 @@ public class MainActivity3 extends AppCompatActivity {
     private String[] inci;
     private ArrayAdapter<String> adaptadorInci;
     final static String CHANNEL_ID = "NOTIFICACIONES";
-    int contadorE;
+    boolean contadorE;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -89,6 +90,8 @@ public class MainActivity3 extends AppCompatActivity {
         // Configuración de idioma
         SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
+         timeE = preferenciasCompartidas.getString("entrada", "");
+        contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
         getSupportActionBar().setTitle(R.string.app_name);
 
@@ -106,7 +109,6 @@ public class MainActivity3 extends AppCompatActivity {
         spInci = (Spinner) findViewById(R.id.spnIncidencia);
         Resources res = getResources();
         inci = res.getStringArray(R.array.array_inci);
-
         adaptadorInci = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, inci);
         spInci.setAdapter(adaptadorInci);
 
@@ -123,58 +125,57 @@ public class MainActivity3 extends AppCompatActivity {
                 // your code here
             }
         });
-
-        Context contexto = getApplicationContext();
-        File path = contexto.getFilesDir();
-        File file = new File(path, "registros.csv");
-
+        timeE = preferenciasCompartidas.getString("entrada", "");
 
         // gestion del boton Entrada
-        registroEntrada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                contadorE++;
-                Calendar c = Calendar.getInstance();
-                diaE = c.get(Calendar.DATE);
-                anyoE = c.get(Calendar.YEAR);
-                mesE = c.get(Calendar.MONTH);
-                String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
-                horaE = c.get(Calendar.HOUR_OF_DAY);
-                minE = c.get(Calendar.MINUTE);
-                entrada.setText(String.format("%02d:%02d", horaE, minE));
-                ;
-                //   FirebaseUser currentUser = mAuth.getCurrentUser();
-                // Inicializar aplicación de Firebase
-                FirebaseApp.initializeApp(getApplicationContext());
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                db = FirebaseDatabase.getInstance();
-                // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                String corr = preferenciasCompartidas.getString("email", "");
+            registroEntrada.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Calendar c = Calendar.getInstance();
+                    diaE = c.get(Calendar.DATE);
+                    anyoE = c.get(Calendar.YEAR);
+                    mesE = c.get(Calendar.MONTH);
+                    String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
+                    horaE = c.get(Calendar.HOUR_OF_DAY);
+                    minE = c.get(Calendar.MINUTE);
 
-                Map<String, String> datos = new HashMap<>();
-                int posicionInci = spInci.getSelectedItemPosition();
-                datos.put("tipo", "entrada");
-                datos.put("incidencia", inci[posicionInci]);
-                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE,mesE,diaE, horaE, minE)).setValue(datos);
-                //separar
+                    timeE = String.format("%02d:%02d", horaE, minE);
+                    entrada.setText(timeE);
+                    SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
+                    editorPreferencias.putString("entrada", timeE);
+                    editorPreferencias.putInt("horaE", horaE);
+                    editorPreferencias.putInt("minE", minE);
+                    ;
+                    //   FirebaseUser currentUser = mAuth.getCurrentUser();
+                    // Inicializar aplicación de Firebase
+                    FirebaseApp.initializeApp(getApplicationContext());
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                    db = FirebaseDatabase.getInstance();
+                    // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                    String corr = preferenciasCompartidas.getString("email", "");
 
-                        /*
-                        String cadena = "231337";
-String dia = cadena.substring(0, 2);
-String horas = cadena.substring(2, 4);
-String minutos = cadena.substring(4, 6);
-System.out.println("Día: " + dia);
-System.out.println("Horas: " + horas);
-System.out.println("Minutos: " + minutos);
-*/
-                registroEntrada.setEnabled(false);
-                registroSalida.setEnabled(true);
-            }
-        });
+                    Map<String, String> datos = new HashMap<>();
+                    int posicionInci = spInci.getSelectedItemPosition();
+                    datos.put("tipo", "entrada");
+                    datos.put("incidencia", inci[posicionInci]);
+                    db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
+
+
+
+                    registroEntrada.setEnabled(false);
+                    registroSalida.setEnabled(true);
+                    contadorE=false;
+                    editorPreferencias.putBoolean("contadorE", false);
+                    editorPreferencias.commit();
+                }
+            });
+
+
         registroSalida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                contadorE = 0;
+                contadorE = true;
+                SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
                 Calendar c = Calendar.getInstance();
                 dia = Integer.toString(c.get(Calendar.DATE));
                 String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
@@ -183,7 +184,10 @@ System.out.println("Minutos: " + minutos);
                 mesS = c.get(Calendar.MONTH);
                 horaS = c.get(Calendar.HOUR_OF_DAY);
                 minS = c.get(Calendar.MINUTE);
-                salida.setText(String.format("%02d:%02d", horaS, minS));
+                horaE= preferenciasCompartidas.getInt("horaE", 0);
+                minE= preferenciasCompartidas.getInt("minE", 0);
+                timeS=String.format("%02d:%02d", horaS, minS);
+                salida.setText(timeS);
                 // Inicializar aplicación de Firebase
                 FirebaseApp.initializeApp(getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -196,50 +200,44 @@ System.out.println("Minutos: " + minutos);
                 datos.put("tipo", "salida");
                 datos.put("incidencia", "NO");
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS,mesS,diaS, horaS, minS)).setValue(datos);
+                // calculamos las horas trabajadas:
+
+                int tE = (horaE * 60) + minE;
+                int tS = (horaS * 60) + minS;
+                int tot;
+
+                if (tS < tE) {
+                    tot = (24 * 60 - tE) + tS;
+                } else {
+                    tot = tS - tE;
+                }
+
+                int horas = tot / 60;
+                int minutos = tot % 60;
+
+
+                // Indicamos al usuario con el textView de total el resultado
+                horasTotal = "Día: " + dia + "; Horas: " + horas + ",Minutos: " + minutos + ";";
+                total.setText(horasTotal);
+                editorPreferencias.putString("salida", timeS);
 
                 registroEntrada.setEnabled(true);
                 registroSalida.setEnabled(false);
+
+                editorPreferencias.putBoolean("contadorE", false);
             }
 
         });
 
-
-        // gestion del boton calcular
-        /*
-        botonCalcular.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (entrada.getText().toString().equals("") || salida.getText().toString().equals("")) {
-                    Toast.makeText(getApplicationContext(), "Debes señalar la hora de entrada y la hora de salida", Toast.LENGTH_SHORT).show();
-                } else {
-
-
-                    //Calculamos la diferencia en minutos para sacar las horas "Trabajadas", luego sacamos horas / 60 y los minutos sera el resto de esta division
-                    int tE = (horaE * 60) + minE;
-                    int tS = (horaS * 60) + minS;
-                    int tot;
-
-                    if (tS < tE) {
-                        tot = (24 * 60 - tE) + tS;
-                    } else {
-                        tot = tS - tE;
-                    }
-
-                    int horas = tot / 60;
-                    int minutos = tot % 60;
-                    // Indicamos al usuario con el textView de total el resultado
-                    horasTotal = "Día: " + dia + "; Horas: " + horas + ",Minutos: " + minutos + ";";
-                    total.setText(horasTotal);
-
-                    // Ahora activo el botón de Guardar, una vez hecho el cálculo
-                    botonGuardar.setEnabled(true);
-                }
-            }
-        });
-
-*/
-
+// Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
+        if (contadorE) {
+            registroEntrada.setEnabled(true);
+            registroSalida.setEnabled(false);
+        } else {
+            registroEntrada.setEnabled(false);
+            registroSalida.setEnabled(true);
+            entrada.setText(timeE);
+        }
         // Salir de la app
         botonSalir.setOnClickListener(new View.OnClickListener() {
             @Override

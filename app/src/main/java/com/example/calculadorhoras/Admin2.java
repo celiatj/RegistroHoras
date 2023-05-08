@@ -40,7 +40,7 @@ public class Admin2 extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
         dateFormat.setLenient(false);
         try {
-            return dateFormat.parse(this.idRegistro.substring(0, 10));
+            return dateFormat.parse(this.idRegistro.substring(0, 12));
         } catch (ParseException e) {
             return null;
         }

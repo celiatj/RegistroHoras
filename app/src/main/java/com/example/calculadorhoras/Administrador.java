@@ -73,7 +73,7 @@ public class Administrador extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+               public void onCancelled(DatabaseError databaseError) {
                 // Manejar errores de lectura de la base de datos
             }
         });

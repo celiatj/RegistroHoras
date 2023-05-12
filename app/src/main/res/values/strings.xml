@@ -51,6 +51,8 @@
     <string name="salir">Salir</string>
     <string name="falloEnLaBase">Fallo en la base de datos</string>
     <string name="IndicaAntesBoton">Indica antes de presionar el boton el tipo de incidencia</string>
+    <string name="toast_sin_conexion">Sin conexion a internet</string>
+    <string name="recuerdame">Recordar correo y contarseña</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

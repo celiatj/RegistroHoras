@@ -196,9 +196,9 @@ public class MainActivity3 extends AppCompatActivity {
                 String corr = preferenciasCompartidas.getString("email", "");
 
                 Map<String, String> datos = new HashMap<>();
-
+                int posicionInci = spInci.getSelectedItemPosition();
                 datos.put("tipo", "salida");
-                datos.put("incidencia", "NO");
+                datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS,mesS,diaS, horaS, minS)).setValue(datos);
                 // calculamos las horas trabajadas:
 
@@ -304,7 +304,7 @@ public class MainActivity3 extends AppCompatActivity {
 
             return true;
         } else if (id == R.id.registro) {
-            Intent objetoMensajero2 = new Intent(getApplicationContext(), RegistroActivity.class);
+            Intent objetoMensajero2 = new Intent(getApplicationContext(), RegistroUsuarios.class);
             startActivity(objetoMensajero2);
 
             return true;

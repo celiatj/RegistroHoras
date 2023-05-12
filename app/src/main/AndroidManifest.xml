@@ -18,6 +18,9 @@
         android:theme="@style/Theme.CalculadorHoras"
         tools:targetApi="31">
         <activity
+            android:name=".RegistroUsuarios"
+            android:exported="false" />
+        <activity
             android:name=".Admin2"
             android:exported="false" />
         <activity
@@ -25,9 +28,7 @@
             android:exported="false" />
         <activity
             android:name=".Administrador"
-            android:exported="false" >
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".FirebaseActivity"
             android:exported="false" />
@@ -39,7 +40,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity
             android:name=".MainActivityConf"

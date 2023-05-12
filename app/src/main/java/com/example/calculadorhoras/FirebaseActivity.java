@@ -334,7 +334,10 @@ public class FirebaseActivity  extends AppCompatActivity {
 
     }
      else {
-        // No hay conexión a Internet, toma las medidas adecuadas, como mostrar un mensaje de error
+            Toast.makeText(getApplicationContext(),
+                            getText(R.string.toast_sin_conexion).toString(),
+                            Toast.LENGTH_LONG)
+                    .show();
     }
 }}
 

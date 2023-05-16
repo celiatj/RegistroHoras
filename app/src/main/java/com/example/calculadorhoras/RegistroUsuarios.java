@@ -45,6 +45,7 @@ public class RegistroUsuarios extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.registro);
         setContentView(R.layout.activity_registro_usuarios);
         Button btnUBuscar = findViewById(R.id.btnUbuscar);
         EditText etUFechaInicio = findViewById(R.id.etUFechaInicio);

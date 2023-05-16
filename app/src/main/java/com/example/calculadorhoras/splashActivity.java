@@ -29,7 +29,7 @@ public class splashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animationView);
         animationView.playAnimation();
-
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 /*
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());

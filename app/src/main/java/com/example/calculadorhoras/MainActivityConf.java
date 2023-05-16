@@ -50,6 +50,7 @@ public class MainActivityConf extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Configuración de idioma
         preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         String codigoIdioma = preferencias.getString("codigo_idioma", "es");

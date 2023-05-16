@@ -1,16 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper13"
-    android:orientation="vertical"
-    tools:context=".MainActivity">
+    android:orientation="vertical">
+    <!-- ViewPager2 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <!-- TabLayout -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:tabGravity="fill"
+        app:tabMode="fixed" />
 
     <TextView
-        android:id="@+id/tvE"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvE2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:backgroundTint="#B7F1EAEA"
@@ -19,7 +29,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
-        android:id="@+id/textViewE"
+        android:id="@+id/textViewE2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -30,16 +40,8 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="24sp" />
 
-    <TimePicker
-        android:id="@+id/timePickerE"
-        android:layout_width="283dp"
-        android:layout_height="151dp"
-        android:layout_gravity="center"
-        android:backgroundTint="#B9F1EAEA"
-        android:timePickerMode="spinner" />
-
     <TextView
-        android:id="@+id/tvS"
+        android:id="@+id/tvS2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -49,7 +51,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
-        android:id="@+id/textViewS"
+        android:id="@+id/textViewS2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -60,16 +62,57 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="24sp" />
 
-    <TimePicker
-        android:id="@+id/timePickerS"
-        android:layout_width="277dp"
-        android:layout_height="138dp"
-        android:layout_gravity="center"
-        android:backgroundTint="#6BF1EAEA"
-        android:timePickerMode="spinner"></TimePicker>
+    <LinearLayout
+        android:id="@+id/linear_layout_configu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="3"
+        android:background="#4BFFFFFF">
+
+        <Button
+            android:id="@+id/btnRegistroEntrada2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="30dp"
+            android:backgroundTint="#2241F1"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:paddingLeft="30dp"
+            android:paddingTop="40dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp"
+            android:text="@string/entrada"
+            android:textSize="20sp"
+            app:icon="@drawable/en"
+            app:iconGravity="top"
+            app:iconSize="50dp" />
+
+        <Button
+            android:id="@+id/btnRegistroSalida2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="#2241F1"
+            android:foregroundGravity="center"
+            android:gravity="center"
+            android:paddingStart="40dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="40dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp"
+            android:text="@string/salida"
+            android:textSize="20sp"
+            app:icon="@drawable/sa"
+            app:iconGravity="top"
+            app:iconSize="50dp" />
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/textViewTotal"
+        android:id="@+id/textViewTotal2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
@@ -80,48 +123,33 @@
         android:text="Total:"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/IndicaAntesBoton" />
+
+    <Spinner
+        android:id="@+id/spnIncidencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:tag="@string/incidencia" />
+
     <LinearLayout
-        android:id="@+id/linear_layout_confiuj"
+        android:id="@+id/linear_layout_confiuj2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
-        android:background="#4BFFFFFF">
-
-
-        <Button
-            android:id="@+id/btnCalcular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:text="Calcular"
-            app:iconGravity="start" />
-
-        <Button
-            android:id="@+id/btnGuardar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:text="Guardar"
-            app:iconGravity="start" />
-
-    </LinearLayout>
+        android:background="#4BFFFFFF"
+        android:orientation="vertical" />
 
     <Button
-        android:id="@+id/btnSalir"
+        android:id="@+id/btnSalir2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right"
+        android:layout_gravity="end"
         android:backgroundTint="#2241F1"
         android:text="Salir" />
 
-
-</LinearLayout>
+    </LinearLayout>

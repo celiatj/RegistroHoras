@@ -1,10 +1,14 @@
 package com.example.calculadorhoras;
 
+import static androidx.constraintlayout.motion.widget.Debug.getLocation;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -14,11 +18,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,8 +47,13 @@ import java.util.Locale;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,8 +79,8 @@ public class MainActivity3 extends AppCompatActivity {
     String horasTotal;
 
     String dia;
-    String timeE,timeS;
-    int horaE, horaS, minE, minS,anyoE,anyoS,mesE,mesS,diaE,diaS;
+    String timeE, timeS;
+    int horaE, horaS, minE, minS, anyoE, anyoS, mesE, mesS, diaE, diaS;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
     private Spinner spInci;
@@ -76,6 +88,8 @@ public class MainActivity3 extends AppCompatActivity {
     private ArrayAdapter<String> adaptadorInci;
     final static String CHANNEL_ID = "NOTIFICACIONES";
     boolean contadorE;
+    String localizacion;
+    private static final int PERMISSION_REQUEST_CODE = 1;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -125,50 +139,57 @@ public class MainActivity3 extends AppCompatActivity {
                 // your code here
             }
         });
-        timeE = preferenciasCompartidas.getString("entrada", "");
+        registroEntrada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar c = Calendar.getInstance();
+                diaE = c.get(Calendar.DATE);
+                anyoE = c.get(Calendar.YEAR);
+                mesE = c.get(Calendar.MONTH);
+                String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
+                horaE = c.get(Calendar.HOUR_OF_DAY);
+                minE = c.get(Calendar.MINUTE);
 
-        // gestion del boton Entrada
-            registroEntrada.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Calendar c = Calendar.getInstance();
-                    diaE = c.get(Calendar.DATE);
-                    anyoE = c.get(Calendar.YEAR);
-                    mesE = c.get(Calendar.MONTH);
-                    String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
-                    horaE = c.get(Calendar.HOUR_OF_DAY);
-                    minE = c.get(Calendar.MINUTE);
+                timeE = String.format("%02d:%02d", horaE, minE);
+                entrada.setText(timeE);
+                SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
+                editorPreferencias.putString("entrada", timeE);
+                editorPreferencias.putInt("horaE", horaE);
+                editorPreferencias.putInt("minE", minE);
+                ;
+                //   FirebaseUser currentUser = mAuth.getCurrentUser();
+                // Inicializar aplicación de Firebase
+                FirebaseApp.initializeApp(getApplicationContext());
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+                db = FirebaseDatabase.getInstance();
+                // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                String corr = preferenciasCompartidas.getString("email", "");
+                String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
+                Map<String, String> datos = new HashMap<>();
+                int posicionInci = spInci.getSelectedItemPosition();
+                datos.put("ubicacion",ubi );
+                datos.put("tipo", "entrada");
+                datos.put("incidencia", inci[posicionInci]);
 
-                    timeE = String.format("%02d:%02d", horaE, minE);
-                    entrada.setText(timeE);
-                    SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
-                    editorPreferencias.putString("entrada", timeE);
-                    editorPreferencias.putInt("horaE", horaE);
-                    editorPreferencias.putInt("minE", minE);
-                    ;
-                    //   FirebaseUser currentUser = mAuth.getCurrentUser();
-                    // Inicializar aplicación de Firebase
-                    FirebaseApp.initializeApp(getApplicationContext());
-                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-                    db = FirebaseDatabase.getInstance();
-                    // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                    String corr = preferenciasCompartidas.getString("email", "");
-
-                    Map<String, String> datos = new HashMap<>();
-                    int posicionInci = spInci.getSelectedItemPosition();
-                    datos.put("tipo", "entrada");
-                    datos.put("incidencia", inci[posicionInci]);
-                    db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
-
-
-
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
+                if (contadorE) {
                     registroEntrada.setEnabled(false);
                     registroSalida.setEnabled(true);
-                    contadorE=false;
+                    contadorE = false;
                     editorPreferencias.putBoolean("contadorE", false);
-                    editorPreferencias.commit();
+                    entrada.setText(timeE);
+                } else {
+                    registroEntrada.setEnabled(true);
+                    registroSalida.setEnabled(false);
+                    contadorE = true;
+                    editorPreferencias.putBoolean("contadorE", true);
+                    salida.setText(timeS);
                 }
-            });
+                editorPreferencias.commit();}
+
+
+
+        });
 
 
         registroSalida.setOnClickListener(new View.OnClickListener() {
@@ -184,9 +205,9 @@ public class MainActivity3 extends AppCompatActivity {
                 mesS = c.get(Calendar.MONTH);
                 horaS = c.get(Calendar.HOUR_OF_DAY);
                 minS = c.get(Calendar.MINUTE);
-                horaE= preferenciasCompartidas.getInt("horaE", 0);
-                minE= preferenciasCompartidas.getInt("minE", 0);
-                timeS=String.format("%02d:%02d", horaS, minS);
+                horaE = preferenciasCompartidas.getInt("horaE", 0);
+                minE = preferenciasCompartidas.getInt("minE", 0);
+                timeS = String.format("%02d:%02d", horaS, minS);
                 salida.setText(timeS);
                 // Inicializar aplicación de Firebase
                 FirebaseApp.initializeApp(getApplicationContext());
@@ -194,12 +215,13 @@ public class MainActivity3 extends AppCompatActivity {
                 db = FirebaseDatabase.getInstance();
                 //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
-
+                String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
+                datos.put("ubicacion", ubi);
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
-                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS,mesS,diaS, horaS, minS)).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
                 // calculamos las horas trabajadas:
 
                 int tE = (horaE * 60) + minE;
@@ -221,18 +243,19 @@ public class MainActivity3 extends AppCompatActivity {
                 total.setText(horasTotal);
                 editorPreferencias.putString("salida", timeS);
 
+                // Guardar el estado del contador antes de cambiar los estados de los botones
                 registroEntrada.setEnabled(true);
                 registroSalida.setEnabled(false);
-
                 editorPreferencias.putBoolean("contadorE", false);
+                editorPreferencias.commit();
             }
-
         });
 
 // Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
         if (contadorE) {
             registroEntrada.setEnabled(true);
             registroSalida.setEnabled(false);
+            salida.setText(timeS);
         } else {
             registroEntrada.setEnabled(false);
             registroSalida.setEnabled(true);
@@ -256,6 +279,7 @@ public class MainActivity3 extends AppCompatActivity {
                 // Establecer botón de respuesta positiva
                 constructorAlerta.setPositiveButton(getResources().getText(R.string.txt_si), (DialogInterface.OnClickListener) (dialog, which) -> {
                     finishAffinity();
+
                 });
 
                 // Establecer botón de respuesta negativa

@@ -77,7 +77,7 @@
             android:layout_marginRight="30dp"
             android:backgroundTint="#2241F1"
             android:foregroundGravity="center"
-            android:gravity="right"
+            android:gravity="center"
             android:paddingLeft="30dp"
             android:paddingTop="40dp"
             android:paddingRight="30dp"
@@ -138,7 +138,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:layout_marginBottom="10dp"
-        android:background="#4BFFFFFF" />
+        android:background="#4BFFFFFF"
+        android:orientation="vertical" />
 
     <Button
         android:id="@+id/btnSalir2"

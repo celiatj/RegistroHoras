@@ -2,10 +2,15 @@ package com.example.calculadorhoras;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,10 +19,16 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
@@ -30,12 +41,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 
-public class FirebaseActivity  extends AppCompatActivity {
+public class FirebaseActivity extends AppCompatActivity {
     public static class NetworkUtils {
         public static boolean isNetworkAvailable(Context context) {
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -57,6 +69,8 @@ public class FirebaseActivity  extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     private FirebaseDatabase db;
     int contador = 0;
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private FusedLocationProviderClient fusedLocationClient;
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -68,14 +82,86 @@ public class FirebaseActivity  extends AppCompatActivity {
         Matcher matcher = pattern.matcher(correo);
         return matcher.matches();
     }
+
+    // Manejar la respuesta de los permisos
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // El permiso ha sido concedido, puedes iniciar la obtención de la ubicación aquí
+                obtenerUbicacion();
+            } else {
+                // El permiso ha sido denegado, puedes mostrar un mensaje o tomar alguna otra acción
+            }
+        }
+    }
+
+    // Método para obtener la ubicación
+    private void obtenerUbicacion() {
+        // Aquí puedes utilizar las API de ubicación de Android para obtener la ubicación del dispositivo
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            double latitude = location.getLatitude();
+                            double longitude = location.getLongitude();
+
+                            // Aquí puedes utilizar las coordenadas de latitud y longitud obtenidas
+                            // por ejemplo, guardarlas en la base de datos o mostrarlas en la interfaz de usuario
+                            SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                            SharedPreferences.Editor editorPreferencias = preferencias.edit();
+
+                            // Ejemplo: Guardar las coordenadas en la base de datos
+                            DatabaseReference ubicacionRef = db.getReference("ubicacion");
+                            ubicacionRef.child("latitude").setValue(latitude);
+                            ubicacionRef.child("longitude").setValue(longitude);
+                            editorPreferencias.putString("longitude", String.valueOf(longitude));;
+                            editorPreferencias.putString("latitud", String.valueOf(latitude));
+                            Toast.makeText(getApplicationContext(),
+                                    longitude + " " + latitude,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // No se pudo obtener la ubicación actual
+                            Toast.makeText(getApplicationContext(),
+                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Ocurrió un error al obtener la ubicación
+                        Toast.makeText(getApplicationContext(),
+                                "Error al obtener la ubicación: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase);
-        
+
+
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
-       
+
         db = FirebaseDatabase.getInstance();
         getSupportActionBar().setTitle(R.string.login);
 
@@ -91,6 +177,51 @@ public class FirebaseActivity  extends AppCompatActivity {
 
         registro = findViewById(R.id.btnregistro);
         login = findViewById(R.id.btnlogin);
+        SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        SharedPreferences.Editor editorPreferencias = preferencias.edit();
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Verificar si se ha concedido el permiso de ubicación
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // El permiso no se ha concedido, se solicita al usuario
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            // El permiso ya se ha concedido, puedes iniciar la obtención de la ubicación aquí
+            obtenerUbicacion();
+        }
+
+
+
+
+        CheckBox checkBox = findViewById(R.id.checkBox);
+        checkBox.setChecked(preferencias.getBoolean("record", false));
+        if (checkBox.isChecked()) {
+            String correoT = preferencias.getString("correo", "");
+            String contrasenya = preferencias.getString("contrasenya", "");
+            contraseya.setText(contrasenya);
+            correo.setText(correoT);
+        }
+
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editorPreferencias.putBoolean("record", isChecked);
+                editorPreferencias.apply(); // Guarda los cambios en SharedPreferences
+
+                if (isChecked) {
+                    // CheckBox marcado
+                    String correoT = preferencias.getString("correo", "");
+                    String contrasenya = preferencias.getString("contrasenya", "");
+                    contraseya.setText(contrasenya);
+                    correo.setText(correoT);
+                } else {
+                    // CheckBox desmarcado
+                }
+            }
+        });
 
     }
 
@@ -208,6 +339,7 @@ public class FirebaseActivity  extends AppCompatActivity {
                                         datos.put("nombre", nom);
                                         datos.put("apellidos", ap);
                                         datos.put("correo", corr);
+                                        //datos.put("Admin",false);
                                         databaseReference.child("usuarios").child(corr.replace(".", "")).setValue(datos);
 
 
@@ -234,6 +366,8 @@ public class FirebaseActivity  extends AppCompatActivity {
                     contador = 0;
                     Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
                     editorPreferencias.putString("email", corr.replace(".", ""));
+                    editorPreferencias.putString("correo", corr);
+                    editorPreferencias.putString("contrasenya", cont);
                     editorPreferencias.commit();
                     startActivity(objetoMensajero);
             }}
@@ -280,6 +414,8 @@ public class FirebaseActivity  extends AppCompatActivity {
 
 
                                             editorPreferencias.putString("email", correoText.replace(".", ""));
+                                            editorPreferencias.putString("correo", correoText);
+                                            editorPreferencias.putString("contrasenya", contrasenaText);
                                             editorPreferencias.commit();
 
                                             // Como el login es exitoso, ir a la Activity principal
@@ -299,7 +435,24 @@ public class FirebaseActivity  extends AppCompatActivity {
 
 
             }});
+            CheckBox checkBox = findViewById(R.id.checkBox);
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    editorPreferencias.putBoolean("record", isChecked);
+                    editorPreferencias.apply(); // Guarda los cambios en SharedPreferences
 
+                    if (isChecked) {
+                        // CheckBox marcado
+                        String correoT = preferencias.getString("correo", "");
+                        String contrasenya = preferencias.getString("contrasenya", "");
+                        contraseya.setText(contrasenya);
+                        correo.setText(correoT);
+                    } else {
+                        // CheckBox desmarcado
+                    }
+                }
+            });
 
         /*
         mAuth
@@ -326,11 +479,12 @@ public class FirebaseActivity  extends AppCompatActivity {
                             datos.put("nombre", "CELIA");
                             datos.put("apellidos", "TORIBIO");
                             datos.put("correo", "celiatoribio95@gmail.com");
-                            datos.put("Admin","administrador");
+                            datos.put("Admin",true);
                             databaseReference.child("usuarios").child("celiatoribio95@gmail.com".replace(".", "")).setValue(datos);
 
                         }}});
                         */
+
 
     }
      else {

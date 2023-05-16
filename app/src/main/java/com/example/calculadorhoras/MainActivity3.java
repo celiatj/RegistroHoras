@@ -238,8 +238,8 @@ public class MainActivity3 extends AppCompatActivity {
                 Calendar c = Calendar.getInstance();
                 diaE = c.get(Calendar.DATE);
                 anyoE = c.get(Calendar.YEAR);
-                mesE = c.get(Calendar.MONTH);
-                String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
+                mesE = c.get(Calendar.MONTH)+1;
+              //  String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 horaE = c.get(Calendar.HOUR_OF_DAY);
                 minE = c.get(Calendar.MINUTE);
 
@@ -287,7 +287,7 @@ public class MainActivity3 extends AppCompatActivity {
                 String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 diaS = c.get(Calendar.DATE);
                 anyoS = c.get(Calendar.YEAR);
-                mesS = c.get(Calendar.MONTH);
+                mesS = c.get(Calendar.MONTH)+1;
                 horaS = c.get(Calendar.HOUR_OF_DAY);
                 minS = c.get(Calendar.MINUTE);
                 horaE = preferenciasCompartidas.getInt("horaE", 0);

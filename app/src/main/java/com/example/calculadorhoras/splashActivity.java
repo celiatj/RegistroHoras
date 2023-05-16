@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,10 +27,12 @@ public class splashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_splash);
         LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animationView);
         animationView.playAnimation();
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+      //  getSupportActionBar().setDisplayShowTitleEnabled(false);
 /*
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());

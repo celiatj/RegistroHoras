@@ -8,6 +8,7 @@
     android:accessibilityTraversalAfter="@id/animationView"
     android:background="@drawable/wallpaper13"
     android:orientation="vertical"
+    android:theme="@android:style/Theme.NoTitleBar"
     tools:context=".splashActivity">
 
     <LinearLayout

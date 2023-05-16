@@ -69,8 +69,7 @@ public class FirebaseActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
     private FirebaseDatabase db;
     int contador = 0;
-    private static final int PERMISSION_REQUEST_CODE = 1;
-    private FusedLocationProviderClient fusedLocationClient;
+
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private static final String EMAIL_PATTERN =
             "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -83,73 +82,7 @@ public class FirebaseActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
-    // Manejar la respuesta de los permisos
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // El permiso ha sido concedido, puedes iniciar la obtención de la ubicación aquí
-                obtenerUbicacion();
-            } else {
-                // El permiso ha sido denegado, puedes mostrar un mensaje o tomar alguna otra acción
-            }
-        }
-    }
 
-    // Método para obtener la ubicación
-    private void obtenerUbicacion() {
-        // Aquí puedes utilizar las API de ubicación de Android para obtener la ubicación del dispositivo
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-
-                            // Aquí puedes utilizar las coordenadas de latitud y longitud obtenidas
-                            // por ejemplo, guardarlas en la base de datos o mostrarlas en la interfaz de usuario
-                            SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                            SharedPreferences.Editor editorPreferencias = preferencias.edit();
-
-                            // Ejemplo: Guardar las coordenadas en la base de datos
-                            DatabaseReference ubicacionRef = db.getReference("ubicacion");
-                            ubicacionRef.child("latitude").setValue(latitude);
-                            ubicacionRef.child("longitude").setValue(longitude);
-                            editorPreferencias.putString("longitude", String.valueOf(longitude));;
-                            editorPreferencias.putString("latitud", String.valueOf(latitude));
-                            Toast.makeText(getApplicationContext(),
-                                    longitude + " " + latitude,
-                                    Toast.LENGTH_SHORT).show();
-                        } else {
-                            // No se pudo obtener la ubicación actual
-                            Toast.makeText(getApplicationContext(),
-                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Ocurrió un error al obtener la ubicación
-                        Toast.makeText(getApplicationContext(),
-                                "Error al obtener la ubicación: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
 
 
 
@@ -180,18 +113,7 @@ public class FirebaseActivity extends AppCompatActivity {
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        // Verificar si se ha concedido el permiso de ubicación
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // El permiso no se ha concedido, se solicita al usuario
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSION_REQUEST_CODE);
-        } else {
-            // El permiso ya se ha concedido, puedes iniciar la obtención de la ubicación aquí
-            obtenerUbicacion();
-        }
+
 
 
 

@@ -89,8 +89,71 @@ public class MainActivity3 extends AppCompatActivity {
     final static String CHANNEL_ID = "NOTIFICACIONES";
     boolean contadorE;
     String localizacion;
+    double longitude,latitude;
+    Map<String, String> ubicacion = new HashMap<>();
     private static final int PERMISSION_REQUEST_CODE = 1;
+    private FusedLocationProviderClient fusedLocationClient;
+    // Manejar la respuesta de los permisos
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // El permiso ha sido concedido, puedes iniciar la obtención de la ubicación aquí
+                obtenerUbicacion();
+            } else {
+                // El permiso ha sido denegado, puedes mostrar un mensaje o tomar alguna otra acción
+            }
+        }
+    }
 
+    // Método para obtener la ubicación
+    private void obtenerUbicacion() {
+        // Aquí puedes utilizar las API de ubicación de Android para obtener la ubicación del dispositivo
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            latitude = location.getLatitude();
+                            longitude = location.getLongitude();
+
+                            // Aquí puedes utilizar las coordenadas de latitud y longitud obtenidas
+                            // por ejemplo, guardarlas en la base de datos o mostrarlas en la interfaz de usuario
+                            ubicacion.put("latitude", String.valueOf(latitude));
+                            ubicacion.put("longitude", String.valueOf(longitude));
+
+                            Toast.makeText(getApplicationContext(),
+                                    longitude + " " + latitude,
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            // No se pudo obtener la ubicación actual
+                            Toast.makeText(getApplicationContext(),
+                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Ocurrió un error al obtener la ubicación
+                        Toast.makeText(getApplicationContext(),
+                                "Error al obtener la ubicación: " + e.getMessage(),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +171,21 @@ public class MainActivity3 extends AppCompatActivity {
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
         getSupportActionBar().setTitle(R.string.app_name);
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        // Verificar si se ha concedido el permiso de ubicación
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // El permiso no se ha concedido, se solicita al usuario
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSION_REQUEST_CODE);
+        } else {
+            // El permiso ya se ha concedido, puedes iniciar la obtención de la ubicación aquí
+            obtenerUbicacion();
+        }
+
+
 
         // Guardar debe estar desactivado hasta que se pulse Calcular
 
@@ -139,6 +217,21 @@ public class MainActivity3 extends AppCompatActivity {
                 // your code here
             }
         });
+
+        // Recuperar el valor de contadorE de las preferencias compartidas
+        contadorE = preferenciasCompartidas.getBoolean("contadorE", true);
+
+// Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
+        if (contadorE) {
+            registroEntrada.setEnabled(true);
+            registroSalida.setEnabled(false);
+            salida.setText(timeS);
+        } else {
+            registroEntrada.setEnabled(false);
+            registroSalida.setEnabled(true);
+            entrada.setText(timeE);
+        }
+
         registroEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -164,27 +257,19 @@ public class MainActivity3 extends AppCompatActivity {
                 db = FirebaseDatabase.getInstance();
                 // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
-                String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
+                //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
-                datos.put("ubicacion",ubi );
+               // datos.put("ubicacion", String.valueOf(ubicacion));
                 datos.put("tipo", "entrada");
                 datos.put("incidencia", inci[posicionInci]);
 
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
-                if (contadorE) {
-                    registroEntrada.setEnabled(false);
-                    registroSalida.setEnabled(true);
-                    contadorE = false;
-                    editorPreferencias.putBoolean("contadorE", false);
-                    entrada.setText(timeE);
-                } else {
-                    registroEntrada.setEnabled(true);
-                    registroSalida.setEnabled(false);
-                    contadorE = true;
-                    editorPreferencias.putBoolean("contadorE", true);
-                    salida.setText(timeS);
-                }
+               // db.getReference("usuarios").child(corr).child("Registros").child("ubicacion").setValue(ubicacion);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).child("ubicacion").setValue(ubicacion);
+
+                editorPreferencias.putBoolean("contadorE", false);
+
                 editorPreferencias.commit();}
 
 
@@ -215,13 +300,14 @@ public class MainActivity3 extends AppCompatActivity {
                 db = FirebaseDatabase.getInstance();
                 //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
-                String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
+                //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
-                datos.put("ubicacion", ubi);
+
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).child("ubicacion").setValue(ubicacion);
                 // calculamos las horas trabajadas:
 
                 int tE = (horaE * 60) + minE;
@@ -244,23 +330,16 @@ public class MainActivity3 extends AppCompatActivity {
                 editorPreferencias.putString("salida", timeS);
 
                 // Guardar el estado del contador antes de cambiar los estados de los botones
-                registroEntrada.setEnabled(true);
-                registroSalida.setEnabled(false);
-                editorPreferencias.putBoolean("contadorE", false);
+
+                editorPreferencias.putBoolean("contadorE", true);
                 editorPreferencias.commit();
+               // entrada.setText("");
+               // editorPreferencias.putString("entrada", "");
             }
+
         });
 
-// Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
-        if (contadorE) {
-            registroEntrada.setEnabled(true);
-            registroSalida.setEnabled(false);
-            salida.setText(timeS);
-        } else {
-            registroEntrada.setEnabled(false);
-            registroSalida.setEnabled(true);
-            entrada.setText(timeE);
-        }
+
         // Salir de la app
         botonSalir.setOnClickListener(new View.OnClickListener() {
             @Override

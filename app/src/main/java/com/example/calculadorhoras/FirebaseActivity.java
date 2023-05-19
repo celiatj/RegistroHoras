@@ -167,188 +167,113 @@ public class FirebaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        boolean isInternetAvailable = NetworkUtils.isNetworkAvailable(getApplicationContext());
-        if (isInternetAvailable) {
-            // Hay conexión a Internet, realiza las operaciones necesarias
+
 
         // Guardar correo en las SharedPreferences para posterior uso
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
-        Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity3.class);
+        Intent objetoMensajero = new Intent(getApplicationContext(), MainActivity.class);
+        Intent objetoMensajeroAdmin = new Intent(getApplicationContext(), Administrador.class);
        // Intent objetoMensajeroDatos = new Intent(getApplicationContext(), MainActivityConf.class);
 
         registro.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View view) {
-                 contador++;
+                boolean isInternetAvailable = NetworkUtils.isNetworkAvailable(getApplicationContext());
+                if (isInternetAvailable) {
+                    // Hay conexión a Internet, realiza las operaciones necesarias
+                    contador++;
 
-                if (contador == 1) {
-                    nombre.setVisibility(View.VISIBLE);
-                    apellido.setVisibility(View.VISIBLE);
-                    login.setEnabled(false);
-                    // Avisa al usuario que tiene que pulsar de nuevo
-                    Toast.makeText(getApplicationContext(), "Pulse de nuevo para completar el registro", Toast.LENGTH_SHORT).show();
-                } else if (contador >= 2) {
-                String nom = nombre.getText().toString();
-                String ap = apellido.getText().toString();
-                String corr = correo.getText().toString();
-                String cont = contraseya.getText().toString();
+                    if (contador == 1) {
+                        nombre.setVisibility(View.VISIBLE);
+                        apellido.setVisibility(View.VISIBLE);
+                        login.setEnabled(false);
+                        // Avisa al usuario que tiene que pulsar de nuevo
+                        Toast.makeText(getApplicationContext(), "Pulse de nuevo para completar el registro", Toast.LENGTH_SHORT).show();
+                    } else if (contador >= 2) {
+                        String nom = nombre.getText().toString();
+                        String ap = apellido.getText().toString();
+                        String corr = correo.getText().toString();
+                        String cont = contraseya.getText().toString();
 
-                if (TextUtils.isEmpty(nom)) {
-                    Toast.makeText(getApplicationContext(),
-                                    getText(R.string.toast_introducir_nombre).toString(),
-                                    Toast.LENGTH_LONG)
-                            .show();return;}
-                    if (TextUtils.isEmpty(corr)) {
-                        Toast.makeText(getApplicationContext(),
-                                        getText(R.string.toast_introducir_correo).toString(),
-                                        Toast.LENGTH_LONG)
-                                .show();
-                        return;}
+                        if (TextUtils.isEmpty(nom)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_nombre).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+                        if (TextUtils.isEmpty(corr)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_correo).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
                         if (TextUtils.isEmpty(ap)) {
                             Toast.makeText(getApplicationContext(),
                                             getText(R.string.toast_introducir_apellido).toString(),
                                             Toast.LENGTH_LONG)
                                     .show();
-                            return;}
-                            if (TextUtils.isEmpty(cont)) {
+                            return;
+                        }
+                        if (TextUtils.isEmpty(cont)) {
 
-                        Toast.makeText(getApplicationContext(),
-                                        getText(R.string.toast_introducir_password).toString(),
-                                        Toast.LENGTH_LONG)
-                                .show();
-                        return;
-                    }
-                if(cont.length()<6){
-                    Toast.makeText(getApplicationContext(),
-                                    getText(R.string.toast_introducir_longitud).toString(),
-                                    Toast.LENGTH_LONG)
-                            .show();
-                    return;
-                }
-                    if (!validarCorreo(corr)) {
-                        Toast.makeText(getApplicationContext(),
-                                        getText(R.string.correo_Invalido).toString(),
-                                        Toast.LENGTH_LONG)
-                                .show();
-                        return;
-                    }
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_password).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+                        if (cont.length() < 6) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_longitud).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+                        if (!validarCorreo(corr)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.correo_Invalido).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
 
-                    // create new user or register new user
-                    mAuth
-                            .createUserWithEmailAndPassword(corr, cont)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        // create new user or register new user
+                        mAuth
+                                .createUserWithEmailAndPassword(corr, cont)
+                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task)
-                                {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(getApplicationContext(),
-                                                        getText(R.string.toast_registro_exito).toString(),
-                                                        Toast.LENGTH_LONG)
-                                                .show();
-
-                                        // Creamos ese usuario en la base de datos en tiempo real de Firebase
-                                        // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
-                                        DatabaseReference refUsuario = db.getReference("usuarios").child(corr.replace(".", ""));
-
-                                        // Crear un nuevo objeto de datos en formato JSON
-
-                                        Map<String, String> datos = new HashMap<>();
-
-                                        datos.put("nombre", nom);
-                                        datos.put("apellidos", ap);
-                                        datos.put("correo", corr);
-                                        //datos.put("Admin",false);
-                                        databaseReference.child("usuarios").child(corr.replace(".", "")).setValue(datos);
-
-
-                                    }
-                                    else {
-
-                                        // Registro fallido
-                                        Toast.makeText(
-                                                        getApplicationContext(),
-                                                        getText(R.string.toast_registro_fallo).toString(),
-                                                        Toast.LENGTH_LONG)
-                                                .show();
-                                    }
-                                }
-                            });
-
-
-                   // objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
-                   // startActivity(objetoMensajeroDatos);
-                    /*
-                    objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
-*/
-                    // Reinicia el contador para permitir la próxima secuencia de pulsaciones
-                    contador = 0;
-                    Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
-                    editorPreferencias.putString("email", corr.replace(".", ""));
-                    editorPreferencias.putString("correo", corr);
-                    editorPreferencias.putString("contrasenya", cont);
-                    editorPreferencias.commit();
-                    startActivity(objetoMensajero);
-            }}
-        });
-
-
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String correoText = correo.getText().toString();
-                String contrasenaText = contraseya.getText().toString();
-
-
-                // validations for input email and password
-                if (TextUtils.isEmpty(correoText)) {
-                    Toast.makeText(getApplicationContext(),
-                                    getText(R.string.toast_introducir_email).toString(),
-                                    Toast.LENGTH_LONG)
-                            .show();
-                    return;
-                }
-
-                if (TextUtils.isEmpty(contrasenaText)) {
-                    Toast.makeText(getApplicationContext(),
-                                    getText(R.string.toast_introducir_password).toString(),
-                                    Toast.LENGTH_LONG)
-                            .show();
-                    return;
-                }
-
-                // signin existing user
-                mAuth.signInWithEmailAndPassword(correoText, contrasenaText)
-                        .addOnCompleteListener(
-                                new OnCompleteListener<AuthResult>() {
                                     @Override
-                                    public void onComplete(
-                                            @NonNull Task<AuthResult> task) {
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(getApplicationContext(),
-                                                            getText(R.string.toast_identificacion_exito).toString() + " " + correoText,
+                                                            getText(R.string.toast_registro_exito).toString(),
                                                             Toast.LENGTH_LONG)
                                                     .show();
 
+                                            // Creamos ese usuario en la base de datos en tiempo real de Firebase
+                                            // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
+                                            DatabaseReference refUsuario = db.getReference("usuarios").child(corr.replace(".", ""));
 
-                                            editorPreferencias.putString("email", correoText.replace(".", ""));
-                                            editorPreferencias.putString("correo", correoText);
-                                            editorPreferencias.putString("contrasenya", contrasenaText);
-                                            editorPreferencias.commit();
+                                            // Crear un nuevo objeto de datos en formato JSON
 
-                                            // Como el login es exitoso, ir a la Activity principal
-                                            startActivity(objetoMensajero);
-                                           // objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
-                                           // startActivity(objetoMensajeroDatos);
+                                            Map<String, String> datos = new HashMap<>();
+
+                                            datos.put("nombre", nom);
+                                            datos.put("apellidos", ap);
+                                            datos.put("correo", corr);
+                                            //datos.put("Admin",false);
+                                            databaseReference.child("usuarios").child(corr.replace(".", "")).setValue(datos);
+
+
                                         } else {
 
-                                            // sign-in failed
-                                            Toast.makeText(getApplicationContext(),
-                                                            getText(R.string.toast_identificacion_fallo).toString(),
+                                            // Registro fallido
+                                            Toast.makeText(
+                                                            getApplicationContext(),
+                                                            getText(R.string.toast_registro_fallo).toString(),
                                                             Toast.LENGTH_LONG)
                                                     .show();
                                         }
@@ -356,7 +281,98 @@ public class FirebaseActivity extends AppCompatActivity {
                                 });
 
 
-            }});
+                        // objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
+                        // startActivity(objetoMensajeroDatos);
+                    /*
+                    objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
+*/
+                        // Reinicia el contador para permitir la próxima secuencia de pulsaciones
+                        contador = 0;
+                        Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+                        editorPreferencias.putString("email", corr.replace(".", ""));
+                        editorPreferencias.putString("correo", corr);
+                        editorPreferencias.putString("contrasenya", cont);
+                        editorPreferencias.commit();
+                        startActivity(objetoMensajero);
+                    }
+                }
+            else {
+                    Toast.makeText(getApplicationContext(),
+                                    getText(R.string.toast_sin_conexion).toString(),
+                                    Toast.LENGTH_LONG)
+                            .show();
+                } }});
+
+
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    boolean isInternetAvailable = NetworkUtils.isNetworkAvailable(getApplicationContext());
+                    if (isInternetAvailable) {
+                        // Hay conexión a Internet, realiza las operaciones necesarias
+
+                        String correoText = correo.getText().toString();
+                        String contrasenaText = contraseya.getText().toString();
+
+
+                        // validations for input email and password
+                        if (TextUtils.isEmpty(correoText)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_email).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+
+                        if (TextUtils.isEmpty(contrasenaText)) {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_introducir_password).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                            return;
+                        }
+
+                        // signin existing user
+                        mAuth.signInWithEmailAndPassword(correoText, contrasenaText)
+                                .addOnCompleteListener(
+                                        new OnCompleteListener<AuthResult>() {
+                                            @Override
+                                            public void onComplete(
+                                                    @NonNull Task<AuthResult> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(getApplicationContext(),
+                                                                    getText(R.string.toast_identificacion_exito).toString() + " " + correoText,
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
+
+
+                                                    editorPreferencias.putString("email", correoText.replace(".", ""));
+                                                    editorPreferencias.putString("correo", correoText);
+                                                    editorPreferencias.putString("contrasenya", contrasenaText);
+                                                    editorPreferencias.commit();
+//if(esAdmin(correoText)){ startActivity(objetoMensajeroAdmin);}else{}
+                                                    // Como el login es exitoso, ir a la Activity principal
+                                                    startActivity(objetoMensajero);
+                                                    // objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
+                                                    // startActivity(objetoMensajeroDatos);
+                                                } else {
+
+                                                    // sign-in failed
+                                                    Toast.makeText(getApplicationContext(),
+                                                                    getText(R.string.toast_identificacion_fallo).toString(),
+                                                                    Toast.LENGTH_LONG)
+                                                            .show();
+                                                }
+                                            }
+                                        });
+                    }else {
+                            Toast.makeText(getApplicationContext(),
+                                            getText(R.string.toast_sin_conexion).toString(),
+                                            Toast.LENGTH_LONG)
+                                    .show();
+                        } }});
+
+
             CheckBox checkBox = findViewById(R.id.checkBox);
             checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -409,11 +425,6 @@ public class FirebaseActivity extends AppCompatActivity {
 
 
     }
-     else {
-            Toast.makeText(getApplicationContext(),
-                            getText(R.string.toast_sin_conexion).toString(),
-                            Toast.LENGTH_LONG)
-                    .show();
-    }
-}}
+
+}
 

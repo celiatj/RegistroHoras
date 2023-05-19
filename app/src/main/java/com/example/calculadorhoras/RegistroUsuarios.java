@@ -1,12 +1,15 @@
 package com.example.calculadorhoras;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +50,14 @@ public class RegistroUsuarios extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.registro);
         setContentView(R.layout.activity_registro_usuarios);
+
+        // Agregar un fragmento a tu actividad
+        Fragment fragment = new MiFragmento2();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container2, fragment)
+                .commit();
+
+
         Button btnUBuscar = findViewById(R.id.btnUbuscar);
         EditText etUFechaInicio = findViewById(R.id.etUFechaInicio);
         EditText etUFechaFin = findViewById(R.id.etUFechaFin);
@@ -154,5 +165,12 @@ public class RegistroUsuarios extends AppCompatActivity {
                     }
                 });
             }
-        });
-    }}
+        });}
+
+    public static class MiFragmento2 extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.activity_registro_usuarios, container, false);
+        }
+    }
+}

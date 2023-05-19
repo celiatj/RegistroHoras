@@ -26,9 +26,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -49,6 +51,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -75,9 +78,7 @@ public class MainActivity3 extends AppCompatActivity {
     public TextView salida;
     private Button registroEntrada, registroSalida;
     private Button botonSalir;
-
     String horasTotal;
-
     String dia;
     String timeE, timeS;
     int horaE, horaS, minE, minS, anyoE, anyoS, mesE, mesS, diaE, diaS;
@@ -93,7 +94,15 @@ public class MainActivity3 extends AppCompatActivity {
     Map<String, String> ubicacion = new HashMap<>();
     private static final int PERMISSION_REQUEST_CODE = 1;
     private FusedLocationProviderClient fusedLocationClient;
+
     // Manejar la respuesta de los permisos
+    public static class MiFragmento extends Fragment {
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            return inflater.inflate(R.layout.activity_main3, container, false);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -156,10 +165,18 @@ public class MainActivity3 extends AppCompatActivity {
     }
     @SuppressLint("MissingInflatedId")
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
         getSupportActionBar().setTitle(R.string.app_name);
+
+        // Agregar un fragmento a tu actividad
+        Fragment fragment = new MiFragmento();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .commit();
+
+
         total = findViewById(R.id.textViewTotal2);
 
         // Crear canal de notificaciones
@@ -221,15 +238,17 @@ public class MainActivity3 extends AppCompatActivity {
         // Recuperar el valor de contadorE de las preferencias compartidas
         contadorE = preferenciasCompartidas.getBoolean("contadorE", true);
 
-// Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
+       // Actualiza la visibilidad y el texto de los botones y la entrada según el valor de contadorE
         if (contadorE) {
             registroEntrada.setEnabled(true);
             registroSalida.setEnabled(false);
             salida.setText(timeS);
+
         } else {
             registroEntrada.setEnabled(false);
             registroSalida.setEnabled(true);
             entrada.setText(timeE);
+
         }
 
         registroEntrada.setOnClickListener(new View.OnClickListener() {
@@ -238,8 +257,8 @@ public class MainActivity3 extends AppCompatActivity {
                 Calendar c = Calendar.getInstance();
                 diaE = c.get(Calendar.DATE);
                 anyoE = c.get(Calendar.YEAR);
-                mesE = c.get(Calendar.MONTH)+1;
-              //  String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
+                mesE = c.get(Calendar.MONTH) + 1;
+                //  String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 horaE = c.get(Calendar.HOUR_OF_DAY);
                 minE = c.get(Calendar.MINUTE);
 
@@ -260,19 +279,20 @@ public class MainActivity3 extends AppCompatActivity {
                 //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
-               // datos.put("ubicacion", String.valueOf(ubicacion));
+                // datos.put("ubicacion", String.valueOf(ubicacion));
                 datos.put("tipo", "entrada");
                 datos.put("incidencia", inci[posicionInci]);
 
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
-               // db.getReference("usuarios").child(corr).child("Registros").child("ubicacion").setValue(ubicacion);
+                // db.getReference("usuarios").child(corr).child("Registros").child("ubicacion").setValue(ubicacion);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).child("ubicacion").setValue(ubicacion);
 
                 editorPreferencias.putBoolean("contadorE", false);
 
-                editorPreferencias.commit();}
-
-
+                editorPreferencias.commit();
+                registroSalida.setEnabled(true);
+                registroEntrada.setEnabled(false);
+            }
 
         });
 
@@ -333,6 +353,9 @@ public class MainActivity3 extends AppCompatActivity {
 
                 editorPreferencias.putBoolean("contadorE", true);
                 editorPreferencias.commit();
+                registroEntrada.setEnabled(true);
+                registroSalida.setEnabled(false);
+                editorPreferencias.putString("entrada", "");
                // entrada.setText("");
                // editorPreferencias.putString("entrada", "");
             }
@@ -387,7 +410,7 @@ public class MainActivity3 extends AppCompatActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         outState.putString("total", total.getText().toString());
@@ -449,6 +472,11 @@ public class MainActivity3 extends AppCompatActivity {
             gestorNotificaciones.createNotificationChannel(canal);
         }
 
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+        super.onPointerCaptureChanged(hasCapture);
     }
 
 }

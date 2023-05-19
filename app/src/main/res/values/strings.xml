@@ -55,6 +55,8 @@
     <string name="recuerdame">Recordar correo y contarseña</string>
     <string name="navigation_drawer_open">abrir</string>
     <string name="navigation_drawer_close">cerrar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

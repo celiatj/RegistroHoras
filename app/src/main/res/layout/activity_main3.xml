@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/wallpaper13"
-    android:gravity="end"
-    android:orientation="vertical"
-    tools:context=".MainActivity3"
-    tools:ignore="ExtraText">
+    android:id="@+id/fragment_container"
+    tools:context=".MainActivity3">
 
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/wallpaper13"
+        android:gravity="end"
+        android:orientation="vertical"
+        tools:ignore="ExtraText">
+
+     <TextView
         android:id="@+id/tvE2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,12 +35,7 @@
         android:backgroundTint="#6BF1EAEA"
         android:fontFamily="sans-serif"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="24sp" /><![CDATA[
-
-    />
-
-
-    ]]>
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/tvS2"
@@ -84,9 +84,7 @@
             android:paddingBottom="40dp"
             android:text="@string/entrada"
             android:textSize="20sp"
-            app:icon="@drawable/en"
-            app:iconGravity="top"
-            app:iconSize="50dp" />
+           />
 
         <Button
             android:id="@+id/btnRegistroSalida2"
@@ -103,9 +101,7 @@
             android:paddingBottom="40dp"
             android:text="@string/salida"
             android:textSize="20sp"
-            app:icon="@drawable/sa"
-            app:iconGravity="top"
-            app:iconSize="50dp" />
+            />
     </LinearLayout>
 
     <TextView
@@ -150,3 +146,4 @@
         android:text="Salir" />
 
 </LinearLayout>
+</FrameLayout>

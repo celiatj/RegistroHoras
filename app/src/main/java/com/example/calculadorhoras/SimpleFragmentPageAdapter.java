@@ -14,9 +14,8 @@ public class SimpleFragmentPageAdapter extends FragmentPagerAdapter {
         // Retorna el fragmento correspondiente a la posición actual
         switch (position) {
             case 0:
-                return new MainActivity3.MiFragmento();
-            case 1:
-                return new RegistroUsuarios.MiFragmento2();
+                return new MainActivity3();
+            case 1: return new RegistroUsuarios();
             default:
                 return null;
         }

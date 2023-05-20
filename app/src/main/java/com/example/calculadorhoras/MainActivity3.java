@@ -1,5 +1,6 @@
 package com.example.calculadorhoras;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
 import androidx.annotation.NonNull;
@@ -28,6 +29,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,6 +64,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -72,7 +75,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 
-public class MainActivity3 extends AppCompatActivity {
+public class MainActivity3 extends Fragment {
     public TextView total;
     public TextView entrada;
     public TextView salida;
@@ -96,12 +99,8 @@ public class MainActivity3 extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
 
     // Manejar la respuesta de los permisos
-    public static class MiFragmento extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.activity_main3, container, false);
-        }
-    }
+    private SharedPreferences.Editor editorPreferencias;
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -120,8 +119,8 @@ public class MainActivity3 extends AppCompatActivity {
     // Método para obtener la ubicación
     private void obtenerUbicacion() {
         // Aquí puedes utilizar las API de ubicación de Android para obtener la ubicación del dispositivo
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -143,58 +142,49 @@ public class MainActivity3 extends AppCompatActivity {
                             ubicacion.put("latitude", String.valueOf(latitude));
                             ubicacion.put("longitude", String.valueOf(longitude));
 
-                            Toast.makeText(getApplicationContext(),
+                           /* Toast.makeText(getApplicationContext(),
                                     longitude + " " + latitude,
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT).show();*/
                         } else {
                             // No se pudo obtener la ubicación actual
-                            Toast.makeText(getApplicationContext(),
-                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();
+                           /* Toast.makeText(getApplicationContext(),
+                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();*/
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Ocurrió un error al obtener la ubicación
+                        /* Ocurrió un error al obtener la ubicación
                         Toast.makeText(getApplicationContext(),
                                 "Error al obtener la ubicación: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();*/
                     }
                 });
     }
     @SuppressLint("MissingInflatedId")
+    @Nullable
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main3);
-        getSupportActionBar().setTitle(R.string.app_name);
-
-        // Agregar un fragmento a tu actividad
-        Fragment fragment = new MiFragmento();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-
-
-        total = findViewById(R.id.textViewTotal2);
-
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_main3, container, false);;
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+        total = view.findViewById(R.id.textViewTotal2);
         // Crear canal de notificaciones
         createNotificationChannel();
         // Configuración de idioma
-        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
          timeE = preferenciasCompartidas.getString("entrada", "");
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
-        getSupportActionBar().setTitle(R.string.app_name);
+        //getSupportActionBar().setTitle(R.string.app_name);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         // Verificar si se ha concedido el permiso de ubicación
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             // El permiso no se ha concedido, se solicita al usuario
-            ActivityCompat.requestPermissions(this,
+            ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_CODE);
         } else {
@@ -206,26 +196,26 @@ public class MainActivity3 extends AppCompatActivity {
 
         // Guardar debe estar desactivado hasta que se pulse Calcular
 
-        botonSalir = findViewById(R.id.btnSalir2);
-        total = findViewById(R.id.textViewTotal2);
-        registroEntrada = findViewById(R.id.btnRegistroEntrada2);
-        entrada = findViewById(R.id.textViewE2);
-        salida = findViewById(R.id.textViewS2);
-        registroSalida = findViewById(R.id.btnRegistroSalida2);
+        botonSalir = view.findViewById(R.id.btnSalir2);
+        total = view.findViewById(R.id.textViewTotal2);
+        registroEntrada = view.findViewById(R.id.btnRegistroEntrada2);
+        entrada = view.findViewById(R.id.textViewE2);
+        salida = view.findViewById(R.id.textViewS2);
+        registroSalida = view.findViewById(R.id.btnRegistroSalida2);
         registroSalida.setEnabled(false);
 
         // Rellenamos el Spinner
-        spInci = (Spinner) findViewById(R.id.spnIncidencia);
+        spInci = (Spinner) view.findViewById(R.id.spnIncidencia);
         Resources res = getResources();
         inci = res.getStringArray(R.array.array_inci);
-        adaptadorInci = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, inci);
+        adaptadorInci = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, inci);
         spInci.setAdapter(adaptadorInci);
 
         spInci.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
-                SharedPreferences.Editor editorPreferencias = preferencias.edit();
+                SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                editorPreferencias = preferenciasCompartidas.edit();
 
             }
 
@@ -271,7 +261,7 @@ public class MainActivity3 extends AppCompatActivity {
                 ;
                 //   FirebaseUser currentUser = mAuth.getCurrentUser();
                 // Inicializar aplicación de Firebase
-                FirebaseApp.initializeApp(getApplicationContext());
+                FirebaseApp.initializeApp(getActivity().getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 db = FirebaseDatabase.getInstance();
                 // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
@@ -315,7 +305,7 @@ public class MainActivity3 extends AppCompatActivity {
                 timeS = String.format("%02d:%02d", horaS, minS);
                 salida.setText(timeS);
                 // Inicializar aplicación de Firebase
-                FirebaseApp.initializeApp(getApplicationContext());
+                FirebaseApp.initializeApp(getActivity().getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 db = FirebaseDatabase.getInstance();
                 //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
@@ -364,11 +354,11 @@ public class MainActivity3 extends AppCompatActivity {
 
 
         // Salir de la app
-        botonSalir.setOnClickListener(new View.OnClickListener() {
+      /*  botonSalir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Crear el objeto constructor de alerta AlertDialog.Builder
-                AlertDialog.Builder constructorAlerta = new AlertDialog.Builder(com.example.calculadorhoras.MainActivity3.this);
+                AlertDialog.Builder constructorAlerta = new AlertDialog.Builder(com.example.calculadorhoras.MainActivity3.getActivity());
 
                 // Establecer título y mensaje
                 constructorAlerta.
@@ -396,20 +386,22 @@ public class MainActivity3 extends AppCompatActivity {
             }
 
 
-        });
+        });*/
+        return view;
     }
 
     //Guardamos los valores cuando la aplicacion este en pause (se gire la pantalla por ejemplo)
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
+
+  /*  public void onViewStateRestored(Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
         entrada.setText(savedInstanceState.getString("entrada"));
         salida.setText(savedInstanceState.getString("salida"));
         total.setText(savedInstanceState.getString("total"));
-    }
+    }*/
 
-    @Override
+
+  /*  @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -418,19 +410,19 @@ public class MainActivity3 extends AppCompatActivity {
         outState.putString("salida", salida.getText().toString());
     }
 
-
+*/
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         // Control de opciones de la action bar
         int id = item.getItemId();
         if (id == R.id.configuracion) {
-            Toast.makeText(getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
-            Intent intencion = new Intent(com.example.calculadorhoras.MainActivity3.this, MainActivityConf.class);
+            Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
+            Intent intencion = new Intent(getActivity().getApplicationContext(), MainActivityConf.class);
             startActivity(intencion);
 
             return true;
         } else if (id == R.id.registro) {
-            Intent objetoMensajero2 = new Intent(getApplicationContext(), RegistroUsuarios.class);
+            Intent objetoMensajero2 = new Intent(getActivity().getApplicationContext(), RegistroUsuarios.class);
             startActivity(objetoMensajero2);
 
             return true;
@@ -440,10 +432,9 @@ public class MainActivity3 extends AppCompatActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflate the menu; this adds items to the action bar if it is present
-        getMenuInflater().inflate(R.menu.menu_en_activity, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_en_activity, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     private void setAppLocale(String localeCode) {
@@ -468,16 +459,17 @@ public class MainActivity3 extends AppCompatActivity {
             canal.setDescription(descripcion);
 
             // Registrar el canal de notificaciones
-            NotificationManager gestorNotificaciones = getSystemService(NotificationManager.class);
+            NotificationManager gestorNotificaciones = getActivity().getSystemService(NotificationManager.class);
             gestorNotificaciones.createNotificationChannel(canal);
         }
 
     }
 
-    @Override
+  /*  @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
         super.onPointerCaptureChanged(hasCapture);
-    }
+        // Realiza alguna acción cuando cambia el estado de captura del puntero
+    }*/
 
 }
 

@@ -1,5 +1,7 @@
 package com.example.calculadorhoras;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -26,7 +28,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-public class RegistroUsuarios extends AppCompatActivity {
+public class RegistroUsuarios extends Fragment  {
     private RecyclerView mRecyclerView;
     private TextView tvnombre;
     private AdapterUsu mAdapterU;
@@ -44,40 +46,36 @@ public class RegistroUsuarios extends AppCompatActivity {
             return null;
         }
     }
-
+//    SharedPreferences preferenciasCompartidas =getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.registro);
-        setContentView(R.layout.activity_registro_usuarios);
-
-        // Agregar un fragmento a tu actividad
-        Fragment fragment = new MiFragmento2();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container2, fragment)
-                .commit();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_registro_usuarios, container, false);
+        //getSupportActionBar().setTitle(R.string.registro);
+       // setContentView(R.layout.activity_registro_usuarios);
 
 
-        Button btnUBuscar = findViewById(R.id.btnUbuscar);
-        EditText etUFechaInicio = findViewById(R.id.etUFechaInicio);
-        EditText etUFechaFin = findViewById(R.id.etUFechaFin);
+        Button btnUBuscar =  view.findViewById(R.id.btnUbuscar);
+        EditText etUFechaInicio =  view.findViewById(R.id.etUFechaInicio);
+        EditText etUFechaFin =  view.findViewById(R.id.etUFechaFin);
 
         // Obtener la referencia al RecyclerView
-        mRecyclerView = findViewById(R.id.rvusu);
+        mRecyclerView =  view.findViewById(R.id.rvusu);
 
         // Inicializar la lista de registros
         mRegistrosU = new ArrayList<>();
 
         // Obtener el correo electrónico del usuario desde los extras del intent
-        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        SharedPreferences preferenciasCompartidas =  getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         db = FirebaseDatabase.getInstance();
         String corr = preferenciasCompartidas.getString("email", "");
 
-        tvnombre = findViewById(R.id.tvnombreUsuario);
+        tvnombre =  view.findViewById(R.id.tvnombreUsuario);
         tvnombre.setText(corr);
 
         // Configurar el RecyclerView
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(layoutManager);
+        //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapterU = new AdapterUsu();
         mRecyclerView.setAdapter(mAdapterU);
 
@@ -107,7 +105,7 @@ public class RegistroUsuarios extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Manejar errores de lectura de la base de datos
-                Toast.makeText(getApplicationContext(), R.string.falloEnLaBase, Toast.LENGTH_LONG).show();
+                mostrarToast(R.string.falloEnLaBase);
             }
         });
 
@@ -165,12 +163,9 @@ public class RegistroUsuarios extends AppCompatActivity {
                     }
                 });
             }
-        });}
-
-    public static class MiFragmento2 extends Fragment {
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.activity_registro_usuarios, container, false);
-        }
+        });
+        return view;}
+    private void mostrarToast(int mensajeId) {
+        Toast.makeText(getActivity(), mensajeId, Toast.LENGTH_LONG).show();
     }
 }

@@ -392,16 +392,17 @@ public class MainActivity3 extends Fragment {
 
     //Guardamos los valores cuando la aplicacion este en pause (se gire la pantalla por ejemplo)
 
-  /*  public void onViewStateRestored(Bundle savedInstanceState) {
+    public void onViewStateRestored(Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        entrada.setText(savedInstanceState.getString("entrada"));
-        salida.setText(savedInstanceState.getString("salida"));
-        total.setText(savedInstanceState.getString("total"));
-    }*/
+        if (savedInstanceState != null) {
+            entrada.setText(savedInstanceState.getString("entrada"));
+            salida.setText(savedInstanceState.getString("salida"));
+            total.setText(savedInstanceState.getString("total"));
+        }
+    }
 
-
-  /*  @Override
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
@@ -410,27 +411,26 @@ public class MainActivity3 extends Fragment {
         outState.putString("salida", salida.getText().toString());
     }
 
-*/
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        // Control de opciones de la action bar
-        int id = item.getItemId();
-        if (id == R.id.configuracion) {
-            Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
-            Intent intencion = new Intent(getActivity().getApplicationContext(), MainActivityConf.class);
-            startActivity(intencion);
-
-            return true;
-        } else if (id == R.id.registro) {
-            Intent objetoMensajero2 = new Intent(getActivity().getApplicationContext(), RegistroUsuarios.class);
-            startActivity(objetoMensajero2);
-
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setHasOptionsMenu(true);
+  }
+  @Override
+  public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+      int id = item.getItemId();
+      if (id == R.id.configuracion) {
+          Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
+          Intent intencion = new Intent(getActivity().getApplicationContext(), MainActivityConf.class);
+          startActivity(intencion);
+          return true;
+      } else if (id == R.id.registro) {
+          Intent objetoMensajero2 = new Intent(getActivity().getApplicationContext(), RegistroUsuarios.class);
+          startActivity(objetoMensajero2);
+          return true;
+      }
+      return super.onOptionsItemSelected(item);
+  }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_en_activity, menu);

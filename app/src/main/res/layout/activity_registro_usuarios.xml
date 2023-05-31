@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_container2"
     tools:context=".RegistroUsuarios">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-   >
-
-    <TextView
-        android:id="@+id/tvnombreUsuario"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="24sp" />
-
-    <EditText
-        android:id="@+id/etUFechaInicio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Fecha inicio (YYYY/MM/DD)"
-        android:inputType="date" />
-
-
-    <EditText
-        android:id="@+id/etUFechaFin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Fecha fin (YYYY/MM/DD)"
-        android:inputType="date" />
-
-    <Button
-        android:id="@+id/btnUbuscar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        android:text="Button" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvusu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1" />
-</LinearLayout>
+        android:background="@drawable/wallpaper13"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvnombreUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/etUFechaInicio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha inicio (YYYY/MM/DD)"
+            android:inputType="date" />
+
+
+        <EditText
+            android:id="@+id/etUFechaFin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Fecha fin (YYYY/MM/DD)"
+            android:inputType="date" />
+
+        <Button
+            android:id="@+id/btnUbuscar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:text="@string/btn_Buscar" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvusu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#51FFFFFF" />
+    </LinearLayout>
 </FrameLayout>

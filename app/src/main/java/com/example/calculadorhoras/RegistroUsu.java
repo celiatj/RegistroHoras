@@ -1,5 +1,8 @@
 package com.example.calculadorhoras;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class RegistroUsu {
     private String id;
     private String tipo;
@@ -7,12 +10,14 @@ public class RegistroUsu {
     private String dia,mes,anyo;
     private String horas;
     private String min;
+    private String latitud,longitud;
 
-    public RegistroUsu(String id, String tipo, String incidencia) {
+    public RegistroUsu(String id, String tipo, String incidencia, String latitud,String longitud) {
         this.id = id;
         this.tipo = tipo;
         this.incidencia = incidencia;
-
+        this.latitud = latitud;
+        this.longitud=longitud;
         // Extraer los componentes individuales de la fecha y hora del ID
         String year = id.substring(0, 4);
         String month = id.substring(4, 6);
@@ -42,5 +47,11 @@ public class RegistroUsu {
 
     public String getTextoId() {
         return "Fecha: " + dia + "/" + mes + "/" + anyo + " Hora: " + horas + ":" + min;
+    }
+    public Map<String, String> getUbicacion() {
+        Map<String, String> ubicacion = new HashMap<>();
+        ubicacion.put("latitude", latitud);
+        ubicacion.put("longitude", longitud);
+        return ubicacion;
     }
 }

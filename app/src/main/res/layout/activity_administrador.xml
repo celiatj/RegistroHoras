@@ -14,7 +14,7 @@
         android:layout_height="78dp"
         android:background="#5DA4AC"
         android:gravity="center"
-        android:text="Empleados"
+        android:text="@string/Empleados"
         android:textColor="#000000"
         android:textSize="34sp" />
 

@@ -5,7 +5,7 @@
     android:id="@+id/linear_layout_confiuj"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@drawable/wallpaper13"
     android:orientation="vertical"
     tools:context=".MainActivityConf">
 
@@ -34,6 +34,16 @@
         android:id="@+id/guardar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar" />
+        android:text="@string/Guardar"
+        android:textSize="14sp" />
+
+    <Button
+        android:id="@+id/btnUbi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="180dp"
+        android:text="@string/GuardarUbi"
+        android:textSize="20sp" />
 
 </LinearLayout>

@@ -74,6 +74,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import android.location.LocationManager;
+import android.content.Context;
+import com.google.android.gms.location.LocationServices;
 
 public class MainActivity3 extends Fragment {
     public TextView total;
@@ -92,7 +95,7 @@ public class MainActivity3 extends Fragment {
     private ArrayAdapter<String> adaptadorInci;
     final static String CHANNEL_ID = "NOTIFICACIONES";
     boolean contadorE;
-    String localizacion;
+
     double longitude,latitude;
     Map<String, String> ubicacion = new HashMap<>();
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -100,6 +103,8 @@ public class MainActivity3 extends Fragment {
 
     // Manejar la respuesta de los permisos
     private SharedPreferences.Editor editorPreferencias;
+    private double ubicacionLatitude = 39.4672809;
+    private double ubicacionLongitude = -0.3869;
 
 
     @Override
@@ -118,56 +123,45 @@ public class MainActivity3 extends Fragment {
 
     // Método para obtener la ubicación
     private void obtenerUbicacion() {
-        // Aquí puedes utilizar las API de ubicación de Android para obtener la ubicación del dispositivo
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            // Los permisos de ubicación no están concedidos, puedes mostrar un mensaje o solicitar los permisos nuevamente.
             return;
         }
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    // La ubicación está disponible
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
 
-                            // Aquí puedes utilizar las coordenadas de latitud y longitud obtenidas
-                            // por ejemplo, guardarlas en la base de datos o mostrarlas en la interfaz de usuario
-                            ubicacion.put("latitude", String.valueOf(latitude));
-                            ubicacion.put("longitude", String.valueOf(longitude));
-
-                           /* Toast.makeText(getApplicationContext(),
-                                    longitude + " " + latitude,
-                                    Toast.LENGTH_SHORT).show();*/
-                        } else {
-                            // No se pudo obtener la ubicación actual
-                           /* Toast.makeText(getApplicationContext(),
-                                    "No se pudo obtener la ubicación actual", Toast.LENGTH_SHORT).show();*/
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        /* Ocurrió un error al obtener la ubicación
-                        Toast.makeText(getApplicationContext(),
-                                "Error al obtener la ubicación: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show();*/
-                    }
-                });
+                    // Guardar las coordenadas en la base de datos o donde sea necesario
+                    ubicacion.put("latitude", String.valueOf(latitude));
+                    ubicacion.put("longitude", String.valueOf(longitude));
+                } else {
+                    // No se pudo obtener la ubicación actual, guarda "00" en latitud y longitud
+                    ubicacion.put("latitude", "00");
+                    ubicacion.put("longitude", "00");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Ocurrió un error al obtener la ubicación, guarda "00" en latitud y longitud
+                ubicacion.put("latitude", "00");
+                ubicacion.put("longitude", "00");
+            }
+        });
     }
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main3, container, false);;
+        View view = inflater.inflate(R.layout.activity_main3, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+
+
         total = view.findViewById(R.id.textViewTotal2);
         // Crear canal de notificaciones
         createNotificationChannel();
@@ -178,7 +172,6 @@ public class MainActivity3 extends Fragment {
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
         //getSupportActionBar().setTitle(R.string.app_name);
-
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         // Verificar si se ha concedido el permiso de ubicación
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -188,15 +181,13 @@ public class MainActivity3 extends Fragment {
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSION_REQUEST_CODE);
         } else {
-            // El permiso ya se ha concedido, puedes iniciar la obtención de la ubicación aquí
-            obtenerUbicacion();
-        }
-
-
+            //se vuelve a solicitar??
+            ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSION_REQUEST_CODE);}
 
         // Guardar debe estar desactivado hasta que se pulse Calcular
 
-        botonSalir = view.findViewById(R.id.btnSalir2);
         total = view.findViewById(R.id.textViewTotal2);
         registroEntrada = view.findViewById(R.id.btnRegistroEntrada2);
         entrada = view.findViewById(R.id.textViewE2);
@@ -244,6 +235,22 @@ public class MainActivity3 extends Fragment {
         registroEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Verificar si el servicio de ubicación está habilitado
+                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+                if (!isLocationEnabled) {
+                    // Mostrar un diálogo o notificación al usuario para que active la ubicación
+                    // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
+                    Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                } else {
+                    obtenerUbicacion();
+                }
+
+
                 Calendar c = Calendar.getInstance();
                 diaE = c.get(Calendar.DATE);
                 anyoE = c.get(Calendar.YEAR);
@@ -251,7 +258,6 @@ public class MainActivity3 extends Fragment {
                 //  String fecha = Integer.toString(c.get(Calendar.YEAR) + c.get(Calendar.MONTH) + c.get(Calendar.DATE));
                 horaE = c.get(Calendar.HOUR_OF_DAY);
                 minE = c.get(Calendar.MINUTE);
-
                 timeE = String.format("%02d:%02d", horaE, minE);
                 entrada.setText(timeE);
                 SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
@@ -264,24 +270,29 @@ public class MainActivity3 extends Fragment {
                 FirebaseApp.initializeApp(getActivity().getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 db = FirebaseDatabase.getInstance();
+
                 // SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
                 //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
+
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
-                // datos.put("ubicacion", String.valueOf(ubicacion));
                 datos.put("tipo", "entrada");
                 datos.put("incidencia", inci[posicionInci]);
-
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
-                // db.getReference("usuarios").child(corr).child("Registros").child("ubicacion").setValue(ubicacion);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).child("ubicacion").setValue(ubicacion);
+
+
+
 
                 editorPreferencias.putBoolean("contadorE", false);
 
                 editorPreferencias.commit();
                 registroSalida.setEnabled(true);
                 registroEntrada.setEnabled(false);
+                // Cambiar el color de fondo del botón de salida cuando se desactiva
+               // registroEntrada.setBackgroundColor(getResources().getColor(R.color.purple_500));
+               // registroSalida.setBackgroundColor(getResources().getColor(R.color.purple_700));
             }
 
         });
@@ -290,6 +301,22 @@ public class MainActivity3 extends Fragment {
         registroSalida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                // Verificar si el servicio de ubicación está habilitado
+                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+                if (!isLocationEnabled) {
+                    // Mostrar un diálogo o notificación al usuario para que active la ubicación
+                    // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
+                    Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
+
+                    return;
+                } else {
+                    obtenerUbicacion();
+                }
+
                 contadorE = true;
                 SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
                 Calendar c = Calendar.getInstance();
@@ -308,12 +335,14 @@ public class MainActivity3 extends Fragment {
                 FirebaseApp.initializeApp(getActivity().getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 db = FirebaseDatabase.getInstance();
+
+
+
                 //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
                 //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");
                 Map<String, String> datos = new HashMap<>();
                 int posicionInci = spInci.getSelectedItemPosition();
-
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
@@ -345,6 +374,9 @@ public class MainActivity3 extends Fragment {
                 editorPreferencias.commit();
                 registroEntrada.setEnabled(true);
                 registroSalida.setEnabled(false);
+                // Cambiar el color de fondo del botón de salida cuando se desactiva
+                //registroEntrada.setBackgroundColor(getResources().getColor(R.color.purple_700));
+                //registroSalida.setBackgroundColor(getResources().getColor(R.color.purple_500));
                 editorPreferencias.putString("entrada", "");
                // entrada.setText("");
                // editorPreferencias.putString("entrada", "");
@@ -353,40 +385,7 @@ public class MainActivity3 extends Fragment {
         });
 
 
-        // Salir de la app
-      /*  botonSalir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Crear el objeto constructor de alerta AlertDialog.Builder
-                AlertDialog.Builder constructorAlerta = new AlertDialog.Builder(com.example.calculadorhoras.MainActivity3.getActivity());
 
-                // Establecer título y mensaje
-                constructorAlerta.
-                        setTitle(getResources().getText(R.string.txt_salir_app_titulo)).
-                        setMessage(getResources().getText(R.string.txt_salir_app_mensaje));
-
-                // Hacer que no se pueda dejar el diálogo sin pulsar una opción
-                constructorAlerta.setCancelable(false);
-
-                // Establecer botón de respuesta positiva
-                constructorAlerta.setPositiveButton(getResources().getText(R.string.txt_si), (DialogInterface.OnClickListener) (dialog, which) -> {
-                    finishAffinity();
-
-                });
-
-                // Establecer botón de respuesta negativa
-                constructorAlerta.setNegativeButton(getResources().getText(R.string.txt_no), (DialogInterface.OnClickListener) (dialog, which) -> {
-                    dialog.cancel();
-                });
-
-                // Crear y mostrar diálogo de alerta
-                AlertDialog dialogoAlertaSalir = constructorAlerta.create();
-                dialogoAlertaSalir.show();
-
-            }
-
-
-        });*/
         return view;
     }
 
@@ -423,10 +422,6 @@ public class MainActivity3 extends Fragment {
           Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
           Intent intencion = new Intent(getActivity().getApplicationContext(), MainActivityConf.class);
           startActivity(intencion);
-          return true;
-      } else if (id == R.id.registro) {
-          Intent objetoMensajero2 = new Intent(getActivity().getApplicationContext(), RegistroUsuarios.class);
-          startActivity(objetoMensajero2);
           return true;
       }
       return super.onOptionsItemSelected(item);

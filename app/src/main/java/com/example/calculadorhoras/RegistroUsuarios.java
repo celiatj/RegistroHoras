@@ -2,11 +2,17 @@ package com.example.calculadorhoras;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,94 +27,109 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-public class RegistroUsuarios extends Fragment  {
+import java.util.GregorianCalendar;
+import java.util.Locale;
+import java.util.Map;
+
+public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDateSetListener {
     private RecyclerView mRecyclerView;
     private TextView tvnombre;
     private AdapterUsu mAdapterU;
+    private Button btnUBuscar;
     private ArrayList<RegistroUsu> mRegistrosU;
     private FirebaseDatabase db;
     private DatabaseReference usuarioRef;
-    String idRegistro, tipoRegistro, incidenciaRegistro;
+    private String fechaInicio = "";
+    private String fechaFin = "";
+    private double ubicacionLatitude = 39.4672809;
+    private double ubicacionLongitude = -0.3869;
 
-    public Date getFecha() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        dateFormat.setLenient(false);
-        try {
-            return dateFormat.parse(this.idRegistro.substring(0, 12));
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-//    SharedPreferences preferenciasCompartidas =getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_registro_usuarios, container, false);
-        //getSupportActionBar().setTitle(R.string.registro);
-       // setContentView(R.layout.activity_registro_usuarios);
 
+        Button btnUBuscar = view.findViewById(R.id.btnUbuscar);
+        EditText etUFechaInicio = view.findViewById(R.id.etUFechaInicio);
+        EditText etUFechaFin = view.findViewById(R.id.etUFechaFin);
 
-        Button btnUBuscar =  view.findViewById(R.id.btnUbuscar);
-        EditText etUFechaInicio =  view.findViewById(R.id.etUFechaInicio);
-        EditText etUFechaFin =  view.findViewById(R.id.etUFechaFin);
+        etUFechaInicio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(true);
+            }
+        });
+
+        etUFechaFin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showDatePickerDialog(false);
+            }
+        });
 
         // Obtener la referencia al RecyclerView
-        mRecyclerView =  view.findViewById(R.id.rvusu);
+        mRecyclerView = view.findViewById(R.id.rvusu);
 
         // Inicializar la lista de registros
         mRegistrosU = new ArrayList<>();
 
         // Obtener el correo electrónico del usuario desde los extras del intent
-        SharedPreferences preferenciasCompartidas =  getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         db = FirebaseDatabase.getInstance();
         String corr = preferenciasCompartidas.getString("email", "");
 
-        tvnombre =  view.findViewById(R.id.tvnombreUsuario);
+        tvnombre = view.findViewById(R.id.tvnombreUsuario);
         tvnombre.setText(corr);
 
         // Configurar el RecyclerView
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-        //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapterU = new AdapterUsu();
+        mAdapterU = new AdapterUsu(ubicacionLatitude, ubicacionLongitude);
         mRecyclerView.setAdapter(mAdapterU);
 
         // Obtener referencia a la base de datos
         DatabaseReference ref = db.getReference("usuarios").child(corr).child("Registros");
 
-        // Leer los datos de Firebase
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        // Leer los datos de Firebase y establecer un listener para obtener actualizaciones en tiempo real
+        ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mRegistrosU.clear();
                 for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
-                    // Aquí se obtiene el ID del registro utilizando getKey() en el nivel "registroSnapshot"
-                    idRegistro = registroSnapshot.getKey();
-                    tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
-                    incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
+                    // Obtener los datos de cada registro
+                    String idRegistro = registroSnapshot.getKey();
+                    String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
+                    String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 
-                    // Crea un objeto RegistroUsu y agrégalo a la lista
-                    RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro);
-                    mRegistrosU.add(registro);
+                    String latitude = registroSnapshot.child("ubicacion").child("latitude").getValue(String.class);
+                    String longitude = registroSnapshot.child("ubicacion").child("longitude").getValue(String.class);
+
+                    if (latitude != null && longitude != null) {
+                        RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro, latitude, longitude);
+                        mRegistrosU.add(registro);
+                    } else {
+                        RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro, "00", "00");
+                        mRegistrosU.add(registro);
+                    }
                 }
 
-                // Notificar al adaptador de que los datos han cambiado
+                // Notificar al adaptador de los cambios en los datos
                 mAdapterU.setRegistros(mRegistrosU);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Manejar errores de lectura de la base de datos
-                mostrarToast(R.string.falloEnLaBase);
+                // Manejar el error de lectura de la base de datos
             }
         });
-
 
         btnUBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,13 +137,11 @@ public class RegistroUsuarios extends Fragment  {
                 String fechaInicio = etUFechaInicio.getText().toString().trim().replace("/", "");
                 String fechaFin = etUFechaFin.getText().toString().trim().replace("/", "");
 
-                if (fechaInicio.isEmpty() && fechaFin.isEmpty()) {
-                    // Si ambos campos de fecha están vacíos, actualizar el adaptador con todos los registros
+                if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
                     mAdapterU.setRegistros(mRegistrosU);
                     return;
                 }
 
-                // Obtener la referencia a la base de datos
                 DatabaseReference registrosRef = db.getReference("usuarios").child(corr).child("Registros");
 
                 // Convertir las fechas en formato numérico para compararlas como enteros
@@ -134,26 +153,22 @@ public class RegistroUsuarios extends Fragment  {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         mRegistrosU.clear();
                         for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
-                            // Obtén el ID del registro
                             String idRegistro = registroSnapshot.getKey();
-
-                            // Extraer la parte de fecha del ID (primeros 8 dígitos)
                             String fechaRegistro = idRegistro.substring(0, 8);
                             int fechaRegistroNum = Integer.parseInt(fechaRegistro);
 
-                            // Verificar si la fecha del registro está dentro del rango especificado
                             if (fechaRegistroNum >= fechaInicioNum && fechaRegistroNum <= fechaFinNum) {
-                                // Obtén los datos del registro
                                 String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
                                 String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 
-                                // Crea un objeto Registro y agrégalo a la lista
-                                RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro);
+                                String latitude = registroSnapshot.child("ubicacion").child("latitude").getValue(String.class);
+                                String longitude = registroSnapshot.child("ubicacion").child("longitude").getValue(String.class);
+
+                                RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro, latitude, longitude);
                                 mRegistrosU.add(registro);
                             }
                         }
 
-                        // Actualiza el adaptador del RecyclerView con la lista de registros
                         mAdapterU.setRegistros(mRegistrosU);
                     }
 
@@ -164,8 +179,156 @@ public class RegistroUsuarios extends Fragment  {
                 });
             }
         });
-        return view;}
-    private void mostrarToast(int mensajeId) {
-        Toast.makeText(getActivity(), mensajeId, Toast.LENGTH_LONG).show();
+
+        return view;
+    }
+
+    private void showDatePickerDialog(boolean isStartDate) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), this, year, month, day);
+
+        if (!isStartDate && !fechaInicio.isEmpty()) {
+            String[] parts = fechaInicio.split("/");
+            int startYear = Integer.parseInt(parts[2]);
+            int startMonth = Integer.parseInt(parts[1]) - 1;
+            int startDay = Integer.parseInt(parts[0]);
+            datePickerDialog.getDatePicker().setMinDate(new GregorianCalendar(startYear, startMonth, startDay).getTimeInMillis());
+        }
+
+        if (isStartDate) {
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+        }
+
+        datePickerDialog.show();
+    }
+
+    @Override
+    public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
+        String fechaSeleccionada = dia + "/" + (mes + 1) + "/" + anyo;
+        EditText etFechaInicio = getView().findViewById(R.id.etUFechaInicio);
+        EditText etFechaFin = getView().findViewById(R.id.etUFechaFin);
+
+        if (etFechaInicio.hasFocus()) {
+            etFechaInicio.setText(fechaSeleccionada);
+            fechaInicio = fechaSeleccionada; // Actualizar fechaInicio con el valor seleccionado
+        } else if (etFechaFin.hasFocus()) {
+            etFechaFin.setText(fechaSeleccionada);
+            fechaFin = fechaSeleccionada; // Actualizar fechaFin con el valor seleccionado
+        }
     }
 }
+/*
+        private void showDatePickerDialog ( boolean isStartDate){
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // DatePickerListener listener = new DatePickerListener();  // Instancia de la clase interna creada anteriormente
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(requireContext(), this, year, month, day);
+
+            if (!isStartDate && !fechaInicio.isEmpty()) {
+                String[] parts = fechaInicio.split("/");
+                int startYear = Integer.parseInt(parts[2]);
+                int startMonth = Integer.parseInt(parts[1]) - 1;
+                int startDay = Integer.parseInt(parts[0]);
+                datePickerDialog.getDatePicker().setMinDate(new GregorianCalendar(startYear, startMonth, startDay).getTimeInMillis());
+            }
+            datePickerDialog.show();
+        }
+    }
+    */
+    /*
+    @Override
+    public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
+        Calendar calendario = Calendar.getInstance();
+        calendario.set(Calendar.YEAR, anyo);
+        calendario.set(Calendar.MONTH, mes);
+        calendario.set(Calendar.DAY_OF_MONTH, dia);
+        //String fechaSeleccionada = DateFormat.getDateInstance(DateFormat.FULL).format(calendario.getTime());
+        String fechaSeleccionada = dia + "/" + (mes + 1) + "/" + anyo;
+        EditText etFechaInicio = getView().findViewById(R.id.etUFechaInicio);
+        etFechaInicio.setText(fechaSeleccionada);
+
+*/
+        /* String fechaSeleccionada = String.format(Locale.getDefault(), "%02d/%02d/%02d",  year, month + 1,dayOfMonth);
+
+        EditText etFechaInicio = getView().findViewById(R.id.etUFechaInicio);
+        EditText etFechaFin = getView().findViewById(R.id.etUFechaFin);
+
+        if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
+            if (fechaInicio.isEmpty()) {
+                etFechaInicio.setText(fechaSeleccionada);
+                fechaInicio = fechaSeleccionada; // Actualizar fechaInicio con el valor seleccionado
+            } else {
+                etFechaFin.setText(fechaSeleccionada);
+                fechaFin = fechaSeleccionada; // Actualizar fechaFin con el valor seleccionado
+            }
+        } else {
+            etFechaInicio.setText(fechaSeleccionada);
+            etFechaFin.setText("");
+            fechaInicio = fechaSeleccionada; // Actualizar fechaInicio con el valor seleccionado
+            fechaFin = ""; // Limpiar fechaFin
+        }
+
+        */
+/*
+        btnUBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fechaInicio = etUFechaInicio.getText().toString().trim().replace("/", "");
+                fechaFin = etUFechaFin.getText().toString().trim().replace("/", "");
+
+                if (fechaInicio.isEmpty() && fechaFin.isEmpty()) {
+                    mAdapterU.setRegistros(mRegistrosU);
+                    return;
+                }
+
+                DatabaseReference registrosRef = db.getReference("usuarios").child(corr).child("Registros");
+
+                // Convertir las fechas en formato numérico para compararlas como enteros
+                int fechaInicioNum = Integer.parseInt(fechaInicio);
+                int fechaFinNum = Integer.parseInt(fechaFin);
+                registrosRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        mRegistrosU.clear();
+                        for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
+                            String idRegistro = registroSnapshot.getKey();
+                            String fechaRegistro = idRegistro.substring(0, 8);
+                            int fechaRegistroNum = Integer.parseInt(fechaRegistro);
+
+                            if (fechaRegistroNum >= fechaInicioNum && fechaRegistroNum <= fechaFinNum) {
+                                String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
+                                String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
+
+                                String latitude = registroSnapshot.child("ubicacion").child("latitude").getValue(String.class);
+                                String longitude = registroSnapshot.child("ubicacion").child("longitude").getValue(String.class);
+
+
+                                RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro, latitude, longitude);
+                                mRegistrosU.add(registro);
+                            }
+                        }
+
+                        mAdapterU.setRegistros(mRegistrosU);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Manejar errores de lectura de la base de datos
+                    }
+                });
+            }
+        });
+
+        return view;
+    }
+*/
+
+

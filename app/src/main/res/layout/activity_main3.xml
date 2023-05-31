@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,15 +17,15 @@
         android:orientation="vertical"
         tools:ignore="ExtraText">
 
-     <TextView
-        android:id="@+id/tvE2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:backgroundTint="#B7F1EAEA"
-        android:fontFamily="sans-serif"
-        android:text="Hora de entrada:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <TextView
+            android:id="@+id/tvE2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="#B7F1EAEA"
+            android:fontFamily="sans-serif"
+            android:text="@string/HoraDeEntrada"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/textViewE2"
@@ -38,15 +39,15 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="24sp" />
 
-    <TextView
-        android:id="@+id/tvS2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:backgroundTint="#6BF1EAEA"
-        android:fontFamily="sans-serif"
-        android:text="Hora de salida:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        <TextView
+            android:id="@+id/tvS2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:backgroundTint="#6BF1EAEA"
+            android:fontFamily="sans-serif"
+            android:text="@string/HoraDeSalida"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/textViewS2"
@@ -60,62 +61,60 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/linear_layout_configu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
-        android:layout_weight="3"
-        android:background="#4BFFFFFF">
-
-        <Button
-            android:id="@+id/btnRegistroEntrada2"
+        <LinearLayout
+            android:id="@+id/linear_layout_configu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="35dp"
-            android:layout_marginRight="30dp"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:paddingLeft="30dp"
-            android:paddingTop="40dp"
-            android:paddingRight="30dp"
-            android:paddingBottom="40dp"
-            android:text="@string/entrada"
-            android:textSize="20sp"
-           />
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="80dp"
+            android:background="#4BFFFFFF">
 
-        <Button
-            android:id="@+id/btnRegistroSalida2"
-            android:layout_width="wrap_content"
+            <Button
+                android:id="@+id/btnRegistroEntrada2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="12dp"
+                android:width="170dp"
+                android:height="100dp"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/entrada"
+                android:textSize="15sp"
+                app:icon="@drawable/en"
+                app:iconSize="50dp" />
+
+            <Button
+                android:id="@+id/btnRegistroSalida2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="12dp"
+                android:width="170dp"
+                android:height="100dp"
+                android:foregroundGravity="center"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:text="@string/salida"
+                android:textSize="15sp"
+                app:icon="@drawable/sa"
+                app:iconSize="50dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textViewTotal2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="#2241F1"
-            android:foregroundGravity="center"
-            android:gravity="center"
-            android:paddingStart="40dp"
-            android:paddingLeft="30dp"
-            android:paddingTop="40dp"
-            android:paddingRight="30dp"
-            android:paddingBottom="40dp"
-            android:text="@string/salida"
-            android:textSize="20sp"
-            />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textViewTotal2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:fontFamily="sans-serif"
-        android:keepScreenOn="false"
-        android:overScrollMode="ifContentScrolls"
-        android:scrollHorizontally="false"
-        android:text="Total:"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:layout_margin="20dp"
+            android:fontFamily="sans-serif"
+            android:keepScreenOn="false"
+            android:overScrollMode="ifContentScrolls"
+            android:scrollHorizontally="false"
+            android:text="@string/Total"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
         android:id="@+id/textView2"
@@ -129,22 +128,5 @@
         android:layout_height="wrap_content"
         android:tag="@string/incidencia" />
 
-    <LinearLayout
-        android:id="@+id/linear_layout_confiuj2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="10dp"
-        android:background="#4BFFFFFF"
-        android:orientation="vertical" />
-
-    <Button
-        android:id="@+id/btnSalir2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:backgroundTint="#2241F1"
-        android:text="Salir" />
-
-</LinearLayout>
+    </LinearLayout>
 </FrameLayout>

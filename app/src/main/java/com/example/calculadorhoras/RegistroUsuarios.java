@@ -53,6 +53,7 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
     private double ubicacionLatitude = 39.4672809;
     private double ubicacionLongitude = -0.3869;
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_registro_usuarios, container, false);
@@ -60,6 +61,24 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         Button btnUBuscar = view.findViewById(R.id.btnUbuscar);
         EditText etUFechaInicio = view.findViewById(R.id.etUFechaInicio);
         EditText etUFechaFin = view.findViewById(R.id.etUFechaFin);
+
+        etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                com.example.calculadorhoras.DatePicker fragmentSelectorFecha;
+                fragmentSelectorFecha = new com.example.calculadorhoras.DatePicker();
+                fragmentSelectorFecha.show(getParentFragmentManager(), (String) getText(R.string.selector_fecha_ini));
+            }
+        });
+
+        etUFechaFin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                com.example.calculadorhoras.DatePicker fragmentSelectorFecha;
+                fragmentSelectorFecha = new com.example.calculadorhoras.DatePicker();
+                fragmentSelectorFecha.show(getParentFragmentManager(), (String) getText(R.string.selector_fecha_fin));
+            }
+        });
 
         etUFechaInicio.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +227,7 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
 
     @Override
     public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
-        String fechaSeleccionada = dia + "/" + (mes + 1) + "/" + anyo;
+        String fechaSeleccionada = String.format("%02d/%02d/%02d", anyo, (mes + 1),dia);
         EditText etFechaInicio = getView().findViewById(R.id.etUFechaInicio);
         EditText etFechaFin = getView().findViewById(R.id.etUFechaFin);
 
@@ -330,5 +349,18 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         return view;
     }
 */
+// String.format("%02d:%02d:%02d", horaS, minS)
 
+// Extraer los componentes de la fecha
+               /* String yearF = fechaFin.substring(0, 4);
+                String monthF = fechaFin.substring(4, 6);
+                String dayF = fechaFin.substring(6);
 
+                String yearE = fechaInicio.substring(0, 4);
+                String monthE = fechaInicio.substring(4, 6);
+                String dayE = fechaInicio.substring(6);
+
+                */
+// Construir la nueva cadena de fecha
+//String nuevaFechaF = yearF + monthF + dayF;
+// String nuevaFechaE = yearE + monthE + dayE;

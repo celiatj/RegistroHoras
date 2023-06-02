@@ -160,6 +160,23 @@ public class MainActivity3 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_main3, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
+        boolean isLocationEnabled = false;
+
+        while (!isLocationEnabled) {
+            // Comprobar si la ubicación está habilitada
+        // Verificar si el servicio de ubicación está habilitado
+        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+        isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!isLocationEnabled) {
+            // Mostrar un diálogo o notificación al usuario para que active la ubicación
+            // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
+            Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
+
+        } else {
+            obtenerUbicacion();
+        }}
 
 
         total = view.findViewById(R.id.textViewTotal2);
@@ -235,22 +252,6 @@ public class MainActivity3 extends Fragment {
         registroEntrada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Verificar si el servicio de ubicación está habilitado
-                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-                if (!isLocationEnabled) {
-                    // Mostrar un diálogo o notificación al usuario para que active la ubicación
-                    // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
-                    Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
-
-                    return;
-                } else {
-                    obtenerUbicacion();
-                }
-
-
                 Calendar c = Calendar.getInstance();
                 diaE = c.get(Calendar.DATE);
                 anyoE = c.get(Calendar.YEAR);
@@ -281,9 +282,7 @@ public class MainActivity3 extends Fragment {
                 datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).child("ubicacion").setValue(ubicacion);
-
-
-
+                Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
 
                 editorPreferencias.putBoolean("contadorE", false);
 
@@ -301,21 +300,6 @@ public class MainActivity3 extends Fragment {
         registroSalida.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                // Verificar si el servicio de ubicación está habilitado
-                LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                        locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-                if (!isLocationEnabled) {
-                    // Mostrar un diálogo o notificación al usuario para que active la ubicación
-                    // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
-                    Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
-
-                    return;
-                } else {
-                    obtenerUbicacion();
-                }
 
                 contadorE = true;
                 SharedPreferences.Editor editorPreferencias = preferenciasCompartidas.edit();
@@ -347,6 +331,8 @@ public class MainActivity3 extends Fragment {
                 datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).child("ubicacion").setValue(ubicacion);
+                Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
+
                 // calculamos las horas trabajadas:
 
                 int tE = (horaE * 60) + minE;

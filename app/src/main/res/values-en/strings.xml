@@ -47,4 +47,21 @@
         <item>Inglés</item>
         <item>Francés</item>
     </string-array>
+    <string name="falloEnLaBase">" Database failure"</string>
+    <string name="IndicaAntesBoton">" Indicates before pressing the button the type of incident"</string>
+    <string name="toast_sin_conexion">" No internet connection"</string>
+    <string name="recuerdame">Remember email and password</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Exit</string>
+
+    <string name="selector_fecha_ini">Select start date</string>
+    <string name="selector_fecha_fin">Select End date</string>
+    <string name="btn_Buscar">Search</string>
+
+    <string name="HoraDeEntrada">Entry Time:</string>
+    <string name="HoraDeSalida">Departure time :</string>
+    <string name="Total">Equal :</string>
+    <string name="Guardar">Save</string>
+    <string name="GuardarUbi">Save current location</string>
+    <string name="Empleados">Employees</string>
 </resources>

@@ -53,19 +53,20 @@
     <string name="IndicaAntesBoton">Indica antes de presionar el boton el tipo de incidencia</string>
     <string name="toast_sin_conexion">Sin conexion a internet</string>
     <string name="recuerdame">Recordar correo y contarseña</string>
-    <string name="navigation_drawer_open">abrir</string>
-    <string name="navigation_drawer_close">cerrar</string>
+    <string name="navigation_drawer_open">Abrir</string>
+    <string name="navigation_drawer_close">Cerrar</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="selector_fecha_ini">Seleccionar fecha Inicio</string>
     <string name="selector_fecha_fin">Seleccionar fecha Fin</string>
     <string name="btn_Buscar">Buscar</string>
-    <string name="HoraDeEntrada">Hora de Entrada</string>
+    <string name="HoraDeEntrada">Hora de Entrada :</string>
     <string name="HoraDeSalida">Hora de Salida :</string>
-    <string name="Total">"Total: "</string>
+    <string name="Total">"Total : "</string>
     <string name="Guardar">Guardar</string>
     <string name="GuardarUbi">Guardar ubicacion actual</string>
     <string name="Empleados">Empleados</string>
+    <string name="InfoBtnUbi">"Pulsa el Boton para guardar la ubicacion del trabajo "</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

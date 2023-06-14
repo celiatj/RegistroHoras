@@ -3,6 +3,8 @@ package com.example.calculadorhoras;
 import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.motion.widget.Debug.getLocation;
 
+import static java.lang.Thread.sleep;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -25,6 +27,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -103,8 +106,8 @@ public class MainActivity3 extends Fragment {
 
     // Manejar la respuesta de los permisos
     private SharedPreferences.Editor editorPreferencias;
-    private double ubicacionLatitude = 39.4672809;
-    private double ubicacionLongitude = -0.3869;
+    private float ubicacionLatitude;
+    private float ubicacionLongitude ;
 
 
     @Override
@@ -160,30 +163,34 @@ public class MainActivity3 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_main3, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
-        boolean isLocationEnabled = false;
-
+        obtenerUbicacion();
+/*
         while (!isLocationEnabled) {
             // Comprobar si la ubicación está habilitada
-        // Verificar si el servicio de ubicación está habilitado
-        LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-        isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
-                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            // Verificar si el servicio de ubicación está habilitado
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        if (!isLocationEnabled) {
-            // Mostrar un diálogo o notificación al usuario para que active la ubicación
-            // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
-            Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
+            if (!isLocationEnabled) {
+                // Mostrar un diálogo o notificación al usuario para que active la ubicación
+                // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
+                Toast.makeText(getContext(), "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
 
-        } else {
-            obtenerUbicacion();
-        }}
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
 
+            } else {
+                obtenerUbicacion();
+            }}
+        obtenerUbicacion();
+*/
+        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
 
         total = view.findViewById(R.id.textViewTotal2);
         // Crear canal de notificaciones
         createNotificationChannel();
         // Configuración de idioma
-        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+
         String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
          timeE = preferenciasCompartidas.getString("entrada", "");
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
@@ -210,7 +217,7 @@ public class MainActivity3 extends Fragment {
         entrada = view.findViewById(R.id.textViewE2);
         salida = view.findViewById(R.id.textViewS2);
         registroSalida = view.findViewById(R.id.btnRegistroSalida2);
-        registroSalida.setEnabled(false);
+        //registroSalida.setEnabled(false);
 
         // Rellenamos el Spinner
         spInci = (Spinner) view.findViewById(R.id.spnIncidencia);
@@ -401,6 +408,7 @@ public class MainActivity3 extends Fragment {
       super.onCreate(savedInstanceState);
       setHasOptionsMenu(true);
   }
+
   @Override
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       int id = item.getItemId();

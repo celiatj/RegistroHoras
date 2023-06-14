@@ -1,5 +1,7 @@
 package com.example.calculadorhoras;
 
+
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -11,9 +13,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -22,6 +28,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -34,8 +41,11 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,18 +67,27 @@ public class FirebaseActivity extends AppCompatActivity {
             }
             return false;
         }
-    }
 
+
+
+    }
+    String esAdmin;
     private EditText correo;
     private EditText contraseya;
     private EditText nombre;
     private EditText apellido;
     private Button registro;
     private Button login;
+    private ImageView imgOjo;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
     private FirebaseDatabase db;
     int contador = 0;
+    private boolean contadorOjo = true;
+    double longitude,latitude;
+    Map<String, String> ubicacion = new HashMap<>();
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private FusedLocationProviderClient fusedLocationClient;
 
     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
     private static final String EMAIL_PATTERN =
@@ -82,7 +101,53 @@ public class FirebaseActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // El permiso ha sido concedido, puedes iniciar la obtención de la ubicación aquí
+                obtenerUbicacion();
+            } else {
+                // El permiso ha sido denegado, puedes mostrar un mensaje o tomar alguna otra acción
+            }
+        }
+    }
 
+    // Método para obtener la ubicación
+    private void obtenerUbicacion() {
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Los permisos de ubicación no están concedidos, puedes mostrar un mensaje o solicitar los permisos nuevamente.
+            return;
+        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    // La ubicación está disponible
+                    latitude = location.getLatitude();
+                    longitude = location.getLongitude();
+
+                    // Guardar las coordenadas en la base de datos o donde sea necesario
+                    ubicacion.put("latitude", String.valueOf(latitude));
+                    ubicacion.put("longitude", String.valueOf(longitude));
+                } else {
+                    // No se pudo obtener la ubicación actual, guarda "00" en latitud y longitud
+                    ubicacion.put("latitude", "00");
+                    ubicacion.put("longitude", "00");
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Ocurrió un error al obtener la ubicación, guarda "00" en latitud y longitud
+                ubicacion.put("latitude", "00");
+                ubicacion.put("longitude", "00");
+            }
+        });
+    }
 
 
 
@@ -90,6 +155,9 @@ public class FirebaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase);
+
+
+
 
 
         // Inicializar aplicación de Firebase
@@ -112,11 +180,24 @@ public class FirebaseActivity extends AppCompatActivity {
         login = findViewById(R.id.btnlogin);
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
+        imgOjo = findViewById(R.id.imgOjo);
 
 
+        imgOjo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-
-
+                if (contadorOjo) {
+                    imgOjo.setImageResource(R.drawable.en);
+                    contraseya.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                    contadorOjo = false;
+                } else {
+                    imgOjo.setImageResource(R.drawable.sa);
+                    contraseya.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    contadorOjo = true;
+                }
+            }
+        });
 
         CheckBox checkBox = findViewById(R.id.checkBox);
         checkBox.setChecked(preferencias.getBoolean("record", false));
@@ -168,6 +249,26 @@ public class FirebaseActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        // Verificar si el servicio de ubicación está habilitado
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        boolean isLocationEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        // Comprobar si la ubicación está habilitada
+        if (!isLocationEnabled) {
+            // Mostrar un diálogo o notificación al usuario para que active la ubicación
+            // Aquí puedes mostrar un mensaje de error o solicitar que el usuario active la ubicación en la configuración del dispositivo
+            Toast.makeText(this, "Por favor, activa la ubicación para guardar el registro.", Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+        /*else
+            obtenerUbicacion();
+        */
+
+
+
+
 
         // Guardar correo en las SharedPreferences para posterior uso
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
@@ -180,6 +281,19 @@ public class FirebaseActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 boolean isInternetAvailable = NetworkUtils.isNetworkAvailable(getApplicationContext());
+                editorPreferencias.putString("email", "");
+                editorPreferencias.putString("correo", "");
+                editorPreferencias.putString("contrasenya", "");
+                editorPreferencias.putString("entrada", "");
+                editorPreferencias.putInt("horaE", 0);
+                editorPreferencias.putInt("minE", 0);
+                editorPreferencias.putString("salida", "");
+                editorPreferencias.putString("codigo_idioma", "es");
+                editorPreferencias.putString("nombre", "");
+                editorPreferencias.putString("apellidos", "");
+                editorPreferencias.putBoolean("contadorE", true);
+                editorPreferencias.commit();
+
                 if (isInternetAvailable) {
                     // Hay conexión a Internet, realiza las operaciones necesarias
                     contador++;
@@ -197,112 +311,75 @@ public class FirebaseActivity extends AppCompatActivity {
                         String cont = contraseya.getText().toString();
 
                         if (TextUtils.isEmpty(nom)) {
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.toast_introducir_nombre).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.toast_introducir_nombre).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (TextUtils.isEmpty(corr)) {
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.toast_introducir_correo).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.toast_introducir_correo).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (TextUtils.isEmpty(ap)) {
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.toast_introducir_apellido).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.toast_introducir_apellido).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (TextUtils.isEmpty(cont)) {
-
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.toast_introducir_password).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.toast_introducir_password).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (cont.length() < 6) {
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.toast_introducir_longitud).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.toast_introducir_longitud).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
                         if (!validarCorreo(corr)) {
-                            Toast.makeText(getApplicationContext(),
-                                            getText(R.string.correo_Invalido).toString(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.correo_Invalido).toString(), Toast.LENGTH_LONG).show();
                             return;
                         }
 
                         // create new user or register new user
-                        mAuth
-                                .createUserWithEmailAndPassword(corr, cont)
+                        mAuth.createUserWithEmailAndPassword(corr, cont)
                                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(getApplicationContext(),
-                                                            getText(R.string.toast_registro_exito).toString(),
-                                                            Toast.LENGTH_LONG)
-                                                    .show();
+                                            Toast.makeText(getApplicationContext(), getText(R.string.toast_registro_exito).toString(), Toast.LENGTH_LONG).show();
 
                                             // Creamos ese usuario en la base de datos en tiempo real de Firebase
                                             // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
                                             DatabaseReference refUsuario = db.getReference("usuarios").child(corr.replace(".", ""));
 
                                             // Crear un nuevo objeto de datos en formato JSON
-
                                             Map<String, String> datos = new HashMap<>();
-
                                             datos.put("nombre", nom);
                                             datos.put("apellidos", ap);
                                             datos.put("correo", corr);
-                                            //datos.put("Admin",false);
-                                            databaseReference.child("usuarios").child(corr.replace(".", "")).setValue(datos);
+                                            datos.put("Admin", "no");
 
+                                            refUsuario.setValue(datos);
 
+                                            // Reinicia el contador para permitir la próxima secuencia de pulsaciones
+                                            contador = 0;
+                                            Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
+                                            editorPreferencias.putString("email", corr.replace(".", ""));
+                                            editorPreferencias.putString("correo", corr);
+                                            editorPreferencias.putString("contrasenya", cont);
+                                            editorPreferencias.commit();
+                                            startActivity(objetoMensajero);
                                         } else {
-
                                             // Registro fallido
-                                            Toast.makeText(
-                                                            getApplicationContext(),
-                                                            getText(R.string.toast_registro_fallo).toString(),
-                                                            Toast.LENGTH_LONG)
-                                                    .show();
+                                            Toast.makeText(getApplicationContext(), getText(R.string.toast_registro_fallo).toString(), Toast.LENGTH_LONG).show();
+
+                                            // Vaciar los campos de correo y contraseña
+                                            correo.setText("");
+                                            contraseya.setText("");
                                         }
                                     }
                                 });
-
-
-                        // objetoMensajeroDatos.putExtra("correo", corr.replace(".", ""));
-                        // startActivity(objetoMensajeroDatos);
-                    /*
-                    objetoMensajeroDatos.putExtra("apellido", apellido.getText().toString());
-*/
-                        // Reinicia el contador para permitir la próxima secuencia de pulsaciones
-                        contador = 0;
-                        Toast.makeText(getApplicationContext(), "Registro completado correctamente", Toast.LENGTH_SHORT).show();
-                        editorPreferencias.putString("email", corr.replace(".", ""));
-                        editorPreferencias.putString("correo", corr);
-                        editorPreferencias.putString("contrasenya", cont);
-                        editorPreferencias.commit();
-                        startActivity(objetoMensajero);
                     }
+                } else {
+                    Toast.makeText(getApplicationContext(), getText(R.string.toast_sin_conexion).toString(), Toast.LENGTH_LONG).show();
                 }
-            else {
-                    Toast.makeText(getApplicationContext(),
-                                    getText(R.string.toast_sin_conexion).toString(),
-                                    Toast.LENGTH_LONG)
-                            .show();
-                } }});
-
+            }
+        });
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,8 +390,24 @@ public class FirebaseActivity extends AppCompatActivity {
 
                         String correoText = correo.getText().toString();
                         String contrasenaText = contraseya.getText().toString();
+                        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+                       // editorPreferencias = preferenciasCompartidas.edit();
+                        String corr = preferenciasCompartidas.getString("email", "");
+                     /*   if(corr.equals(correoText)){}else{
+                            editorPreferencias.putString("email", "");
+                            editorPreferencias.putString("correo", "");
+                            editorPreferencias.putString("contrasenya","");
+                            editorPreferencias.putString("entrada", "");
+                            editorPreferencias.putInt("horaE", 0);
+                            editorPreferencias.putInt("minE",0);
+                            editorPreferencias.putString("salida", "");
+                            editorPreferencias.putString("codigo_idioma", "es");
+                            editorPreferencias.putString("nombre","");
+                            editorPreferencias.putString("apellidos","");
+                            editorPreferencias.putBoolean("contadorE", true);
+                            editorPreferencias.commit();
 
-
+                        }*/
                         // validations for input email and password
                         if (TextUtils.isEmpty(correoText)) {
                             Toast.makeText(getApplicationContext(),
@@ -350,9 +443,27 @@ public class FirebaseActivity extends AppCompatActivity {
                                                     editorPreferencias.putString("correo", correoText);
                                                     editorPreferencias.putString("contrasenya", contrasenaText);
                                                     editorPreferencias.commit();
-//if(esAdmin(correoText)){ startActivity(objetoMensajeroAdmin);}else{}
-                                                    // Como el login es exitoso, ir a la Activity principal
-                                                    startActivity(objetoMensajero);
+
+                                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usuarios").child(correoText.replace(".", "")).child("Admin");
+                                                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                                                        @Override
+                                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                                            esAdmin = dataSnapshot.getValue(String.class);
+
+                                                            if (esAdmin != null && esAdmin.equals("si")) {
+                                                                // Realiza las operaciones necesarias si esAdmin no es nulo y es igual a "si"
+                                                                startActivity(objetoMensajeroAdmin);
+                                                            } else {
+                                                                // Realiza las operaciones necesarias si esAdmin es nulo o no es igual a "si"
+                                                                startActivity(objetoMensajero);
+                                                            }
+                                                        }
+
+                                                        @Override
+                                                        public void onCancelled(DatabaseError databaseError) {
+                                                            // Manejo de errores
+                                                        }
+                                                    });
                                                     // objetoMensajeroDatos.putExtra("correo", correoText.replace(".", ""));
                                                     // startActivity(objetoMensajeroDatos);
                                                 } else {
@@ -365,8 +476,8 @@ public class FirebaseActivity extends AppCompatActivity {
                                                 }
                                             }
                                         });
-                    }else {
-                            Toast.makeText(getApplicationContext(),
+                                            }else {
+                                       Toast.makeText(getApplicationContext(),
                                             getText(R.string.toast_sin_conexion).toString(),
                                             Toast.LENGTH_LONG)
                                     .show();
@@ -392,7 +503,7 @@ public class FirebaseActivity extends AppCompatActivity {
                 }
             });
 
-        /*
+/*
         mAuth
                 .createUserWithEmailAndPassword("celiatoribio95@gmail.com", "practicas")
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -417,12 +528,12 @@ public class FirebaseActivity extends AppCompatActivity {
                             datos.put("nombre", "CELIA");
                             datos.put("apellidos", "TORIBIO");
                             datos.put("correo", "celiatoribio95@gmail.com");
-                            datos.put("Admin",true);
+                            datos.put("Admin","si");
                             databaseReference.child("usuarios").child("celiatoribio95@gmail.com".replace(".", "")).setValue(datos);
 
                         }}});
-                        */
 
+*/
 
     }
 

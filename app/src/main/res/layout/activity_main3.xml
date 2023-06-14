@@ -17,6 +17,7 @@
         android:orientation="vertical"
         tools:ignore="ExtraText">
 
+
         <TextView
             android:id="@+id/tvE2"
             android:layout_width="match_parent"

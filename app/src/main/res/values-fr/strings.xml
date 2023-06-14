@@ -47,4 +47,21 @@
         <item>Francés</item>
     </string-array>
     <string name="salir">" sortir"</string>
+    <string name="falloEnLaBase">" Échec de la base de données"</string>
+    <string name="IndicaAntesBoton">" Indique avant d'appuyer sur le bouton le type d'incident"</string>
+    <string name="toast_sin_conexion">" Pas de connexion Internet"</string>
+    <string name="recuerdame">Mémoriser l\'email et le mot de passe</string>
+    <string name="navigation_drawer_open">Ouvrir</string>
+    <string name="navigation_drawer_close">Sortie</string>
+    <string name="selector_fecha_ini">" Sélectionnez la date de début"</string>
+    <string name="selector_fecha_fin">Sélectionnez la date de fin</string>
+
+    <string name="btn_Buscar">Recherche</string>
+
+    <string name="HoraDeEntrada">Heure d\'entrée :</string>
+    <string name="HoraDeSalida">Heure de départ :</string>
+    <string name="Total">Totale :</string>
+    <string name="Guardar">Sauver</string>
+    <string name="GuardarUbi">Enregistrer l\'emplacement actuel</string>
+    <string name="Empleados">Employés</string>
 </resources>

@@ -17,7 +17,20 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="140dp"
         android:background="#4BFFFFFF"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationViews"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="30dp"
+            android:foregroundGravity="center"
+            app:lottie_autoPlay="true"
+            app:lottie_fileName="94123-1hour-login-effect.json"
+            app:lottie_imageAssetsFolder="assets"
+            app:lottie_loop="true" />
 
 
         <EditText
@@ -25,22 +38,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/correo"
             android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/edContraseya"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/contrasenya"
-            android:inputType="textPassword" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="15dp">
+
+            <EditText
+                android:id="@+id/edContraseya"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:fontFamily="sans-serif-smallcaps"
+                android:hint="@string/contrasenya"
+                android:inputType="textPassword" />
+
+            <ImageView
+                android:id="@+id/imgOjo"
+                android:layout_width="68dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/en" />
+
+        </LinearLayout>
 
         <EditText
             android:id="@+id/edtnombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/name"
             android:inputType="textPersonName" />
 
@@ -49,6 +80,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/ap"
             android:inputType="textPersonName" />
 
@@ -56,18 +88,22 @@
             android:id="@+id/btnlogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/login" />
 
         <Button
             android:id="@+id/btnregistro"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/registro" />
 
         <CheckBox
             android:id="@+id/checkBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="sans-serif-smallcaps"
             android:text="@string/recuerdame" />
     </LinearLayout>
 </LinearLayout>

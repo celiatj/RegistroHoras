@@ -50,8 +50,8 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
     private DatabaseReference usuarioRef;
     private String fechaInicio = "";
     private String fechaFin = "";
-    private double ubicacionLatitude = 39.4672809;
-    private double ubicacionLongitude = -0.3869;
+    private double ubicacionLatitude;
+    private double ubicacionLongitude;
 
 
     @Override
@@ -61,6 +61,7 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         Button btnUBuscar = view.findViewById(R.id.btnUbuscar);
         EditText etUFechaInicio = view.findViewById(R.id.etUFechaInicio);
         EditText etUFechaFin = view.findViewById(R.id.etUFechaFin);
+        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
 
         etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -101,7 +102,6 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         mRegistrosU = new ArrayList<>();
 
         // Obtener el correo electrónico del usuario desde los extras del intent
-        SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         db = FirebaseDatabase.getInstance();
         String corr = preferenciasCompartidas.getString("email", "");
 

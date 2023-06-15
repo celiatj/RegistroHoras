@@ -19,6 +19,7 @@ import android.os.Bundle;
 
 
 import android.content.res.Resources;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
@@ -31,12 +32,10 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
@@ -48,23 +47,21 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import com.google.android.gms.maps.MapView;
-public class MainActivityConf extends AppCompatActivity  {
+
+public class MainActivityConf extends AppCompatActivity {
 
     private EditText nombre;
     private EditText ap1;
     private Switch swNotificaciones;
-    private Button guardar,ubicacion;
+    private Button guardar, ubicacion;
     private Spinner spIdiomas;
     private String[] arrayIdiomas;
     private ArrayAdapter<String> adaptadorIdiomas;
     private DatabaseReference usuarioRef; // Referencia a los datos del usuario en Firebase
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     SharedPreferences preferencias;
-    double longitude,latitude;
+    double longitude, latitude;
     private FusedLocationProviderClient fusedLocationClient;
-    private MapView mapView;
-    private GoogleMap googleMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +97,8 @@ public class MainActivityConf extends AppCompatActivity  {
         guardar = findViewById(R.id.guardar);
         ubicacion = findViewById(R.id.btnUbi);
 
-       // mapView = findViewById(R.id.mapView);
-       // mapView.onCreate(savedInstanceState);
+        // mapView = findViewById(R.id.mapView);
+        // mapView.onCreate(savedInstanceState);
 
         // Recuperar datos del usuario y mostrarlos en los EditTexts correspondientes
         usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -178,13 +175,14 @@ public class MainActivityConf extends AppCompatActivity  {
                 SharedPreferences.Editor editorPreferencias = preferencias.edit();
 
                 fusedLocationClient = LocationServices.getFusedLocationProviderClient(getApplicationContext());
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
                 if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // Los permisos de ubicación no están concedidos, puedes mostrar un mensaje o solicitar los permisos nuevamente.
                     return;
                 }
+
                 fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @SuppressLint("MissingPermission")
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
@@ -192,10 +190,22 @@ public class MainActivityConf extends AppCompatActivity  {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
 
+                            // Guardar las coordenadas en las preferencias
+                            editorPreferencias.putFloat("uLatitud", (float) latitude);
+                            editorPreferencias.putFloat("uLongitude", (float) longitude);
+                            editorPreferencias.commit(); // Guarda los cambios en SharedPreferences
+
+                            Toast.makeText(getApplicationContext(), latitude + "-" + longitude, Toast.LENGTH_SHORT).show();
 
                         } else {
-                            latitude = 0;
-                            longitude = 0;
+                            // Solicitar actualizaciones de la ubicación
+                            LocationRequest locationRequest = LocationRequest.create();
+                            locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                            locationRequest.setInterval(10000); // Actualiza cada 10 segundos
+
+                            fusedLocationClient.requestLocationUpdates(locationRequest,
+                                    locationCallback,
+                                    Looper.getMainLooper());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -204,20 +214,39 @@ public class MainActivityConf extends AppCompatActivity  {
                         latitude = 0;
                         longitude = 0;
 
+                        Toast.makeText(getApplicationContext(), "Error obteniendo la ubicación", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-                // Guardar las coordenadas en la base de datos o donde sea necesario
-                editorPreferencias.putFloat("uLatitud", (float) latitude);
-                editorPreferencias.putFloat("uLongitude", (float) longitude);
-                Toast.makeText(getApplicationContext(), latitude + "-" + longitude, Toast.LENGTH_SHORT).show();
-
-                editorPreferencias.commit(); // Guarda los cambios en SharedPreferences
-
-
             }
         });
+
     }
+
+    // Aquí necesitarías definir tu LocationCallback
+    private LocationCallback locationCallback = new LocationCallback() {
+        @Override
+        public void onLocationResult(LocationResult locationResult) {
+            if (locationResult == null) {
+                return;
+            }
+            for (Location location : locationResult.getLocations()) {
+                if (location != null) {
+                    // Guarda las coordenadas obtenidas en las preferencias
+                    SharedPreferences.Editor editorPreferencias = preferencias.edit();
+                    editorPreferencias.putFloat("uLatitud", (float) location.getLatitude());
+                    editorPreferencias.putFloat("uLongitude", (float) location.getLongitude());
+                    editorPreferencias.commit();
+
+                    Toast.makeText(getApplicationContext(), location.getLatitude() + "-" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+
+                    // Detiene la actualización de la ubicación después de obtener una ubicación válida
+                    fusedLocationClient.removeLocationUpdates(this);
+                }
+            }
+        }
+    };
+
+
 
 
 /*

@@ -44,7 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
     implementation 'com.airbnb.android:lottie:5.2.0'
-    def lottieVersion = "3.4.0"
+    def lottieVersion = '6.0.1'
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation 'com.google.firebase:firebase-database:20.1.0'
     implementation 'com.google.firebase:firebase-messaging:23.1.2'

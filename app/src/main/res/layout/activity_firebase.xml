@@ -62,7 +62,7 @@
                 android:layout_width="68dp"
                 android:layout_height="45dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/en" />
+                app:srcCompat="@drawable/ojoa" />
 
         </LinearLayout>
 

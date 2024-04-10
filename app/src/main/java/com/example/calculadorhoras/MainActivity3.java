@@ -1,24 +1,11 @@
 package com.example.calculadorhoras;
 
 import static android.content.Context.MODE_PRIVATE;
-import static androidx.constraintlayout.motion.widget.Debug.getLocation;
-
-import static java.lang.Thread.sleep;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -27,9 +14,7 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,19 +28,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -64,22 +40,14 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.annotations.Nullable;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import android.location.LocationManager;
-import android.content.Context;
-import com.google.android.gms.location.LocationServices;
 
 public class MainActivity3 extends Fragment {
     public TextView total;
@@ -164,6 +132,8 @@ public class MainActivity3 extends Fragment {
         View view = inflater.inflate(R.layout.activity_main3, container, false);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         obtenerUbicacion();
+
+
 /*
         while (!isLocationEnabled) {
             // Comprobar si la ubicación está habilitada
@@ -191,7 +161,7 @@ public class MainActivity3 extends Fragment {
         createNotificationChannel();
         // Configuración de idioma
 
-        String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "es");
+        String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "");
          timeE = preferenciasCompartidas.getString("entrada", "");
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
@@ -436,6 +406,7 @@ public class MainActivity3 extends Fragment {
         conf.setLayoutDirection(myLocale);
         res.updateConfiguration(conf, dm);
     }
+
 
     // Crear canal de notificaciones
     private void createNotificationChannel() {

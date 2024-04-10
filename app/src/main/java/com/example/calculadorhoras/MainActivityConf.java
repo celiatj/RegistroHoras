@@ -3,7 +3,6 @@ package com.example.calculadorhoras;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -132,23 +131,38 @@ public class MainActivityConf extends AppCompatActivity {
 
                 int idiomaAnterior = preferencias.getInt("idioma", 0);
                 int idiomaActual = spIdiomas.getSelectedItemPosition();
-
+                String[] codigosIdioma = {"es", "en", "fr"}; // Mapeo de índices a códigos de idioma
                 if (idiomaAnterior != idiomaActual) {
                     AlertDialog.Builder constructorDialogo = new AlertDialog.Builder(MainActivityConf.this);
                     constructorDialogo.setMessage(getText(R.string.aviso_cambio_idioma_mensaje));
-                    constructorDialogo.setPositiveButton(getText(R.string.aviso_cambio_idioma_aceptar), (DialogInterface.OnClickListener) (dialog, which) -> {
-                        dialog.cancel();
+                    constructorDialogo.setPositiveButton(getText(R.string.aviso_cambio_idioma_aceptar), (dialog, which) -> {
+                        // Guardar la selección del idioma
+                        SharedPreferences.Editor editor = preferencias.edit();
+                        editor.putInt("idioma", idiomaActual);
+                        editor.apply();
+
+                        editor.putInt("idioma", idiomaActual);
+                        editor.apply();
+                        // Obtener el código de idioma correspondiente al índice seleccionado
+                        String codigoIdiomaSeleccionado = codigosIdioma[idiomaActual];
+
+                        // Guardar el código del idioma seleccionado en SharedPreferences
+                        editor.putString("codigo_idioma", codigoIdiomaSeleccionado);
+                        editor.apply();
+
+                        // Establecer el idioma de la aplicación
+                        setAppLocale(codigoIdiomaSeleccionado);
+
+                        dialog.dismiss();
                     });
                     AlertDialog dialogoAvisoCambioIdioma = constructorDialogo.create();
                     dialogoAvisoCambioIdioma.show();
                 }
-
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                // No es necesario hacer nada aquí
             }
         });
 

@@ -175,11 +175,11 @@ public class FirebaseActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 if (contadorOjo) {
-                    imgOjo.setImageResource(R.drawable.en);
+                    imgOjo.setImageResource(R.drawable.ojoa);
                     contraseya.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                     contadorOjo = false;
                 } else {
-                    imgOjo.setImageResource(R.drawable.sa);
+                    imgOjo.setImageResource(R.drawable.ojoc);
                     contraseya.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     contadorOjo = true;
                 }

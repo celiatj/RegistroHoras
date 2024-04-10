@@ -14,7 +14,7 @@
     <string name="aviso_cambio_idioma_aceptar">Agreed</string>
     <string name="toast_registro_fallo">Registration failed</string>
     <string name="toast_registro_exito">Record saved</string>
-    <string name="toast_introducir_password">" Enter a password"</string>
+    <string name="toast_introducir_password">"Enter a password"</string>
     <string name="toast_identificacion_fallo">Identification failure</string>
     <string name="toast_identificacion_exito">Correct identification</string>
     <string name="toast_introducir_email">" Enter an email"</string>
@@ -24,8 +24,8 @@
     <string name="contrasenya">Password</string>
     <string name="login">Login</string>
     <string name="configuracion">" Setting"</string>
-    <string name="registro">" Record"</string>
-    <string name="salida">" Exit"</string>
+    <string name="registro">"Record"</string>
+    <string name="salida">"Exit"</string>
     <string name="entrada">Entry</string>
     <string name="salir">go out</string>
     <string name="incidencia">Incidence</string>

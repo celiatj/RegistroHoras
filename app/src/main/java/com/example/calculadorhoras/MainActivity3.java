@@ -50,14 +50,11 @@ import java.util.Locale;
 import java.util.Map;
 
 public class MainActivity3 extends Fragment {
-    public TextView total;
-    public TextView entrada;
-    public TextView salida;
+    public TextView total,entrada,salida;
+
     private Button registroEntrada, registroSalida;
     private Button botonSalir;
-    String horasTotal;
-    String dia;
-    String timeE, timeS;
+    String horasTotal,dia,timeE, timeS;
     int horaE, horaS, minE, minS, anyoE, anyoS, mesE, mesS, diaE, diaS;
     private FirebaseAuth mAuth;
     private FirebaseDatabase db;
@@ -66,7 +63,6 @@ public class MainActivity3 extends Fragment {
     private ArrayAdapter<String> adaptadorInci;
     final static String CHANNEL_ID = "NOTIFICACIONES";
     boolean contadorE;
-
     double longitude,latitude;
     Map<String, String> ubicacion = new HashMap<>();
     private static final int PERMISSION_REQUEST_CODE = 1;
@@ -292,6 +288,7 @@ public class MainActivity3 extends Fragment {
                 minE = preferenciasCompartidas.getInt("minE", 0);
                 timeS = String.format("%02d:%02d", horaS, minS);
                 salida.setText(timeS);
+
                 // Inicializar aplicación de Firebase
                 FirebaseApp.initializeApp(getActivity().getApplicationContext());
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
@@ -310,7 +307,7 @@ public class MainActivity3 extends Fragment {
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).child("ubicacion").setValue(ubicacion);
                 Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
 
-                // calculamos las horas trabajadas:
+                // calculamos las horas trabajadas teniendo en cuenta horario nocturno:
 
                 int tE = (horaE * 60) + minE;
                 int tS = (horaS * 60) + minS;

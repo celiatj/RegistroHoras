@@ -2,17 +2,7 @@ package com.example.calculadorhoras;
 
 import static android.content.Context.MODE_PRIVATE;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.viewmodel.CreationExtras;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,24 +11,20 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
-import java.util.Locale;
-import java.util.Map;
 
 public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDateSetListener {
     private RecyclerView mRecyclerView;
@@ -52,15 +38,16 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
     private String fechaFin = "";
     private double ubicacionLatitude;
     private double ubicacionLongitude;
+    private  EditText etUFechaInicio, etUFechaFin;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_registro_usuarios, container, false);
 
-        Button btnUBuscar = view.findViewById(R.id.btnUbuscar);
-        EditText etUFechaInicio = view.findViewById(R.id.etUFechaInicio);
-        EditText etUFechaFin = view.findViewById(R.id.etUFechaFin);
+        btnUBuscar = view.findViewById(R.id.btnUbuscar);
+        etUFechaInicio = view.findViewById(R.id.etUFechaInicio);
+        etUFechaFin = view.findViewById(R.id.etUFechaFin);
         SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
 
         etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {

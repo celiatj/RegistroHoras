@@ -43,14 +43,13 @@
             android:inputType="textEmailAddress" />
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:padding="15dp">
+            android:layout_width="343dp"
+            android:layout_height="42dp"
+            android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edContraseya"
-                android:layout_width="wrap_content"
+                android:layout_width="258dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:fontFamily="sans-serif-smallcaps"
@@ -59,10 +58,10 @@
 
             <ImageView
                 android:id="@+id/imgOjo"
-                android:layout_width="68dp"
-                android:layout_height="45dp"
+                android:layout_width="17dp"
+                android:layout_height="33dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/ojoa" />
+                app:srcCompat="@drawable/ojoc" />
 
         </LinearLayout>
 

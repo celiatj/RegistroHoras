@@ -63,12 +63,9 @@ public class FirebaseActivity extends AppCompatActivity {
 
     }
     String esAdmin;
-    private EditText correo;
-    private EditText contraseya;
-    private EditText nombre;
-    private EditText apellido;
-    private Button registro;
-    private Button login;
+    private EditText correo,contraseya,nombre,apellido;
+
+    private Button registro,login;
     private ImageView imgOjo;
     private FirebaseAuth mAuth;
     private static final String TAG = "EmailPassword";
@@ -252,10 +249,6 @@ public class FirebaseActivity extends AppCompatActivity {
         /*else
             obtenerUbicacion();
         */
-
-
-
-
 
         // Guardar correo en las SharedPreferences para posterior uso
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);

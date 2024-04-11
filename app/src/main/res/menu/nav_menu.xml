@@ -3,13 +3,21 @@
 
         <group android:checkableBehavior="single">
             <item
-                android:id="@+id/nav_option1"
-                android:title="Opción 1"/>
+                android:id="@+id/nav_current_page"
+                android:icon="?android:attr/actionModeFindDrawable"
+                android:title="Informe por Registror" />
             <item
-                android:id="@+id/nav_option2"
-                android:title="Opción 2"/>
+                android:id="@+id/nav_daily_reports"
+                android:icon="?android:attr/actionModeFindDrawable"
+                android:title="Informes Diarios" />
             <item
-                android:id="@+id/nav_option3"
-                android:title="Opción 3"/>
+                android:id="@+id/nav_weekly_reports"
+                android:icon="@android:drawable/ic_menu_week"
+                android:title="Informes Semanales" />
+
+            <item
+                android:id="@+id/nav_changeUbi"
+                android:icon="@android:drawable/ic_menu_week"
+                android:title="Cambiar Ubicación" />
         </group>
 </menu>

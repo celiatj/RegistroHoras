@@ -67,6 +67,8 @@
     <string name="GuardarUbi">Guardar ubicacion actual</string>
     <string name="Empleados">Empleados</string>
     <string name="InfoBtnUbi">"Pulsa el Boton para guardar la ubicacion del trabajo "</string>
+    <string name="drawer_open">Abrir-11</string>
+    <string name="drawer_close">Cerar-11</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

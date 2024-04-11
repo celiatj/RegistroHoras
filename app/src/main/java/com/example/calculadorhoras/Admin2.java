@@ -1,21 +1,23 @@
 package com.example.calculadorhoras;
 
-import static android.content.ContentValues.TAG;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -23,7 +25,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,7 +35,10 @@ public class Admin2 extends AppCompatActivity {
         private TextView tvnombre;
         private MiAdapter2 mAdapter;
         private ArrayList<Registro> mRegistros;
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle drawerToggle;
 
+    private NavigationView navigationView;
     String idRegistro;
     public Date getFecha() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -49,6 +53,38 @@ public class Admin2 extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_admin2);
+
+            drawerLayout = findViewById(R.id.drawer_layout);
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+            drawerLayout.addDrawerListener(drawerToggle);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
+
+            navigationView = findViewById(R.id.navigation_view);
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.nav_current_page:
+                            Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
+                            startActivity(intentCurrentPage);
+                            break;
+                        case R.id.nav_daily_reports:
+                            Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
+                            startActivity(intentDailyReports);
+                            break;
+                        case R.id.nav_weekly_reports:
+                            // Maneja la navegación a los informes semanales
+                            break;
+                        case R.id.nav_changeUbi:
+                            Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
+                            startActivity(intentUbi);
+                            break;
+                    }
+                    drawerLayout.closeDrawers();
+                    return true;
+                }
+            });
 
             EditText etFechaInicio = findViewById(R.id.etFechaInicio);
             EditText etFechaFin = findViewById(R.id.etFechaFin);
@@ -91,7 +127,7 @@ public class Admin2 extends AppCompatActivity {
                                 mRegistros = new ArrayList<>();
                                 for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
                                     // Obtén los datos del registro
-                                     idRegistro = registroSnapshot.getKey(); // Aquí obtenemos el ID del registro
+                                     idRegistro= registroSnapshot.getKey().substring(6, 12); // Aquí obtenemos el ID del registro y eliminamos los 6 primeros digitos por se año y mes
                                     String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
                                     String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 
@@ -179,4 +215,24 @@ public class Admin2 extends AppCompatActivity {
                 }
             });
         }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (drawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
 }

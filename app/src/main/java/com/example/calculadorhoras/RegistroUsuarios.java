@@ -50,6 +50,7 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         etUFechaFin = view.findViewById(R.id.etUFechaFin);
         SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
 
+        /*
         etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
@@ -58,27 +59,24 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
                 fragmentSelectorFecha.show(getParentFragmentManager(), (String) getText(R.string.selector_fecha_ini));
             }
         });
+*/
+
+        etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePickerDialog(true);
+                }
+            }
+        });
+
 
         etUFechaFin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onFocusChange(View view, boolean b) {
-                com.example.calculadorhoras.DatePicker fragmentSelectorFecha;
-                fragmentSelectorFecha = new com.example.calculadorhoras.DatePicker();
-                fragmentSelectorFecha.show(getParentFragmentManager(), (String) getText(R.string.selector_fecha_fin));
-            }
-        });
-
-        etUFechaInicio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog(true);
-            }
-        });
-
-        etUFechaFin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog(false);
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePickerDialog(false);
+                }
             }
         });
 
@@ -212,22 +210,46 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         datePickerDialog.show();
     }
 
+
+
     @Override
     public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
-        String fechaSeleccionada = String.format("%02d/%02d/%02d", anyo, (mes + 1),dia);
-        EditText etFechaInicio = getView().findViewById(R.id.etUFechaInicio);
-        EditText etFechaFin = getView().findViewById(R.id.etUFechaFin);
+        String fechaSeleccionada = String.format("%02d/%02d/%02d", anyo, (mes + 1), dia); // Formato año/mes/día
 
-        if (etFechaInicio.hasFocus()) {
-            etFechaInicio.setText(fechaSeleccionada);
-            fechaInicio = fechaSeleccionada; // Actualizar fechaInicio con el valor seleccionado
-        } else if (etFechaFin.hasFocus()) {
-            etFechaFin.setText(fechaSeleccionada);
-            fechaFin = fechaSeleccionada; // Actualizar fechaFin con el valor seleccionado
+        // Obtener la referencia al EditText que tiene el foco
+        EditText editTextConFoco = etUFechaInicio.hasFocus() ? etUFechaInicio : etUFechaFin;
+
+        // Establecer la fecha seleccionada en el EditText correspondiente
+        editTextConFoco.setText(fechaSeleccionada);
+
+        // Actualizar la variable de fecha correspondiente con el valor seleccionado
+        if (editTextConFoco == etUFechaInicio) {
+            fechaInicio = fechaSeleccionada;
+        } else if (editTextConFoco == etUFechaFin) {
+            fechaFin = fechaSeleccionada;
         }
     }
 }
+
 /*
+@Override
+public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
+    String fechaSeleccionada = String.format("%02d/%02d/%02d", dia, (mes + 1), anyo); // Formato día/mes/año
+
+    // Obtener la referencia al EditText que tiene el foco
+    EditText editTextConFoco = etUFechaInicio.hasFocus() ? etUFechaInicio : etUFechaFin;
+
+    // Establecer la fecha seleccionada en el EditText correspondiente
+    editTextConFoco.setText(fechaSeleccionada);
+
+    // Actualizar la variable de fecha correspondiente con el valor seleccionado
+    if (editTextConFoco == etUFechaInicio) {
+        fechaInicio = fechaSeleccionada;
+    } else if (editTextConFoco == etUFechaFin) {
+        fechaFin = fechaSeleccionada;
+    }
+}
+
         private void showDatePickerDialog ( boolean isStartDate){
             Calendar calendar = Calendar.getInstance();
             int year = calendar.get(Calendar.YEAR);

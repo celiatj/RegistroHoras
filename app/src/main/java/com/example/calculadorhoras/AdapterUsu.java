@@ -1,39 +1,19 @@
 package com.example.calculadorhoras;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-
 public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
     private ArrayList<RegistroUsu> mRegistrosU;
-    private double ubicacionLatitude;
-    private double ubicacionLongitude;
-
+    private double ubicacionLatitude,registroLatitude;
+    private double ubicacionLongitude, registroLongitude;
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView midTextView;
         public TextView mTipoTextView;
@@ -50,6 +30,7 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
     public AdapterUsu(double ubicacionLatitude, double ubicacionLongitude) {
         this.ubicacionLatitude = ubicacionLatitude;
         this.ubicacionLongitude = ubicacionLongitude;
+
     }
 
     public void setRegistros(ArrayList<RegistroUsu> registros) {
@@ -71,10 +52,11 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
         holder.mTipoTextView.setText(registro.getTipo());
         holder.mIncidenciaTextView.setText(registro.getIncidencia());
 
-        // Verificar si la ubicación existe
+        //Verificar si la ubicación existe
         if (registro.getUbicacion() != null) {
-            double registroLatitude = Double.parseDouble(registro.getUbicacion().get("latitude"));
-            double registroLongitude = Double.parseDouble(registro.getUbicacion().get("longitude"));
+             this.registroLatitude = Double.parseDouble(registro.getUbicacion().get("latitude"));
+             this.registroLongitude = Double.parseDouble(registro.getUbicacion().get("longitude"));
+
 
             if (distanciaEntreCoordenadas(registroLatitude, registroLongitude, ubicacionLatitude, ubicacionLongitude) <= 2) {
                 holder.mTipoTextView.setBackgroundColor(Color.GREEN);

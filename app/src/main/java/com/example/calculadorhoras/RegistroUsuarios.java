@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,9 +39,8 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
     private String fechaFin = "";
     private double ubicacionLatitude;
     private double ubicacionLongitude;
-    private  EditText etUFechaInicio, etUFechaFin;
-
-
+    private EditText etUFechaInicio, etUFechaFin;
+    String longitude,latitude;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_registro_usuarios, container, false);
@@ -93,11 +93,38 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         tvnombre = view.findViewById(R.id.tvnombreUsuario);
         tvnombre.setText(corr);
 
-        // Configurar el RecyclerView
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(layoutManager);
-        mAdapterU = new AdapterUsu(ubicacionLatitude, ubicacionLongitude);
-        mRecyclerView.setAdapter(mAdapterU);
+        // Obtener la referencia al nodo de la ubicación de la oficina
+        DatabaseReference ubicacionRef = db.getReference("usuarios").child(corr).child("ubicacionOficina");
+
+        // Obtener los valores de latitud y longitud
+        ubicacionRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Obtener el valor completo de ubicacionOficina
+                    String ubiOficial = dataSnapshot.getValue(String.class);
+
+                    // Dividir la cadena en latitud y longitud
+                    String[] partes = ubiOficial.split(":");
+                    if (partes.length == 2) {
+                        ubicacionLongitude = Double.parseDouble(partes[1]);
+                        ubicacionLatitude = Double.parseDouble(partes[0]);
+
+                    } else {
+                        // Manejar la situación en la que la ubicación no tiene el formato esperado
+                        // Podrías lanzar una excepción, imprimir un mensaje de error, o tomar otra acción adecuada
+                    }
+                } else {
+                    // Manejar la situación en la que no existe el nodo de ubicacionOficina para el usuario
+                    // Podrías lanzar una excepción, imprimir un mensaje de error, o tomar otra acción adecuada
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         // Obtener referencia a la base de datos
         DatabaseReference ref = db.getReference("usuarios").child(corr).child("Registros");
@@ -113,8 +140,8 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
                     String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
                     String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 
-                    String latitude = registroSnapshot.child("ubicacion").child("latitude").getValue(String.class);
-                    String longitude = registroSnapshot.child("ubicacion").child("longitude").getValue(String.class);
+                    latitude = registroSnapshot.child("ubicacion").child("latitude").getValue(String.class);
+                    longitude = registroSnapshot.child("ubicacion").child("longitude").getValue(String.class);
 
                     if (latitude != null && longitude != null) {
                         RegistroUsu registro = new RegistroUsu(idRegistro, tipoRegistro, incidenciaRegistro, latitude, longitude);
@@ -124,6 +151,11 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
                         mRegistrosU.add(registro);
                     }
                 }
+                // Configurar el RecyclerView
+                LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+                mRecyclerView.setLayoutManager(layoutManager);
+                mAdapterU = new AdapterUsu(ubicacionLatitude, ubicacionLongitude);
+                mRecyclerView.setAdapter(mAdapterU);
 
                 // Notificar al adaptador de los cambios en los datos
                 mAdapterU.setRegistros(mRegistrosU);
@@ -209,7 +241,6 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
 
         datePickerDialog.show();
     }
-
 
 
     @Override

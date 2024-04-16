@@ -295,7 +295,6 @@ public class MainActivity3 extends Fragment {
                 db = FirebaseDatabase.getInstance();
 
 
-
                 //SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                 String corr = preferenciasCompartidas.getString("email", "");
                 //String ubi= preferenciasCompartidas.getString("latitude", "")+" "+preferenciasCompartidas.getString("longitude", "");

@@ -83,6 +83,18 @@
             android:hint="@string/ap"
             android:inputType="textPersonName" />
 
+        <TextView
+            android:id="@+id/tvEmpresa"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/EligeEmpresa" />
+
+        <Spinner
+            android:id="@+id/spnEmpresas"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:tag="@string/empresas" />
+
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="match_parent"

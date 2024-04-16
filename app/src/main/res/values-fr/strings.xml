@@ -64,4 +64,6 @@
     <string name="Guardar">Sauver</string>
     <string name="GuardarUbi">Enregistrer l\'emplacement actuel</string>
     <string name="Empleados">Employés</string>
+    <string name="EligeEmpresa">Elige una empresa</string>
+    <string name="empresas">Empresas</string>
 </resources>

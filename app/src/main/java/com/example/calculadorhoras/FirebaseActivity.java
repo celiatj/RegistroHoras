@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -15,11 +16,14 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,13 +62,13 @@ public class FirebaseActivity extends AppCompatActivity {
             }
             return false;
         }
-
-
-
     }
     String esAdmin;
+    private TextView tvEmpresa;
     private EditText correo,contraseya,nombre,apellido;
-
+    private Spinner spEmpresas;
+    private String[] emp;
+    private ArrayAdapter<String> adaptadorEmp;
     private Button registro,login;
     private ImageView imgOjo;
     private FirebaseAuth mAuth;
@@ -136,9 +140,6 @@ public class FirebaseActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,8 +158,10 @@ public class FirebaseActivity extends AppCompatActivity {
 
         nombre = findViewById(R.id.edtnombre);
         apellido = findViewById(R.id.edtap);
+        tvEmpresa= findViewById(R.id.tvEmpresa);
         nombre.setVisibility(View.GONE);
         apellido.setVisibility(View.GONE);
+        tvEmpresa.setVisibility(View.GONE);
 
         registro = findViewById(R.id.btnregistro);
         login = findViewById(R.id.btnlogin);
@@ -166,6 +169,13 @@ public class FirebaseActivity extends AppCompatActivity {
         SharedPreferences.Editor editorPreferencias = preferencias.edit();
         imgOjo = findViewById(R.id.imgOjo);
 
+        // Rellenamos el Spinner
+        spEmpresas =  findViewById(R.id.spnEmpresas);
+        Resources res = getResources();
+        emp = res.getStringArray(R.array.array_empresas);
+        adaptadorEmp = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, emp);
+        spEmpresas.setAdapter(adaptadorEmp);
+        spEmpresas.setVisibility(View.GONE);
 
         imgOjo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -279,11 +289,14 @@ public class FirebaseActivity extends AppCompatActivity {
                     contador++;
 
                     if (contador == 1) {
+                        spEmpresas.setVisibility(View.VISIBLE);
                         nombre.setVisibility(View.VISIBLE);
                         apellido.setVisibility(View.VISIBLE);
+                        tvEmpresa.setVisibility(View.VISIBLE);
                         login.setEnabled(false);
                         // Avisa al usuario que tiene que pulsar de nuevo
                         Toast.makeText(getApplicationContext(), "Pulse de nuevo para completar el registro", Toast.LENGTH_SHORT).show();
+
                     } else if (contador >= 2) {
                         String nom = nombre.getText().toString();
                         String ap = apellido.getText().toString();
@@ -322,6 +335,7 @@ public class FirebaseActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(getApplicationContext(), getText(R.string.toast_registro_exito).toString(), Toast.LENGTH_LONG).show();
+                                            int posicionInci = spEmpresas.getSelectedItemPosition();
 
                                             // Creamos ese usuario en la base de datos en tiempo real de Firebase
                                             // No se permite el caracter punto en las rutas de Firebase así que lo filtramos
@@ -333,7 +347,7 @@ public class FirebaseActivity extends AppCompatActivity {
                                             datos.put("apellidos", ap);
                                             datos.put("correo", corr);
                                             datos.put("Admin", "no");
-
+                                            datos.put("IdEmpresa", emp[posicionInci]);
                                             refUsuario.setValue(datos);
 
                                             // Reinicia el contador para permitir la próxima secuencia de pulsaciones

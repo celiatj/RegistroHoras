@@ -17,6 +17,12 @@
         <item>Accidente Laboral</item>
     </string-array>
 
+    <string-array name="array_empresas">
+        <item>Empresa_A</item>
+        <item>Empresa_B</item>
+        <item>Empresa_C</item>
+    </string-array>
+
     <string name="txt_salir_app_mensaje" translatable="true">¡Adios!</string>
     <string name="txt_salir_app_titulo">¿Salir?</string>
     <string name="txt_si">Si</string>
@@ -69,6 +75,8 @@
     <string name="InfoBtnUbi">"Pulsa el Boton para guardar la ubicacion del trabajo "</string>
     <string name="drawer_open">Abrir-11</string>
     <string name="drawer_close">Cerar-11</string>
+    <string name="EligeEmpresa">Elige una empresa</string>
+    <string name="empresas">Empresas</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

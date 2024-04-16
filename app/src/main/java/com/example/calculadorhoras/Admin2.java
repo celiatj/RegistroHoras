@@ -53,6 +53,9 @@ public class Admin2 extends AppCompatActivity {
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_admin2);
+            // Obtener el correo electrónico del usuario desde los extras del intent
+            String nombre = getIntent().getStringExtra("nombre");
+            String correo = getIntent().getStringExtra("correo");
 
             drawerLayout = findViewById(R.id.drawer_layout);
             drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
@@ -67,10 +70,12 @@ public class Admin2 extends AppCompatActivity {
                     switch (menuItem.getItemId()) {
                         case R.id.nav_current_page:
                             Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
+                            intentCurrentPage.putExtra("correo", correo);
                             startActivity(intentCurrentPage);
                             break;
                         case R.id.nav_daily_reports:
                             Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
+                            intentDailyReports.putExtra("correo", correo);
                             startActivity(intentDailyReports);
                             break;
                         case R.id.nav_weekly_reports:
@@ -78,6 +83,7 @@ public class Admin2 extends AppCompatActivity {
                             break;
                         case R.id.nav_changeUbi:
                             Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
+                            intentUbi.putExtra("correo", correo);
                             startActivity(intentUbi);
                             break;
                     }
@@ -94,9 +100,7 @@ public class Admin2 extends AppCompatActivity {
             // Obtener la referencia al RecyclerView
             mRecyclerView = findViewById(R.id.rvRegistros);
 
-            // Obtener el correo electrónico del usuario desde los extras del intent
-            String nombre = getIntent().getStringExtra("nombre");
-            String correo = getIntent().getStringExtra("correo");
+
             tvnombre = findViewById(R.id.tvNombreUsuario);
             tvnombre.setText(correo);
 

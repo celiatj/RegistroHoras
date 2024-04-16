@@ -91,10 +91,12 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
         ubicacion = findViewById(R.id.btnUbi);
         SharedPreferences preferencias = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         String corr = preferencias.getString("email", "");
+        String correo = getIntent().getStringExtra("correo");
         // Obtener la referencia  a los datos del usuario en Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        usuarioRef = database.getReference("usuarios").child(corr);
 
+        usuarioRef = database.getReference("usuarios").child(correo.replace(".", "")).child("ubicacionOficina");
+       // Toast.makeText(getApplicationContext(), correo, Toast.LENGTH_SHORT).show();
         // mapView = findViewById(R.id.mapView);
         // mapView.onCreate(savedInstanceState);
 
@@ -130,6 +132,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
 
+                           usuarioRef.setValue(latitude+":"+longitude);
                             // Guardar las coordenadas en las preferencias
                             editorPreferencias.putFloat("uLatitud", (float) latitude);
                             editorPreferencias.putFloat("uLongitude", (float) longitude);

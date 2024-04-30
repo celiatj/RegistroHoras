@@ -178,10 +178,12 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                     case R.id.nav_current_page:
                         Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
                         startActivity(intentCurrentPage);
+                        finish();
                         break;
                     case R.id.nav_daily_reports:
                         Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
                         startActivity(intentDailyReports);
+                        finish();
                         break;
                     case R.id.nav_weekly_reports:
                         // Maneja la navegación a los informes semanales
@@ -189,6 +191,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                     case R.id.nav_changeUbi:
                         Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
                         startActivity(intentUbi);
+                        finish();
                         break;
                 }
                 drawerLayout.closeDrawers();

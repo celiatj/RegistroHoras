@@ -77,6 +77,8 @@
     <string name="drawer_close">Cerar-11</string>
     <string name="EligeEmpresa">Elige una empresa</string>
     <string name="empresas">Empresas</string>
+    <string name="RegistroDia">Registros por Dia</string>
+    <string name="Atras">Atras</string>
 
 
     <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->

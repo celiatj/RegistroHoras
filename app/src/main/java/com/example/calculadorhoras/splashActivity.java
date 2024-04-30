@@ -1,23 +1,13 @@
 package com.example.calculadorhoras;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
-import android.widget.EditText;
-import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
-
-
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class splashActivity extends AppCompatActivity {
 
@@ -58,6 +48,7 @@ public class splashActivity extends AppCompatActivity {
             public void run() {
                 Intent objetoMensajero = new Intent(getApplicationContext(), FirebaseActivity.class);
                 startActivity(objetoMensajero);
+                finish();
             }
 
         }, 4000);

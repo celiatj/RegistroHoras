@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -47,6 +49,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -144,6 +147,10 @@ public class FirebaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_firebase);
+
+        SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
+        String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "");
+        setAppLocale(codigoIdioma);
 
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
@@ -255,6 +262,7 @@ public class FirebaseActivity extends AppCompatActivity {
 
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
+
         }
         /*else
             obtenerUbicacion();
@@ -358,6 +366,7 @@ public class FirebaseActivity extends AppCompatActivity {
                                             editorPreferencias.putString("contrasenya", cont);
                                             editorPreferencias.commit();
                                             startActivity(objetoMensajero);
+                                            finish();
                                         } else {
                                             // Registro fallido
                                             Toast.makeText(getApplicationContext(), getText(R.string.toast_registro_fallo).toString(), Toast.LENGTH_LONG).show();
@@ -447,9 +456,11 @@ public class FirebaseActivity extends AppCompatActivity {
                                                             if (esAdmin != null && esAdmin.equals("si")) {
                                                                 // Realiza las operaciones necesarias si esAdmin no es nulo y es igual a "si"
                                                                 startActivity(objetoMensajeroAdmin);
+                                                                finish();
                                                             } else {
                                                                 // Realiza las operaciones necesarias si esAdmin es nulo o no es igual a "si"
                                                                 startActivity(objetoMensajero);
+                                                                finish();
                                                             }
                                                         }
 
@@ -529,6 +540,16 @@ public class FirebaseActivity extends AppCompatActivity {
 
 */
 
+    }
+    private void setAppLocale(String localeCode) {
+        Locale myLocale = new Locale(localeCode);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = myLocale;
+        Locale.setDefault(myLocale);
+        conf.setLayoutDirection(myLocale);
+        res.updateConfiguration(conf, dm);
     }
 
 }

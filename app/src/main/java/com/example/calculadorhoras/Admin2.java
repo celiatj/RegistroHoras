@@ -72,11 +72,13 @@ public class Admin2 extends AppCompatActivity {
                             Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
                             intentCurrentPage.putExtra("correo", correo);
                             startActivity(intentCurrentPage);
+                            finish();
                             break;
                         case R.id.nav_daily_reports:
                             Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
                             intentDailyReports.putExtra("correo", correo);
                             startActivity(intentDailyReports);
+                            finish();
                             break;
                         case R.id.nav_weekly_reports:
                             // Maneja la navegación a los informes semanales
@@ -84,6 +86,7 @@ public class Admin2 extends AppCompatActivity {
                         case R.id.nav_changeUbi:
                             Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
                             intentUbi.putExtra("correo", correo);
+                            finish();
                             startActivity(intentUbi);
                             break;
                     }
@@ -99,7 +102,6 @@ public class Admin2 extends AppCompatActivity {
 
             // Obtener la referencia al RecyclerView
             mRecyclerView = findViewById(R.id.rvRegistros);
-
 
             tvnombre = findViewById(R.id.tvNombreUsuario);
             tvnombre.setText(correo);
@@ -190,7 +192,7 @@ public class Admin2 extends AppCompatActivity {
                                         mRegistros = new ArrayList<>();
                                         for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
                                             // Obtén los datos del registro
-                                            String idRegistro = registroSnapshot.getKey(); // Aquí obtenemos el ID del registro
+                                            String idRegistro = registroSnapshot.getKey().substring(6, 12);; // Aquí obtenemos el ID del registro
                                             String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
                                             String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 

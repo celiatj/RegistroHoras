@@ -37,8 +37,11 @@
         android:text="@string/Guardar"
         android:textSize="14sp" />
 
-
-
+    <Button
+        android:id="@+id/btnAtras"
+        android:layout_width="104dp"
+        android:layout_height="wrap_content"
+        android:text="@string/Atras" />
 
 
 </LinearLayout>

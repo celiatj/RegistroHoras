@@ -1,6 +1,7 @@
 package com.example.calculadorhoras;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -32,7 +33,7 @@ public class MainActivityConf extends AppCompatActivity {
     private EditText nombre;
     private EditText ap1;
     private Switch swNotificaciones;
-    private Button guardar;
+    private Button guardar, atras;
     private Spinner spIdiomas;
     private String[] arrayIdiomas;
     private ArrayAdapter<String> adaptadorIdiomas;
@@ -74,7 +75,7 @@ public class MainActivityConf extends AppCompatActivity {
         ap1 = findViewById(R.id.etAp1);
         nombre = findViewById(R.id.etnombre);
         guardar = findViewById(R.id.guardar);
-
+        atras = findViewById(R.id.btnAtras);
 
         // Recuperar datos del usuario y mostrarlos en los EditTexts correspondientes
         usuarioRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -158,6 +159,13 @@ public class MainActivityConf extends AppCompatActivity {
         String nombreGuardado = preferencias.getString("nombre", "");
         String apellidoGuardado = preferencias.getString("apellidos", "");
 
+        atras.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intentBack = new Intent(getApplicationContext(), FirebaseActivity.class);
+                startActivity(intentBack);
+                finish();
+            }});
         // Mostrar los valores recuperados en los EditTexts correspondientes
 //        nombre.setText(nombreGuardado);
 //        ap1.setText(apellidoGuardado);

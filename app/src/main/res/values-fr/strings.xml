@@ -66,4 +66,6 @@
     <string name="Empleados">Employés</string>
     <string name="EligeEmpresa">Elige una empresa</string>
     <string name="empresas">Empresas</string>
+    <string name="RegistroDia">Registros por Dia</string>
+    <string name="Atras">Atras</string>
 </resources>

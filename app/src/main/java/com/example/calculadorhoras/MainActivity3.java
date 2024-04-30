@@ -302,8 +302,7 @@ public class MainActivity3 extends Fragment {
                 int posicionInci = spInci.getSelectedItemPosition();
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
-                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
-                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).child("ubicacion").setValue(ubicacion);
+
                 Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
 
                 // calculamos las horas trabajadas teniendo en cuenta horario nocturno:
@@ -321,10 +320,14 @@ public class MainActivity3 extends Fragment {
                 int horas = tot / 60;
                 int minutos = tot % 60;
 
-
                 // Indicamos al usuario con el textView de total el resultado
-                horasTotal = "Día: " + dia + "; Horas: " + horas + ",Minutos: " + minutos + ";";
+               // horasTotal = "Año: "+anyoS+"; Mes: "+mesS+"; Día: " + diaS + "; Horas: " + horas + "; Minutos: " + minutos + ";";
+                horasTotal = anyoS+"/"+mesS+"/" + diaS + ",  Horas: " + horas + "; Minutos: " + minutos + ";";
                 total.setText(horasTotal);
+                datos.put("HorasTrabajadas", horasTotal);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).setValue(datos);
+                db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoS, mesS, diaS, horaS, minS)).child("ubicacion").setValue(ubicacion);
+
                 editorPreferencias.putString("salida", timeS);
 
                 // Guardar el estado del contador antes de cambiar los estados de los botones

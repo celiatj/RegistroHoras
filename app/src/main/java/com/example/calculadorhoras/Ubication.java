@@ -81,7 +81,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
         getSupportActionBar().setTitle(R.string.configuracion);
 
         drawerLayout = findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
         drawerLayout.addDrawerListener(drawerToggle);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -164,11 +164,6 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
 
 
         });
-        drawerLayout = findViewById(R.id.drawer_layout);
-        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -177,19 +172,25 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                 switch (menuItem.getItemId()) {
                     case R.id.nav_current_page:
                         Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
+                        intentCurrentPage.putExtra("correo", correo);
                         startActivity(intentCurrentPage);
                         finish();
                         break;
                     case R.id.nav_daily_reports:
                         Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
+                        intentDailyReports.putExtra("correo", correo);
                         startActivity(intentDailyReports);
                         finish();
                         break;
-                    case R.id.nav_weekly_reports:
-                        // Maneja la navegación a los informes semanales
+                    case R.id.nav_month_reports:
+                        Intent intentMonthReports = new Intent(getApplicationContext(), Admin4.class);
+                        intentMonthReports.putExtra("correo", correo);
+                        startActivity(intentMonthReports);
+                        finish();
                         break;
                     case R.id.nav_changeUbi:
                         Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
+                        intentUbi .putExtra("correo", correo);
                         startActivity(intentUbi);
                         finish();
                         break;

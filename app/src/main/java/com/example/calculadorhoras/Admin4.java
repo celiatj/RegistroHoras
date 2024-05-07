@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -22,9 +21,11 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class Admin3 extends AppCompatActivity {
+public class Admin4 extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView navigationView;
@@ -91,23 +92,56 @@ public class Admin3 extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Mapa para almacenar las horas trabajadas por mes
+                Map<Integer, Integer> horasPorMesMap = new HashMap<>();
+
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     DataSnapshot registrosSnapshot = userSnapshot.child("Registros");
                     for (DataSnapshot registroSnapshot : registrosSnapshot.getChildren()) {
                         String horasTrabajadas = registroSnapshot.child("HorasTrabajadas").getValue(String.class);
                         if (horasTrabajadas != null) {
-                            mHorasTrabajadasList.add(horasTrabajadas);
+                            String[] fecha = horasTrabajadas.split(",")[0].split("/");
+                            int mes = Integer.parseInt(fecha[1]);
+                            String[] horasMinutos = horasTrabajadas.split(";"); // Divide las horas y los minutos
+                            int horas = Integer.parseInt(horasMinutos[0].split(": ")[1]);
+                            int minutos = Integer.parseInt(horasMinutos[1].split(": ")[1]);
+
+                            // Sumar horas y minutos al mes correspondiente
+                            if (horasPorMesMap.containsKey(mes)) {
+                                int horasActuales = horasPorMesMap.get(mes);
+                                int minutosActuales = horasPorMesMap.get(mes);
+                                horasPorMesMap.put(mes, horasActuales + horas);
+                                horasPorMesMap.put(mes, minutosActuales + minutos);
+                            } else {
+                                horasPorMesMap.put(mes, horas);
+                                horasPorMesMap.put(mes, minutos);
+                            }
                         }
                     }
                 }
+
+                // Construir el string de horas por mes
+                StringBuilder horasPorMes = new StringBuilder();
+                horasPorMes.append("Horas trabajadas por mes:\n");
+                for (Map.Entry<Integer, Integer> entry : horasPorMesMap.entrySet()) {
+                    int mes = entry.getKey();
+                    int totalHoras = entry.getValue() / 60; // Convertir minutos a horas
+                    int totalMinutos = entry.getValue() % 60;
+
+                    horasPorMes.append("Mes: ").append(mes).append(",  Horas trabajadas: ").append(totalHoras).append(", minutos: ").append(totalMinutos).append("\n");
+                }
+
+                // Agregar el resultado al adaptador
+                mHorasTrabajadasList.add(horasPorMes.toString());
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                // Manejar errores de base de datos
             }
         });
+
     }
 
 

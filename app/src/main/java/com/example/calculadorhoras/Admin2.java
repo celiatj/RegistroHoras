@@ -58,7 +58,7 @@ public class Admin2 extends AppCompatActivity {
             String correo = getIntent().getStringExtra("correo");
 
             drawerLayout = findViewById(R.id.drawer_layout);
-            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close);
+            drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close);
             drawerLayout.addDrawerListener(drawerToggle);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
@@ -80,14 +80,17 @@ public class Admin2 extends AppCompatActivity {
                             startActivity(intentDailyReports);
                             finish();
                             break;
-                        case R.id.nav_weekly_reports:
-                            // Maneja la navegación a los informes semanales
+                        case R.id.nav_month_reports:
+                            Intent intentMonthReports = new Intent(getApplicationContext(), Admin4.class);
+                            intentMonthReports.putExtra("correo", correo);
+                            startActivity(intentMonthReports);
+                            finish();
                             break;
                         case R.id.nav_changeUbi:
                             Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
                             intentUbi.putExtra("correo", correo);
-                            finish();
                             startActivity(intentUbi);
+                            finish();
                             break;
                     }
                     drawerLayout.closeDrawers();
@@ -126,6 +129,7 @@ public class Admin2 extends AppCompatActivity {
                         // String correo = usuarioSnapshot.getKey();
 
                         // Usa el correo para obtener los registros del usuario.
+                        // DatabaseReference registrosRef = usuariosRef.child(correo.replace(".", "")).child("Registros");
                         DatabaseReference registrosRef = usuariosRef.child(correo.replace(".", "")).child("Registros");
                         registrosRef.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -133,7 +137,8 @@ public class Admin2 extends AppCompatActivity {
                                 mRegistros = new ArrayList<>();
                                 for (DataSnapshot registroSnapshot : dataSnapshot.getChildren()) {
                                     // Obtén los datos del registro
-                                     idRegistro= registroSnapshot.getKey().substring(6, 12); // Aquí obtenemos el ID del registro y eliminamos los 6 primeros digitos por se año y mes
+                                    //idRegistro = registroSnapshot.getKey();
+                                    idRegistro= registroSnapshot.getKey().substring(6, 12); // Aquí obtenemos el ID del registro y eliminamos los 6 primeros digitos por ser año y mes
                                     String tipoRegistro = registroSnapshot.child("tipo").getValue(String.class);
                                     String incidenciaRegistro = registroSnapshot.child("incidencia").getValue(String.class);
 

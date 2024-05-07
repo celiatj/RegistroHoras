@@ -57,15 +57,15 @@
     <string name="selector_fecha_fin">Sélectionnez la date de fin</string>
 
     <string name="btn_Buscar">Recherche</string>
-
+    <string name="InfoBtnUbi">"Appuyez sur le bouton pour enregistrer le lieu de travail"</string>
     <string name="HoraDeEntrada">Heure d\'entrée :</string>
     <string name="HoraDeSalida">Heure de départ :</string>
     <string name="Total">Totale :</string>
     <string name="Guardar">Sauver</string>
     <string name="GuardarUbi">Enregistrer l\'emplacement actuel</string>
     <string name="Empleados">Employés</string>
-    <string name="EligeEmpresa">Elige una empresa</string>
-    <string name="empresas">Empresas</string>
-    <string name="RegistroDia">Registros por Dia</string>
-    <string name="Atras">Atras</string>
+    <string name="EligeEmpresa">Choisissez une entreprise</string>
+    <string name="empresas">Entreprises</string>
+    <string name="RegistroDia">Inscriptions par jour</string>
+    <string name="Atras">Derrière</string>
 </resources>

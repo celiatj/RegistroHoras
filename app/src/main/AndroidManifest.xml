@@ -27,6 +27,9 @@
             android:name=".Ubication"
             android:exported="false" />
         <activity
+            android:name=".Admin4"
+            android:exported="false" />
+        <activity
             android:name=".Admin3"
             android:exported="false" />
         <activity

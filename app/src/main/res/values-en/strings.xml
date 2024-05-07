@@ -57,15 +57,15 @@
     <string name="selector_fecha_ini">Select start date</string>
     <string name="selector_fecha_fin">Select End date</string>
     <string name="btn_Buscar">Search</string>
-
+    <string name="InfoBtnUbi">"Press the Button to save the work location"</string>
     <string name="HoraDeEntrada">Entry Time:</string>
     <string name="HoraDeSalida">Departure time :</string>
     <string name="Total">Equal :</string>
     <string name="Guardar">Save</string>
     <string name="GuardarUbi">Save current location</string>
     <string name="Empleados">Employees</string>
-    <string name="EligeEmpresa">Elige una empresa</string>
-    <string name="empresas">Empresas</string>
-    <string name="RegistroDia">Registros por Dia</string>
-    <string name="Atras">Atras</string>
+    <string name="EligeEmpresa">Choose a company</string>
+    <string name="empresas">Companies</string>
+    <string name="RegistroDia">Registrations per Day</string>
+    <string name="Atras">Back</string>
 </resources>

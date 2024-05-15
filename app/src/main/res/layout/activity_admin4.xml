@@ -20,28 +20,7 @@
             <TextView
                 android:id="@+id/tvNombreUsuario"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="TextView" />
-
-            <EditText
-                android:id="@+id/etFechaInicio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Fecha inicio (DD/MM/YYYY)"
-                android:inputType="date" />
-
-            <EditText
-                android:id="@+id/etFechaFin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Fecha fin (DD/MM/YYYY)"
-                android:inputType="date" />
-
-            <Button
-                android:id="@+id/btnBuscar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Buscar" />
+                android:layout_height="wrap_content" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRegistros"

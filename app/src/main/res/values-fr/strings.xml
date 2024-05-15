@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CalculadorHoras</string>
+    <string name="app_name">Time Check</string>
     <string name="opcion_name">Choix</string>
     <string name="nombre_canal">Canal de notification unique</string>
     <string name="descripcion_canal">Toutes les notifications d\'application seront publiées via ce canal</string>
@@ -46,18 +46,18 @@
         <item>Inglés</item>
         <item>Francés</item>
     </string-array>
-    <string name="salir">" sortir"</string>
-    <string name="falloEnLaBase">" Échec de la base de données"</string>
-    <string name="IndicaAntesBoton">" Indique avant d'appuyer sur le bouton le type d'incident"</string>
-    <string name="toast_sin_conexion">" Pas de connexion Internet"</string>
+    <string name="salir">sortir</string>
+    <string name="falloEnLaBase">Échec de la base de données</string>
+    <string name="IndicaAntesBoton"> "Indique avant d'appuyer sur le bouton le type d'incident"</string>
+    <string name="toast_sin_conexion">Pas de connexion Internet</string>
     <string name="recuerdame">Mémoriser l\'email et le mot de passe</string>
     <string name="navigation_drawer_open">Ouvrir</string>
     <string name="navigation_drawer_close">Sortie</string>
-    <string name="selector_fecha_ini">" Sélectionnez la date de début"</string>
+    <string name="selector_fecha_ini">Sélectionnez la date de début</string>
     <string name="selector_fecha_fin">Sélectionnez la date de fin</string>
 
     <string name="btn_Buscar">Recherche</string>
-    <string name="InfoBtnUbi">"Appuyez sur le bouton pour enregistrer le lieu de travail"</string>
+    <string name="InfoBtnUbi">Appuyez sur le bouton pour enregistrer le lieu de travail</string>
     <string name="HoraDeEntrada">Heure d\'entrée :</string>
     <string name="HoraDeSalida">Heure de départ :</string>
     <string name="Total">Totale :</string>
@@ -68,4 +68,12 @@
     <string name="empresas">Entreprises</string>
     <string name="RegistroDia">Inscriptions par jour</string>
     <string name="Atras">Derrière</string>
+    <string name="InformesDiarios">Rapports Quotidiens</string>
+    <string name="InformeRegistror">Rapport par Registre</string>
+    <string name="InformesSemanales">Rapports Hebdomadaires</string>
+    <string name="CambiarUbicación">"Changer l'Emplacement"</string>
+    <string name="FechaInicio">Date de Début (YYYY/MM/DD)</string>
+    <string name="FechaFin">Date de Fin (YYYY/MM/DD)</string>
+    <string name="Nombre">Prénom</string>
+    <string name="Apellido">Nom de Famille</string>
 </resources>

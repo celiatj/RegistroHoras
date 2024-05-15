@@ -27,21 +27,21 @@
             android:id="@+id/etFechaInicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha inicio (DD/MM/YYYY)"
+            android:hint="@string/FechaInicio"
             android:inputType="date" />
 
         <EditText
             android:id="@+id/etFechaFin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha fin (DD/MM/YYYY)"
+            android:hint="@string/FechaFin"
             android:inputType="date" />
 
         <Button
             android:id="@+id/btnBuscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Buscar" />
+            android:text="@string/InfoBtnUbi" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvInformeDiario"

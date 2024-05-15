@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">CalculadorHoras</string>
+    <string name="app_name">Time Check</string>
     <string name="opcion_name">Options</string>
     <string name="nombre_canal">Single notification channel</string>
     <string name="descripcion_canal">All app notifications will be published through this channel</string>
@@ -14,7 +14,7 @@
     <string name="aviso_cambio_idioma_aceptar">Agreed</string>
     <string name="toast_registro_fallo">Registration failed</string>
     <string name="toast_registro_exito">Record saved</string>
-    <string name="toast_introducir_password">"Enter a password"</string>
+    <string name="toast_introducir_password">Enter a password</string>
     <string name="toast_identificacion_fallo">Identification failure</string>
     <string name="toast_identificacion_exito">Correct identification</string>
     <string name="toast_introducir_email">" Enter an email"</string>
@@ -23,17 +23,17 @@
     <string name="correo">Email</string>
     <string name="contrasenya">Password</string>
     <string name="login">Login</string>
-    <string name="configuracion">" Setting"</string>
-    <string name="registro">"Record"</string>
-    <string name="salida">"Exit"</string>
+    <string name="configuracion">Setting</string>
+    <string name="registro">Record"</string>
+    <string name="salida">Exit</string>
     <string name="entrada">Entry</string>
     <string name="salir">go out</string>
     <string name="incidencia">Incidence</string>
-    <string name="toast_introducir_nombre">" You must enter a name"</string>
+    <string name="toast_introducir_nombre">You must enter a name</string>
     <string name="toast_introducir_correo">Enter an email</string>
     <string name="toast_introducir_apellido">Enter a last name</string>
     <string name="toast_introducir_longitud">The password must have 6 characters</string>
-    <string name="correo_Invalido">" Invalid email"</string>
+    <string name="correo_Invalido">Invalid email"</string>
 
     <string-array name="array_inci">
         <item>No incidents</item>
@@ -47,9 +47,9 @@
         <item>Inglés</item>
         <item>Francés</item>
     </string-array>
-    <string name="falloEnLaBase">" Database failure"</string>
-    <string name="IndicaAntesBoton">" Indicates before pressing the button the type of incident"</string>
-    <string name="toast_sin_conexion">" No internet connection"</string>
+    <string name="falloEnLaBase">Database failure</string>
+    <string name="IndicaAntesBoton">"Indicates before pressing the button the type of incident</string>
+    <string name="toast_sin_conexion">No internet connection</string>
     <string name="recuerdame">Remember email and password</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Exit</string>
@@ -57,7 +57,7 @@
     <string name="selector_fecha_ini">Select start date</string>
     <string name="selector_fecha_fin">Select End date</string>
     <string name="btn_Buscar">Search</string>
-    <string name="InfoBtnUbi">"Press the Button to save the work location"</string>
+    <string name="InfoBtnUbi">Press the Button to save the work location</string>
     <string name="HoraDeEntrada">Entry Time:</string>
     <string name="HoraDeSalida">Departure time :</string>
     <string name="Total">Equal :</string>
@@ -68,4 +68,12 @@
     <string name="empresas">Companies</string>
     <string name="RegistroDia">Registrations per Day</string>
     <string name="Atras">Back</string>
+    <string name="InformesDiarios">Daily Reports</string>
+    <string name="InformeRegistror">Report by Registry</string>
+    <string name="InformesSemanales">Weekly Reports</string>
+    <string name="CambiarUbicación">Change Location</string>
+    <string name="FechaInicio">Start Date (YYYY/MM/DD)</string>
+    <string name="FechaFin">End Date (YYYY/MM/DD)</string>
+    <string name="Nombre">First Name</string>
+    <string name="Apellido">Last Name</string>
 </resources>

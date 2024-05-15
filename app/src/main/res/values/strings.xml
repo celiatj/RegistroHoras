@@ -1,5 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="app_name" translatable="true">CalculadorHoras</string>
+    <string name="app_name" translatable="true">Time Check</string>
     <string name="opcion_name">Opciones</string>
     <string name="nombre_canal">Canal de notificaciones único</string>
     <string name="descripcion_canal">A través de este canal se publicarán todas las notificaciones de la app</string>
@@ -61,7 +61,6 @@
     <string name="recuerdame">Recordar correo y contarseña</string>
     <string name="navigation_drawer_open">Abrir</string>
     <string name="navigation_drawer_close">Cerrar</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="selector_fecha_ini">Seleccionar fecha Inicio</string>
     <string name="selector_fecha_fin">Seleccionar fecha Fin</string>
@@ -77,8 +76,13 @@
     <string name="empresas">Empresas</string>
     <string name="RegistroDia">Registros por Dia</string>
     <string name="Atras">Atrás</string>
-
-
-    <!-- <string name="anadir_fav"> Añadir a favoritos</string>-->
+    <string name="InformesDiarios">Informes Diarios</string>
+    <string name="InformeRegistror">Informe por Registror</string>
+    <string name="InformesSemanales">Informes Semanales</string>
+    <string name="CambiarUbicación">Cambiar Ubicación</string>
+    <string name="FechaInicio">Fecha inicio (YYYY/MM/DD)</string>
+    <string name="FechaFin">Fecha fin (YYYY/MM/DD)</string>
+    <string name="Nombre">Nombre</string>
+    <string name="Apellido">Apellido</string>
 
 </resources>

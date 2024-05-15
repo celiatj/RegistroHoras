@@ -129,6 +129,8 @@ public class MainActivity3 extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.app_name);
         obtenerUbicacion();
 
+        // Inicializar aplicación de Firebase
+        FirebaseApp.initializeApp(getActivity().getApplicationContext());
 
 /*
         while (!isLocationEnabled) {
@@ -240,8 +242,7 @@ public class MainActivity3 extends Fragment {
                 editorPreferencias.putInt("minE", minE);
                 ;
                 //   FirebaseUser currentUser = mAuth.getCurrentUser();
-                // Inicializar aplicación de Firebase
-                FirebaseApp.initializeApp(getActivity().getApplicationContext());
+
                 DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
                 db = FirebaseDatabase.getInstance();
 

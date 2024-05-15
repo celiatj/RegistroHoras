@@ -24,7 +24,7 @@
             android:id="@+id/etUFechaInicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha inicio (YYYY/MM/DD)"
+            android:hint="@string/FechaInicio"
             android:inputType="date" />
 
 
@@ -32,7 +32,7 @@
             android:id="@+id/etUFechaFin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Fecha fin (YYYY/MM/DD)"
+            android:hint="@string/FechaFin"
             android:inputType="date" />
 
         <Button

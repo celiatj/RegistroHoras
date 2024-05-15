@@ -447,14 +447,15 @@ public class FirebaseActivity extends AppCompatActivity {
                                                     editorPreferencias.putString("contrasenya", contrasenaText);
                                                     editorPreferencias.commit();
 
-                                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usuarios").child(correoText.replace(".", "")).child("Admin");
+                                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("usuarios").child(correoText.replace(".", ""));
                                                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                                                         @Override
                                                         public void onDataChange(DataSnapshot dataSnapshot) {
-                                                            esAdmin = dataSnapshot.getValue(String.class);
-
+                                                            esAdmin = dataSnapshot.child("Admin").getValue(String.class);
+                                                            String empresa = dataSnapshot.child("IdEmpresa").getValue(String.class);
                                                             if (esAdmin != null && esAdmin.equals("si")) {
                                                                 // Realiza las operaciones necesarias si esAdmin no es nulo y es igual a "si"
+                                                                objetoMensajeroAdmin.putExtra("empresa", empresa);
                                                                 startActivity(objetoMensajeroAdmin);
                                                                 finish();
                                                             } else {

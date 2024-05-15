@@ -30,7 +30,10 @@ public class Administrador extends AppCompatActivity {
         miRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         listaNombres = new ArrayList<>();
         mostrarDatos();
+        //String admin = getIntent().getStringExtra("admin");
 
+        // Obtener el valor de IdEmpresa del intent
+        String empresa = getIntent().getStringExtra("empresa");
         // Definir el listener de clics en los elementos del RecyclerView
         MiAdapter.OnItemClickListener listener = new MiAdapter.OnItemClickListener() {
             @Override
@@ -38,6 +41,7 @@ public class Administrador extends AppCompatActivity {
                 String correo = listaNombres.get(position);
                 Intent intent = new Intent(Administrador.this, Admin2.class);
                 intent.putExtra("correo", correo);
+                intent.putExtra("empresa", empresa);
                 startActivity(intent);
                 finish();
             }
@@ -54,17 +58,24 @@ public class Administrador extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("usuarios");
 
+
         // Leer los datos de Firebase
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Recorrer los datos y obtener los nombres y correos de usuario
+                // Obtener el valor de IdEmpresa del intent
+                String empresa = getIntent().getStringExtra("empresa");
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    DataSnapshot registrosSnapshot = snapshot.child("Registros");
-                    if (registrosSnapshot.exists()) {
-                        String nombre = snapshot.child("nombre").getValue(String.class);
-                        String correo = snapshot.child("correo").getValue(String.class);
-                        listaNombres.add(correo);
+                    // Verificar si el valor de IdEmpresa coincide con el valor del intent
+                    String idEmpresa = snapshot.child("IdEmpresa").getValue(String.class);
+                    if (idEmpresa != null && idEmpresa.equals(empresa)) {
+                        DataSnapshot registrosSnapshot = snapshot.child("Registros");
+                        if (registrosSnapshot.exists()) {
+                            String nombre = snapshot.child("nombre").getValue(String.class);
+                            String correo = snapshot.child("correo").getValue(String.class);
+                            listaNombres.add(correo);
+                        }
                     }
                 }
 
@@ -73,8 +84,9 @@ public class Administrador extends AppCompatActivity {
             }
 
             @Override
-               public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
                 // Manejar errores de lectura de la base de datos
             }
         });
-    }}
+    }
+    }

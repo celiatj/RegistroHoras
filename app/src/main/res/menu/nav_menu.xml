@@ -5,19 +5,19 @@
             <item
                 android:id="@+id/nav_current_page"
                 android:icon="?android:attr/actionModeFindDrawable"
-                android:title="Informe por Registror" />
+                android:title="@string/InformeRegistror" />
             <item
                 android:id="@+id/nav_daily_reports"
                 android:icon="?android:attr/actionModeFindDrawable"
-                android:title="Informes Diarios" />
+                android:title="@string/InformesDiarios" />
             <item
                 android:id="@+id/nav_month_reports"
                 android:icon="@android:drawable/ic_menu_week"
-                android:title="Informes Semanales" />
+                android:title="@string/InformesSemanales" />
 
             <item
                 android:id="@+id/nav_changeUbi"
                 android:icon="@android:drawable/ic_menu_week"
-                android:title="Cambiar Ubicación" />
+                android:title="@string/CambiarUbicación" />
         </group>
 </menu>

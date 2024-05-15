@@ -2,10 +2,12 @@ package com.example.calculadorhoras;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -90,61 +92,64 @@ public class Admin4 extends AppCompatActivity {
         Query query = usuariosRef.orderByChild("correo").equalTo(correo);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Mapa para almacenar las horas trabajadas por mes
-                Map<Integer, Integer> horasPorMesMap = new HashMap<>();
+                Map<String, Map<Integer, Integer>> horasPorAñoYMesMap = new HashMap<>();
 
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     DataSnapshot registrosSnapshot = userSnapshot.child("Registros");
                     for (DataSnapshot registroSnapshot : registrosSnapshot.getChildren()) {
                         String horasTrabajadas = registroSnapshot.child("HorasTrabajadas").getValue(String.class);
                         if (horasTrabajadas != null) {
-                            String[] fecha = horasTrabajadas.split(",")[0].split("/");
+                            String[] fechaHora = horasTrabajadas.split(",")[0].split(" "); // Dividir la fecha y la hora
+                            String[] fecha = fechaHora[0].split("/"); // Dividir la fecha en día, mes y año
+                            int año = Integer.parseInt(fecha[0]);
                             int mes = Integer.parseInt(fecha[1]);
                             String[] horasMinutos = horasTrabajadas.split(";"); // Divide las horas y los minutos
                             int horas = Integer.parseInt(horasMinutos[0].split(": ")[1]);
                             int minutos = Integer.parseInt(horasMinutos[1].split(": ")[1]);
 
+                            // Obtener el mapa de horas por mes para el año correspondiente
+                            Map<Integer, Integer> horasPorMesMap = horasPorAñoYMesMap.getOrDefault(Integer.toString(año), new HashMap<>());
+
                             // Sumar horas y minutos al mes correspondiente
-                            if (horasPorMesMap.containsKey(mes)) {
-                                int horasActuales = horasPorMesMap.get(mes);
-                                int minutosActuales = horasPorMesMap.get(mes);
-                                horasPorMesMap.put(mes, horasActuales + horas);
-                                horasPorMesMap.put(mes, minutosActuales + minutos);
-                            } else {
-                                horasPorMesMap.put(mes, horas);
-                                horasPorMesMap.put(mes, minutos);
-                            }
+                            int totalMinutos = horasPorMesMap.getOrDefault(mes, 0) + horas * 60 + minutos;
+                            horasPorMesMap.put(mes, totalMinutos);
+
+                            // Actualizar el mapa de horas por mes para el año correspondiente
+                            horasPorAñoYMesMap.put(Integer.toString(año), horasPorMesMap);
                         }
                     }
                 }
 
-                // Construir el string de horas por mes
-                StringBuilder horasPorMes = new StringBuilder();
-                horasPorMes.append("Horas trabajadas por mes:\n");
-                for (Map.Entry<Integer, Integer> entry : horasPorMesMap.entrySet()) {
-                    int mes = entry.getKey();
-                    int totalHoras = entry.getValue() / 60; // Convertir minutos a horas
-                    int totalMinutos = entry.getValue() % 60;
+                // Construir el string de horas por mes y año
+                StringBuilder horasPorMesYAño = new StringBuilder();
+                horasPorMesYAño.append("Horas trabajadas por año y mes:\n");
+                for (Map.Entry<String, Map<Integer, Integer>> añoEntry : horasPorAñoYMesMap.entrySet()) {
+                    String año = añoEntry.getKey();
+                    Map<Integer, Integer> horasPorMesMap = añoEntry.getValue();
+                    for (Map.Entry<Integer, Integer> mesEntry : horasPorMesMap.entrySet()) {
+                        int mes = mesEntry.getKey();
+                        int totalHoras = mesEntry.getValue() / 60; // Convertir minutos a horas
+                        int totalMinutos = mesEntry.getValue() % 60;
 
-                    horasPorMes.append("Mes: ").append(mes).append(",  Horas trabajadas: ").append(totalHoras).append(", minutos: ").append(totalMinutos).append("\n");
+                        horasPorMesYAño.append("Año: ").append(año).append(", Mes: ").append(mes).append(", Horas trabajadas: ").append(totalHoras).append(", minutos: ").append(totalMinutos).append("\n");
+                    }
                 }
 
                 // Agregar el resultado al adaptador
-                mHorasTrabajadasList.add(horasPorMes.toString());
+                mHorasTrabajadasList.add(horasPorMesYAño.toString());
                 mAdapter.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Manejar errores de base de datos
+                // Manejar errores de lectura de la base de datos
             }
         });
 
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

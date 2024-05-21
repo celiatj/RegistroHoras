@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:accessibilityTraversalAfter="@id/animationView"
-    android:background="@drawable/wallpaper13"
+    android:background="@drawable/wallpaper"
     android:orientation="vertical"
     android:theme="@android:style/Theme.NoTitleBar"
     tools:context=".splashActivity">

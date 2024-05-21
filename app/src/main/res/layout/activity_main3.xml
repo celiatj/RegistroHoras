@@ -12,7 +12,7 @@
         android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/wallpaper13"
+        android:background="@drawable/wallpaper"
         android:gravity="end"
         android:orientation="vertical"
         tools:ignore="ExtraText">

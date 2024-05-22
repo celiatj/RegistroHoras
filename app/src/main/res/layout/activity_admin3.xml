@@ -41,7 +41,7 @@
             android:id="@+id/btnBuscar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/InfoBtnUbi" />
+            android:text="@string/btn_Buscar" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvInformeDiario"

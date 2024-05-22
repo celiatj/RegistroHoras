@@ -41,7 +41,7 @@ public class Admin4 extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin3);
+        setContentView(R.layout.activity_admin4);
         String correo = getIntent().getStringExtra("correo");
 
         SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
@@ -55,6 +55,7 @@ public class Admin4 extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         navigationView = findViewById(R.id.navigation_view);
+        String empresa = getIntent().getStringExtra("empresa");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -62,24 +63,28 @@ public class Admin4 extends AppCompatActivity {
                     case R.id.nav_current_page:
                         Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
                         intentCurrentPage.putExtra("correo", correo);
+                        intentCurrentPage.putExtra("empresa", empresa);
                         startActivity(intentCurrentPage);
                         finish();
                         break;
                     case R.id.nav_daily_reports:
                         Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
                         intentDailyReports.putExtra("correo", correo);
+                        intentDailyReports.putExtra("empresa", empresa);
                         startActivity(intentDailyReports);
                         finish();
                         break;
                     case R.id.nav_month_reports:
                         Intent intentMonthReports = new Intent(getApplicationContext(), Admin4.class);
                         intentMonthReports.putExtra("correo", correo);
+                        intentMonthReports.putExtra("empresa", empresa);
                         startActivity(intentMonthReports);
                         finish();
                         break;
                     case R.id.nav_changeUbi:
                         Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
                         intentUbi.putExtra("correo", correo);
+                        intentUbi.putExtra("empresa", empresa);
                         startActivity(intentUbi);
                         finish();
                         break;
@@ -90,7 +95,7 @@ public class Admin4 extends AppCompatActivity {
         });
 
         // Obtener la referencia a la base de datos
-        mRecyclerView = findViewById(R.id.rvInformeDiario);
+        mRecyclerView = findViewById(R.id.rvRegistrosMesuales);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mHorasTrabajadasList = new ArrayList<>();
         mAdapter = new AdaptadorRegistro(mHorasTrabajadasList);
@@ -122,11 +127,9 @@ public class Admin4 extends AppCompatActivity {
 
                             // Obtener el mapa de horas por mes para el año correspondiente
                             Map<Integer, Integer> horasPorMesMap = horasPorAñoYMesMap.getOrDefault(Integer.toString(año), new HashMap<>());
-
                             // Sumar horas y minutos al mes correspondiente
                             int totalMinutos = horasPorMesMap.getOrDefault(mes, 0) + horas * 60 + minutos;
                             horasPorMesMap.put(mes, totalMinutos);
-
                             // Actualizar el mapa de horas por mes para el año correspondiente
                             horasPorAñoYMesMap.put(Integer.toString(año), horasPorMesMap);
                         }
@@ -135,7 +138,7 @@ public class Admin4 extends AppCompatActivity {
 
                 // Construir el string de horas por mes y año
                 StringBuilder horasPorMesYAño = new StringBuilder();
-                horasPorMesYAño.append("Horas trabajadas por año y mes:\n");
+                horasPorMesYAño.append("\n");
                 for (Map.Entry<String, Map<Integer, Integer>> añoEntry : horasPorAñoYMesMap.entrySet()) {
                     String año = añoEntry.getKey();
                     Map<Integer, Integer> horasPorMesMap = añoEntry.getValue();

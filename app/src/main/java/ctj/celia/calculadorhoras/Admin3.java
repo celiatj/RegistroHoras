@@ -1,5 +1,7 @@
 package ctj.celia.calculadorhoras;
 
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -7,6 +9,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +30,8 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,6 +42,11 @@ public class Admin3 extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private AdaptadorRegistro mAdapter;
     private List<String> mHorasTrabajadasList;
+    private EditText etFechaInicio;
+    private EditText etFechaFin;
+    private String fechaInicio = "";
+    private String fechaFin = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +64,7 @@ public class Admin3 extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         navigationView = findViewById(R.id.navigation_view);
+        String empresa = getIntent().getStringExtra("empresa");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -59,24 +72,28 @@ public class Admin3 extends AppCompatActivity {
                     case R.id.nav_current_page:
                         Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
                         intentCurrentPage.putExtra("correo", correo);
+                        intentCurrentPage.putExtra("empresa", empresa);
                         startActivity(intentCurrentPage);
                         finish();
                         break;
                     case R.id.nav_daily_reports:
                         Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
                         intentDailyReports.putExtra("correo", correo);
+                        intentDailyReports.putExtra("empresa", empresa);
                         startActivity(intentDailyReports);
                         finish();
                         break;
                     case R.id.nav_month_reports:
                         Intent intentMonthReports = new Intent(getApplicationContext(), Admin4.class);
                         intentMonthReports.putExtra("correo", correo);
+                        intentMonthReports.putExtra("empresa", empresa);
                         startActivity(intentMonthReports);
                         finish();
                         break;
                     case R.id.nav_changeUbi:
                         Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
                         intentUbi.putExtra("correo", correo);
+                        intentUbi.putExtra("empresa", empresa);
                         startActivity(intentUbi);
                         finish();
                         break;
@@ -117,9 +134,115 @@ public class Admin3 extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+        etFechaInicio = findViewById(R.id.etFechaInicio);
+        etFechaFin = findViewById(R.id.etFechaFin);
+
+        Button btnBuscar = findViewById(R.id.btnBuscar);
+
+        etFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePickerDialog(true);
+                }
+            }
+        });
+
+
+        etFechaFin.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    showDatePickerDialog(false);
+                }
+            }
+        });
+        btnBuscar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fechaInicio = etFechaInicio.getText().toString().trim().replace("/", "");
+                String fechaFin = etFechaFin.getText().toString().trim().replace("/", "");
+
+                if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
+                    mRecyclerView.setAdapter(mAdapter);
+                    return;
+                }
+
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                DatabaseReference usuariosRef = database.getReference("usuarios");
+                // Convertir las fechas en formato numérico para compararlas como enteros
+                int fechaInicioNum = Integer.parseInt(fechaInicio);
+                int fechaFinNum = Integer.parseInt(fechaFin);
+
+                usuariosRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                            String idRegistro = userSnapshot.child("Registros").getKey();
+                            String fechaRegistro = idRegistro.substring(0, 8);
+                            int fechaRegistroNum = Integer.parseInt(fechaRegistro);
+                            DataSnapshot registrosSnapshot = userSnapshot.child("Registros");
+                            for (DataSnapshot registroSnapshot : registrosSnapshot.getChildren()) {
+                                if (fechaRegistroNum >= fechaInicioNum && fechaRegistroNum <= fechaFinNum) {
+                                    String horasTrabajadas = registroSnapshot.child("HorasTrabajadas").getValue(String.class);
+                                    mHorasTrabajadasList.add(horasTrabajadas);
+                                    ;
+                                }
+                            }
+
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Manejar errores de lectura de la base de datos
+                    }
+                });
+            }
+        });
     }
 
+    private void showDatePickerDialog(boolean isStartDate) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog((Context) this, (DatePickerDialog.OnDateSetListener) this, year, month, day);
+
+        if (!isStartDate && !fechaInicio.isEmpty()) {
+            String[] parts = fechaInicio.split("/");
+            int startYear = Integer.parseInt(parts[2]);
+            int startMonth = Integer.parseInt(parts[1]) - 1;
+            int startDay = Integer.parseInt(parts[0]);
+            datePickerDialog.getDatePicker().setMinDate(new GregorianCalendar(startYear, startMonth, startDay).getTimeInMillis());
+        }
+
+        if (isStartDate) {
+            datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+        }
+
+        datePickerDialog.show();
+    }
+
+    public void onDateSet(android.widget.DatePicker view, int anyo, int mes, int dia) {
+        String fechaSeleccionada = String.format("%02d/%02d/%02d", anyo, (mes + 1), dia); // Formato año/mes/día
+
+        // Obtener la referencia al EditText que tiene el foco
+        EditText editTextConFoco = etFechaInicio.hasFocus() ? etFechaInicio : etFechaFin;
+
+        // Establecer la fecha seleccionada en el EditText correspondiente
+        editTextConFoco.setText(fechaSeleccionada);
+
+        // Actualizar la variable de fecha correspondiente con el valor seleccionado
+        if (editTextConFoco == etFechaInicio) {
+            fechaInicio = fechaSeleccionada;
+        } else if (editTextConFoco == etFechaFin) {
+            fechaFin = fechaSeleccionada;
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -140,6 +263,7 @@ public class Admin3 extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
         drawerToggle.onConfigurationChanged(newConfig);
     }
+
     private void setAppLocale(String localeCode) {
         Locale myLocale = new Locale(localeCode);
         Resources res = getResources();

@@ -154,8 +154,8 @@ public class FirebaseActivity extends AppCompatActivity {
 
         // Inicializar aplicación de Firebase
         FirebaseApp.initializeApp(getApplicationContext());
-
         db = FirebaseDatabase.getInstance();
+
         getSupportActionBar().setTitle(R.string.login);
 
         mAuth = FirebaseAuth.getInstance();

@@ -59,9 +59,9 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
 
 
             if (distanciaEntreCoordenadas(registroLatitude, registroLongitude, ubicacionLatitude, ubicacionLongitude) <= 2) {
-                holder.mTipoTextView.setBackgroundColor(Color.GREEN);
+                holder.mTipoTextView.setTextColor(Color.parseColor("#32CD32"));
             } else {
-                holder.mTipoTextView.setBackgroundColor(Color.RED);
+                holder.mTipoTextView.setTextColor(Color.RED);
             }
         }
     }

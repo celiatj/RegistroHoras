@@ -169,6 +169,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
         });
 
         navigationView = findViewById(R.id.navigation_view);
+        String empresa = getIntent().getStringExtra("empresa");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -176,24 +177,28 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                     case R.id.nav_current_page:
                         Intent intentCurrentPage = new Intent(getApplicationContext(), Admin2.class);
                         intentCurrentPage.putExtra("correo", correo);
+                        intentCurrentPage.putExtra("empresa", empresa);
                         startActivity(intentCurrentPage);
                         finish();
                         break;
                     case R.id.nav_daily_reports:
                         Intent intentDailyReports = new Intent(getApplicationContext(), Admin3.class);
                         intentDailyReports.putExtra("correo", correo);
+                        intentDailyReports.putExtra("empresa", empresa);
                         startActivity(intentDailyReports);
                         finish();
                         break;
                     case R.id.nav_month_reports:
                         Intent intentMonthReports = new Intent(getApplicationContext(), Admin4.class);
                         intentMonthReports.putExtra("correo", correo);
+                        intentMonthReports.putExtra("empresa", empresa);
                         startActivity(intentMonthReports);
                         finish();
                         break;
                     case R.id.nav_changeUbi:
                         Intent intentUbi = new Intent(getApplicationContext(), Ubication.class);
-                        intentUbi .putExtra("correo", correo);
+                        intentUbi.putExtra("correo", correo);
+                        intentUbi.putExtra("empresa", empresa);
                         startActivity(intentUbi);
                         finish();
                         break;

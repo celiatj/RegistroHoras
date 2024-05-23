@@ -21,21 +21,27 @@
         android:id="@+id/tvNombreUsuario"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="@color/ic_launcher_background"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etFechaInicio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/FechaInicio"
-        android:inputType="date" />
+        android:inputType="date"
+        android:textColor="@color/ic_launcher_background"
+        android:textStyle="bold" />
 
     <EditText
         android:id="@+id/etFechaFin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/FechaFin"
-        android:inputType="date" />
+        android:inputType="date"
+        android:textColor="@color/ic_launcher_background"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/btnBuscar"

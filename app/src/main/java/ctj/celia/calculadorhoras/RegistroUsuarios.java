@@ -55,16 +55,6 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         SharedPreferences preferenciasCompartidas = getActivity().getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
         String codigoIdioma = preferenciasCompartidas.getString("codigo_idioma", "");
         setAppLocale(codigoIdioma);
-        /*
-        etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                com.example.calculadorhoras.DatePicker fragmentSelectorFecha;
-                fragmentSelectorFecha = new com.example.calculadorhoras.DatePicker();
-                fragmentSelectorFecha.show(getParentFragmentManager(), (String) getText(R.string.selector_fecha_ini));
-            }
-        });
-*/
 
         etUFechaInicio.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override

@@ -40,7 +40,10 @@
             android:ems="10"
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/correo"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:textColor="@color/ic_launcher_background"
+            android:textColorHint="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="343dp"
@@ -54,7 +57,10 @@
                 android:ems="10"
                 android:fontFamily="sans-serif-smallcaps"
                 android:hint="@string/contrasenya"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:textColor="@color/ic_launcher_background"
+                android:textColorHint="@color/ic_launcher_background"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/imgOjo"
@@ -72,7 +78,10 @@
             android:ems="10"
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/name"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/ic_launcher_background"
+            android:textColorHint="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/edtap"
@@ -81,13 +90,18 @@
             android:ems="10"
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/ap"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:textColor="@color/ic_launcher_background"
+            android:textColorHint="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvEmpresa"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/EligeEmpresa" />
+            android:text="@string/EligeEmpresa"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spnEmpresas"
@@ -115,6 +129,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:fontFamily="sans-serif-smallcaps"
-            android:text="@string/recuerdame" />
+            android:text="@string/recuerdame"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

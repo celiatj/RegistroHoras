@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +36,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 
-public class Admin3 extends AppCompatActivity {
+public class Admin3 extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle drawerToggle;
     private NavigationView navigationView;
@@ -161,43 +162,52 @@ public class Admin3 extends AppCompatActivity {
         btnBuscar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String fechaInicio = etFechaInicio.getText().toString().trim().replace("/", "");
-                String fechaFin = etFechaFin.getText().toString().trim().replace("/", "");
+                String fechaInicioStr = etFechaInicio.getText().toString().trim().replace("/", "");
+                String fechaFinStr = etFechaFin.getText().toString().trim().replace("/", "");
 
-                if (fechaInicio.isEmpty() || fechaFin.isEmpty()) {
+                if (fechaInicioStr.isEmpty() || fechaFinStr.isEmpty()) {
                     mRecyclerView.setAdapter(mAdapter);
                     return;
                 }
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference usuariosRef = database.getReference("usuarios");
+                Query query = usuariosRef.orderByChild("correo").equalTo(correo);
                 // Convertir las fechas en formato numérico para compararlas como enteros
-                int fechaInicioNum = Integer.parseInt(fechaInicio);
-                int fechaFinNum = Integer.parseInt(fechaFin);
+                int fechaInicioNum = Integer.parseInt(fechaInicioStr);
+                int fechaFinNum = Integer.parseInt(fechaFinStr);
 
-                usuariosRef.orderByKey().addListenerForSingleValueEvent(new ValueEventListener() {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        mHorasTrabajadasList.clear(); // Limpiar la lista antes de agregar los resultados filtrados
                         for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
-                            String idRegistro = userSnapshot.child("Registros").getKey();
-                            String fechaRegistro = idRegistro.substring(0, 8);
-                            int fechaRegistroNum = Integer.parseInt(fechaRegistro);
                             DataSnapshot registrosSnapshot = userSnapshot.child("Registros");
                             for (DataSnapshot registroSnapshot : registrosSnapshot.getChildren()) {
-                                if (fechaRegistroNum >= fechaInicioNum && fechaRegistroNum <= fechaFinNum) {
-                                    String horasTrabajadas = registroSnapshot.child("HorasTrabajadas").getValue(String.class);
-                                    mHorasTrabajadasList.add(horasTrabajadas);
-                                    ;
+                                String idRegistro = registroSnapshot.getKey();
+                                if (idRegistro != null && idRegistro.length() >= 8) {
+                                    try {
+                                        String fechaRegistro = idRegistro.substring(0, 8);
+                                        int fechaRegistroNum = Integer.parseInt(fechaRegistro);
+                                        if (fechaRegistroNum >= fechaInicioNum && fechaRegistroNum <= fechaFinNum) {
+                                            String horasTrabajadas = registroSnapshot.child("HorasTrabajadas").getValue(String.class);
+                                            if (horasTrabajadas != null) {
+                                                mHorasTrabajadasList.add(horasTrabajadas);
+                                            }
+                                        }
+                                    } catch (NumberFormatException e) {
+                                        // Manejar caso donde la cadena no es un número
+                                        Log.e("Admin3", "Error parsing fechaRegistro: " + idRegistro, e);
+                                    }
                                 }
                             }
-
-                            mAdapter.notifyDataSetChanged();
                         }
+                        mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         // Manejar errores de lectura de la base de datos
+                        Toast.makeText(getApplicationContext(), "Error: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -210,7 +220,7 @@ public class Admin3 extends AppCompatActivity {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog((Context) this, (DatePickerDialog.OnDateSetListener) this, year, month, day);
+        DatePickerDialog datePickerDialog = new DatePickerDialog( this, this, year, month, day);
 
         if (!isStartDate && !fechaInicio.isEmpty()) {
             String[] parts = fechaInicio.split("/");

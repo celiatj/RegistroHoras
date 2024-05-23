@@ -139,7 +139,7 @@ public class MainActivity3 extends Fragment {
          timeE = preferenciasCompartidas.getString("entrada", "");
         contadorE=preferenciasCompartidas.getBoolean("contadorE", true);
         setAppLocale(codigoIdioma);
-        //getSupportActionBar().setTitle(R.string.app_name);
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
         // Verificar si se ha concedido el permiso de ubicación
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
@@ -274,7 +274,6 @@ public class MainActivity3 extends Fragment {
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
 
-                Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
 
                 // calculamos las horas trabajadas teniendo en cuenta horario nocturno:
 
@@ -307,8 +306,7 @@ public class MainActivity3 extends Fragment {
                 registroEntrada.setEnabled(true);
                 registroSalida.setEnabled(false);
                 // Cambiar el color de fondo del botón de salida cuando se desactiva
-                //registroEntrada.setBackgroundColor(getResources().getColor(R.color.purple_700));
-                //registroSalida.setBackgroundColor(getResources().getColor(R.color.purple_500));
+
                 editorPreferencias.putString("entrada", "");
             }
 

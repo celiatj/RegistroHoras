@@ -22,26 +22,13 @@ public class splashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animationView);
         animationView.playAnimation();
-      //  getSupportActionBar().setDisplayShowTitleEnabled(false);
-/*
-        // Inicializar aplicación de Firebase
-        FirebaseApp.initializeApp(getApplicationContext());
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        Map<String, String> datos = new HashMap<>();
-        datos.put("nombre", "Juan");
-        datos.put("apellidos", "Pruebas");
-
-        databaseReference.child("usuarios").child("123").setValue(datos);
-    */
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-
-/**/
         //pasados 4 segundos la activity cambiara
         new Handler().postDelayed(new Runnable() {
             @Override

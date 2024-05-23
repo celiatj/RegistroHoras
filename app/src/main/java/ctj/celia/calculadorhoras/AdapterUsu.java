@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
     private ArrayList<RegistroUsu> mRegistrosU;
-    private double ubicacionLatitude,registroLatitude;
-    private double ubicacionLongitude, registroLongitude;
+    private double ubicacionLatitude, ubicacionLongitude;
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView midTextView;
         public TextView mTipoTextView;
@@ -30,7 +30,7 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
     public AdapterUsu(double ubicacionLatitude, double ubicacionLongitude) {
         this.ubicacionLatitude = ubicacionLatitude;
         this.ubicacionLongitude = ubicacionLongitude;
-
+        this.mRegistrosU = new ArrayList<>();
     }
 
     public void setRegistros(ArrayList<RegistroUsu> registros) {
@@ -41,8 +41,7 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.regusuview, parent, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -52,30 +51,35 @@ public class AdapterUsu extends RecyclerView.Adapter<AdapterUsu.ViewHolder> {
         holder.mTipoTextView.setText(registro.getTipo());
         holder.mIncidenciaTextView.setText(registro.getIncidencia());
 
-        //Verificar si la ubicación existe
-        if (registro.getUbicacion() != null) {
-             this.registroLatitude = Double.parseDouble(registro.getUbicacion().get("latitude"));
-             this.registroLongitude = Double.parseDouble(registro.getUbicacion().get("longitude"));
+        // Verificar si la ubicación existe
+        String latitudeStr = registro.getUbicacion().get("latitude");
+        String longitudeStr = registro.getUbicacion().get("longitude");
 
+        if (latitudeStr != null && longitudeStr != null) {
+            try {
+                double registroLatitude = Double.parseDouble(latitudeStr);
+                double registroLongitude = Double.parseDouble(longitudeStr);
 
-            if (distanciaEntreCoordenadas(registroLatitude, registroLongitude, ubicacionLatitude, ubicacionLongitude) <= 2) {
-                holder.mTipoTextView.setTextColor(Color.parseColor("#32CD32"));
-            } else {
-                holder.mTipoTextView.setTextColor(Color.RED);
+                if (distanciaEntreCoordenadas(registroLatitude, registroLongitude, ubicacionLatitude, ubicacionLongitude) <= 1) {
+                    holder.mTipoTextView.setTextColor(Color.parseColor("#32CD32")); // Verde
+                } else {
+                    holder.mTipoTextView.setTextColor(Color.RED);
+                }
+            } catch (NumberFormatException e) {
+                // Manejo del error de formato de número
+                holder.mTipoTextView.setTextColor(Color.RED); // En caso de error, marcar en rojo
             }
+        } else {
+            holder.mTipoTextView.setTextColor(Color.BLACK); // Si no hay coordenadas, marcar en rojo
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mRegistrosU == null) {
-            return 0;
-        }
-        return mRegistrosU.size();
+        return mRegistrosU != null ? mRegistrosU.size() : 0;
     }
 
     private double distanciaEntreCoordenadas(double lat1, double lon1, double lat2, double lon2) {
-        // Fórmula para calcular la distancia entre dos coordenadas geográficas (en este caso, la distancia euclidiana)
         double distanciaLat = Math.toRadians(lat2 - lat1);
         double distanciaLon = Math.toRadians(lon2 - lon1);
         double a = Math.sin(distanciaLat / 2) * Math.sin(distanciaLat / 2)

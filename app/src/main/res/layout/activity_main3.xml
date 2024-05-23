@@ -23,44 +23,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:autoText="false"
             android:backgroundTint="#B7F1EAEA"
             android:fontFamily="sans-serif"
             android:text="@string/HoraDeEntrada"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textViewE2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#6BF1EAEA"
-        android:fontFamily="sans-serif"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textViewE2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:autoText="false"
+            android:backgroundTint="#6BF1EAEA"
+            android:fontFamily="sans-serif"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/ic_launcher_background"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvS2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:autoText="false"
             android:backgroundTint="#6BF1EAEA"
             android:fontFamily="sans-serif"
             android:text="@string/HoraDeSalida"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textViewS2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:backgroundTint="#6BF1EAEA"
-        android:fontFamily="sans-serif"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textSize="24sp" />
+        <TextView
+            android:id="@+id/textViewS2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:autoText="false"
+            android:backgroundTint="#6BF1EAEA"
+            android:fontFamily="sans-serif"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/ic_launcher_background"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/linear_layout_configu"
@@ -75,7 +87,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="12dp"
+                android:layout_margin="10dp"
                 android:width="170dp"
                 android:height="100dp"
                 android:foregroundGravity="center"
@@ -92,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_margin="12dp"
+                android:layout_margin="10dp"
                 android:width="170dp"
                 android:height="100dp"
                 android:foregroundGravity="center"
@@ -110,18 +122,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:autoText="false"
             android:fontFamily="sans-serif"
             android:keepScreenOn="false"
             android:overScrollMode="ifContentScrolls"
             android:scrollHorizontally="false"
             android:text="@string/Total"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/IndicaAntesBoton" />
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoText="false"
+            android:text="@string/IndicaAntesBoton"
+            android:textColor="@color/ic_launcher_background"
+            android:textStyle="bold" />
 
     <Spinner
         android:id="@+id/spnIncidencia"

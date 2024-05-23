@@ -23,8 +23,7 @@ public class DatePicker extends DialogFragment {
             int anyo = calendario.get(Calendar.YEAR);
             int mes = calendario.get(Calendar.MONTH);
             int dia = calendario.get(Calendar.DAY_OF_MONTH);
-           // int dia= Integer.parseInt(String.format("%02d", dia1));
-          //  int mes= Integer.parseInt(String.format("%02d", mes1));
+
         return new DatePickerDialog(
                 getContext(),
                 (DatePickerDialog.OnDateSetListener) getParentFragment(), anyo, mes, dia);

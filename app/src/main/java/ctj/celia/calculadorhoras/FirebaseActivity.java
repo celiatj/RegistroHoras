@@ -395,21 +395,6 @@ public class FirebaseActivity extends AppCompatActivity {
                         SharedPreferences preferenciasCompartidas = getSharedPreferences("PreferenciasCompartidas", MODE_PRIVATE);
                        // editorPreferencias = preferenciasCompartidas.edit();
                         String corr = preferenciasCompartidas.getString("email", "");
-                     /*   if(corr.equals(correoText)){}else{
-                            editorPreferencias.putString("email", "");
-                            editorPreferencias.putString("correo", "");
-                            editorPreferencias.putString("contrasenya","");
-                            editorPreferencias.putString("entrada", "");
-                            editorPreferencias.putInt("horaE", 0);
-                            editorPreferencias.putInt("minE",0);
-                            editorPreferencias.putString("salida", "");
-                            editorPreferencias.putString("codigo_idioma", "es");
-                            editorPreferencias.putString("nombre","");
-                            editorPreferencias.putString("apellidos","");
-                            editorPreferencias.putBoolean("contadorE", true);
-                            editorPreferencias.commit();
-
-                        }*/
                         // validations for input email and password
                         if (TextUtils.isEmpty(correoText)) {
                             Toast.makeText(getApplicationContext(),

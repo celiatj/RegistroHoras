@@ -11,6 +11,8 @@ import android.content.res.Resources;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
@@ -141,7 +143,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                             editorPreferencias.putFloat("uLongitude", (float) longitude);
                             editorPreferencias.commit(); // Guarda los cambios en SharedPreferences
 
-                            Toast.makeText(getApplicationContext(), latitude + "-" + longitude, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(getApplicationContext(), latitude + "-" + longitude, Toast.LENGTH_SHORT).show();
 
                         } else {
                             // Solicitar actualizaciones de la ubicación
@@ -170,6 +172,15 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
 
         navigationView = findViewById(R.id.navigation_view);
         String empresa = getIntent().getStringExtra("empresa");
+
+        // Cambiar el color del texto de los elementos del menú
+        int color = getResources().getColor(R.color.ic_launcher_background); // Define el color en colors.xml
+        for (int i = 0; i < navigationView.getMenu().size(); i++) {
+            MenuItem menuItem = navigationView.getMenu().getItem(i);
+            SpannableString s = new SpannableString(menuItem.getTitle());
+            s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
+            menuItem.setTitle(s);
+        }
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -225,7 +236,7 @@ public class Ubication extends AppCompatActivity implements OnMapReadyCallback, 
                     editorPreferencias.putFloat("uLongitude", (float) location.getLongitude());
                     editorPreferencias.commit();
 
-                    Toast.makeText(getApplicationContext(), location.getLatitude() + "-" + location.getLongitude(), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getApplicationContext(), location.getLatitude() + "-" + location.getLongitude(), Toast.LENGTH_SHORT).show();
 
                     // Detiene la actualización de la ubicación después de obtener una ubicación válida
                     fusedLocationClient.removeLocationUpdates(this);

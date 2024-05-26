@@ -9,64 +9,82 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/wallpaper"
-    android:orientation="vertical"
-    android:padding="30px"
-    tools:context=".Admin2">
-
-    <TextView
-        android:id="@+id/tvNombreUsuario"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textColor="@color/ic_launcher_background"
-        android:textStyle="bold" />
+        android:layout_height="match_parent"
+        android:background="@drawable/wallpaper"
+        android:orientation="vertical"
+        android:padding="30px"
+        tools:context=".Admin2">
 
-    <EditText
-        android:id="@+id/etFechaInicio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/FechaInicio"
-        android:inputType="date"
-        android:textColor="@color/ic_launcher_background"
-        android:textStyle="bold" />
+        <!-- Contenedor principal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etFechaFin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/FechaFin"
-        android:inputType="date"
-        android:textColor="@color/ic_launcher_background"
-        android:textStyle="bold" />
+            <TextView
+                android:id="@+id/tvNombreUsuario"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textColor="#00796B"
+                android:textColorHint="#00796B"
+                android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnBuscar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_Buscar" />
+            <EditText
+                android:id="@+id/etFechaInicio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/FechaInicio"
+                android:inputType="date"
+                android:textColor="#00796B"
+                android:textColorHint="#00796B"
+                android:textStyle="bold" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvRegistros"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:background="#7CFFFFFF"
-        android:scrollbars="horizontal|vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:listitem="@layout/registrosview" />
+            <EditText
+                android:id="@+id/etFechaFin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/FechaFin"
+                android:inputType="date"
+                android:textColor="#00796B"
+                android:textColorHint="#00796B"
+                android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="103dp"
-        android:layout_height="wrap_content"
-        android:text="@string/Atras" />
-</LinearLayout>
+            <Button
+                android:id="@+id/btnBuscar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_Buscar" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRegistros"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="8dp"
+                android:background="#7CFFFFFF"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/registrosview" />
+        </LinearLayout>
+
+        <!-- Contenedor del botón -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/Atras" />
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- Menú lateral -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
@@ -74,5 +92,6 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/nav_menu" />
+        app:menu="@menu/nav_menu"
+        app:itemTextAppearance="@style/NavigationViewTextStyle" />
 </androidx.drawerlayout.widget.DrawerLayout>

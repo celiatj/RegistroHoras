@@ -41,8 +41,8 @@
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/correo"
             android:inputType="textEmailAddress"
-            android:textColor="@color/ic_launcher_background"
-            android:textColorHint="@color/ic_launcher_background"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textStyle="bold" />
 
         <LinearLayout
@@ -58,8 +58,8 @@
                 android:fontFamily="sans-serif-smallcaps"
                 android:hint="@string/contrasenya"
                 android:inputType="textPassword"
-                android:textColor="@color/ic_launcher_background"
-                android:textColorHint="@color/ic_launcher_background"
+                android:textColor="#00796B"
+                android:textColorHint="#00796B"
                 android:textStyle="bold" />
 
             <ImageView
@@ -79,8 +79,8 @@
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/name"
             android:inputType="textPersonName"
-            android:textColor="@color/ic_launcher_background"
-            android:textColorHint="@color/ic_launcher_background"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textStyle="bold" />
 
         <EditText
@@ -91,8 +91,8 @@
             android:fontFamily="sans-serif-smallcaps"
             android:hint="@string/ap"
             android:inputType="textPersonName"
-            android:textColor="@color/ic_launcher_background"
-            android:textColorHint="@color/ic_launcher_background"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textStyle="bold" />
 
         <TextView
@@ -100,7 +100,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/EligeEmpresa"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textStyle="bold" />
 
         <Spinner
@@ -108,6 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:tag="@string/empresas" />
+
 
         <Button
             android:id="@+id/btnlogin"
@@ -130,7 +132,8 @@
             android:layout_marginTop="5dp"
             android:fontFamily="sans-serif-smallcaps"
             android:text="@string/recuerdame"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

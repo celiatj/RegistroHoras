@@ -18,6 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textSize="24sp" />
 
         <EditText
@@ -25,7 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/FechaInicio"
-            android:inputType="date" />
+            android:inputType="date"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B" />
 
 
         <EditText
@@ -33,7 +37,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/FechaFin"
-            android:inputType="date" />
+            android:inputType="date"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B" />
 
         <Button
             android:id="@+id/btnUbuscar"

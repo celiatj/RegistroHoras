@@ -20,7 +20,9 @@
             <TextView
                 android:id="@+id/tvNombreUsuario"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textColor="#00796B"
+                android:textColorHint="#00796B" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRegistrosMesuales"

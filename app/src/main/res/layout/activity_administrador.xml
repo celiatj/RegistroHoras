@@ -14,10 +14,10 @@
         android:layout_width="wrap_content"
         android:layout_height="78dp"
         android:layout_marginLeft="110dp"
-        android:background="#955DA4AC"
+        android:background="#005DA4AC"
         android:gravity="center"
         android:text="@string/Empleados"
-        android:textColor="#000000"
+        android:textColor="#00796B"
         android:textSize="34sp" />
 
     <androidx.recyclerview.widget.RecyclerView

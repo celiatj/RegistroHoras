@@ -53,4 +53,30 @@ public class FirebaseActivityTest {
         // Assert
         Assert.assertEquals(expected, actual);
     }
+
+    @Test
+    public void testValidarLongitudContraseña_LongitudMinima() {
+        // Arrange
+        String contraseña = "123456"; // Contraseña con longitud mínima
+        boolean expected = true;
+
+        // Act
+        boolean actual = FirebaseActivity.validarContraseña(contraseña);
+
+        // Assert
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testValidarLongitudContraseña_LongitudInsuficiente() {
+        // Arrange
+        String contraseña = "12345"; // Contraseña con longitud insuficiente (menor que 6)
+        boolean expected = false;
+
+        // Act
+        boolean actual = FirebaseActivity.validarContraseña(contraseña);
+
+        // Assert
+        Assert.assertEquals(expected, actual);
+    }
 }

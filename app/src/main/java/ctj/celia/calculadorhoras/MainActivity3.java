@@ -6,14 +6,25 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -163,10 +174,41 @@ public class MainActivity3 extends Fragment {
         registroSalida = view.findViewById(R.id.btnRegistroSalida2);
 
         // Rellenamos el Spinner
-        spInci = (Spinner) view.findViewById(R.id.spnIncidencia);
+        spInci = view.findViewById(R.id.spnIncidencia); // Asegúrate de que estás utilizando el mismo método para obtener la referencia al Spinner
         Resources res = getResources();
         inci = res.getStringArray(R.array.array_inci);
-        adaptadorInci = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, inci);
+
+        // Obtener el color desde los recursos
+        final int customColor = res.getColor(R.color.ic_launcher_background);
+
+        ArrayAdapter<String> adaptadorInci = new ArrayAdapter<String>(getActivity().getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, inci) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                textView.setBackgroundColor(Color.TRANSPARENT); // Fondo transparente
+                textView.setTypeface(textView.getTypeface(), Typeface.BOLD); // Establecer la letra en negrita
+                textView.setTextColor(customColor); // Usar color personalizado
+                textView.setPadding(16, 0, 0, 0); // Agregar padding
+
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.dropdown_item, parent, false);
+                }
+
+                TextView textView = (TextView) convertView.findViewById(R.id.dropdown_item_text);
+                textView.setText(getItem(position).toString());
+
+                return convertView;
+            }
+        };
+
         spInci.setAdapter(adaptadorInci);
 
         spInci.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -227,7 +269,7 @@ public class MainActivity3 extends Fragment {
                 datos.put("incidencia", inci[posicionInci]);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).setValue(datos);
                 db.getReference("usuarios").child(corr).child("Registros").child(String.format("%04d%02d%02d%02d%02d", anyoE, mesE, diaE, horaE, minE)).child("ubicacion").setValue(ubicacion);
-                Toast.makeText(getContext(), latitude+"", Toast.LENGTH_SHORT).show();
+
 
                 editorPreferencias.putBoolean("contadorE", false);
 
@@ -273,6 +315,7 @@ public class MainActivity3 extends Fragment {
                 int posicionInci = spInci.getSelectedItemPosition();
                 datos.put("tipo", "salida");
                 datos.put("incidencia", inci[posicionInci]);
+
 
 
                 // calculamos las horas trabajadas teniendo en cuenta horario nocturno:
@@ -345,7 +388,7 @@ public class MainActivity3 extends Fragment {
   public boolean onOptionsItemSelected(@NonNull MenuItem item) {
       int id = item.getItemId();
       if (id == R.id.configuracion) {
-          Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
+         // Toast.makeText(getActivity().getApplicationContext(), "Configuración pulsado", Toast.LENGTH_LONG).show();
           Intent intencion = new Intent(getActivity().getApplicationContext(), MainActivityConf.class);
           startActivity(intencion);
           return true;
@@ -356,6 +399,31 @@ public class MainActivity3 extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_en_activity, menu);
         super.onCreateOptionsMenu(menu, inflater);
+
+        // Obtener el elemento de menú
+        MenuItem configuracionItem = menu.findItem(R.id.configuracion);
+
+        if (configuracionItem != null) {
+            // Cambiar el color del texto del elemento del menú
+            int color = getResources().getColor(R.color.ic_launcher_background);
+            SpannableString s = new SpannableString(configuracionItem.getTitle());
+            s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
+
+            // Aplicar negrita al texto del elemento del menú
+            s.setSpan(new StyleSpan(Typeface.BOLD), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            // Aplicar un fondo degradado al elemento del menú
+            GradientDrawable gradientDrawable = new GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[] {Color.parseColor("#FF5722"), Color.parseColor("#FF9800")}
+            );
+            gradientDrawable.setShape(GradientDrawable.RECTANGLE);
+            gradientDrawable.setCornerRadius(8); // Radio de las esquinas del fondo
+
+            configuracionItem.setTitle(s);
+          //  configuracionItem.setIcon(com.google.android.material.R.drawable.abc_ic_star_black_16dp); // Cambiar el ícono si lo deseas
+           // configuracionItem.setActionView(s);
+        }
     }
 
     private void setAppLocale(String localeCode) {
@@ -385,6 +453,7 @@ public class MainActivity3 extends Fragment {
 
 
     }
+
 
 }
 

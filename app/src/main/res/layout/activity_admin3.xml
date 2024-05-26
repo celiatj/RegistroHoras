@@ -21,21 +21,27 @@
             android:id="@+id/tvNombreUsuario"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/RegistroDia" />
+            android:text="@string/RegistroDia"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B" />
 
         <EditText
             android:id="@+id/etFechaInicio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/FechaInicio"
-            android:inputType="date" />
+            android:inputType="date"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B" />
 
         <EditText
             android:id="@+id/etFechaFin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/FechaFin"
-            android:inputType="date" />
+            android:inputType="date"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B" />
 
         <Button
             android:id="@+id/btnBuscar"
@@ -54,12 +60,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             tools:listitem="@layout/registrosview" />
-
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="103dp"
-            android:layout_height="wrap_content"
-            android:text="@string/Atras" />
 
     </LinearLayout>
     <!-- Menú lateral -->

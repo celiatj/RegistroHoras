@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
@@ -55,11 +57,15 @@ public class Admin2 extends AppCompatActivity implements DatePickerDialog.OnDate
 
         @Override
         protected void onCreate(Bundle savedInstanceState) {
+
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_admin2);
             // Inicializar aplicación de Firebase
+
             FirebaseApp.initializeApp(getApplicationContext());
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
             db = FirebaseDatabase.getInstance();
+
             // Obtener el correo electrónico del usuario desde los extras del intent
             String nombre = getIntent().getStringExtra("nombre");
             String correo = getIntent().getStringExtra("correo");
@@ -76,6 +82,16 @@ public class Admin2 extends AppCompatActivity implements DatePickerDialog.OnDate
 
             navigationView = findViewById(R.id.navigation_view);
             String empresa = getIntent().getStringExtra("empresa");
+
+            // Cambiar el color del texto de los elementos del menú
+            int color = getResources().getColor(R.color.ic_launcher_background); // Define el color en colors.xml
+            for (int i = 0; i < navigationView.getMenu().size(); i++) {
+                MenuItem menuItem = navigationView.getMenu().getItem(i);
+                SpannableString s = new SpannableString(menuItem.getTitle());
+                s.setSpan(new ForegroundColorSpan(color), 0, s.length(), 0);
+                menuItem.setTitle(s);
+            }
+
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -330,6 +346,17 @@ public class Admin2 extends AppCompatActivity implements DatePickerDialog.OnDate
             fechaFin = fechaSeleccionada;
         }
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Inicializar aplicación de Firebase
+        FirebaseApp.initializeApp(getApplicationContext());
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance();
+        }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

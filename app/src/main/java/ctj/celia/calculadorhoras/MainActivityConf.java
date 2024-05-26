@@ -1,19 +1,25 @@
 package ctj.celia.calculadorhoras;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.Locale;
 
@@ -61,16 +68,43 @@ public class MainActivityConf extends AppCompatActivity {
         usuarioRef = database.getReference("usuarios").child(corr);
 
         // Rellenamos el Spinner
-        spIdiomas = (Spinner) findViewById(R.id.idiomas);
+        spIdiomas = findViewById(R.id.idiomas);
         Resources res = getResources();
         arrayIdiomas = res.getStringArray(R.array.array_paises);
+// Obtener el color desde los recursos
+        final int customColor = res.getColor(R.color.ic_launcher_background);
 
-        adaptadorIdiomas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayIdiomas);
+        adaptadorIdiomas = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, arrayIdiomas) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                TextView textView = (TextView) view;
+                textView.setBackgroundColor(Color.TRANSPARENT); // Fondo transparente
+                textView.setTypeface(textView.getTypeface(), Typeface.BOLD); // Establecer la letra en negrita
+                textView.setTextColor(customColor); // Usar color personalizado
+                textView.setPadding(6, 6, 6, 6); // Agregar padding
+                return view;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.dropdown_item, parent, false);
+                }
+
+                TextView textView = (TextView) convertView.findViewById(R.id.dropdown_item_text);
+                textView.setText(getItem(position).toString());
+
+                return convertView;
+            }
+        };
+
         spIdiomas.setAdapter(adaptadorIdiomas);
 
         int idioma = preferencias.getInt("idioma", 0);
         spIdiomas.setSelection(idioma);
-
         // Obtener referencias a las vistas
         ap1 = findViewById(R.id.etAp1);
         nombre = findViewById(R.id.etnombre);

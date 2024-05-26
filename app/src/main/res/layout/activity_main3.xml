@@ -28,7 +28,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/HoraDeEntrada"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textStyle="bold" />
 
         <TextView
@@ -42,7 +42,7 @@
             android:backgroundTint="#6BF1EAEA"
             android:fontFamily="sans-serif"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -56,7 +56,7 @@
             android:fontFamily="sans-serif"
             android:text="@string/HoraDeSalida"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textStyle="bold" />
 
         <TextView
@@ -70,7 +70,7 @@
             android:backgroundTint="#6BF1EAEA"
             android:fontFamily="sans-serif"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -129,7 +129,7 @@
             android:scrollHorizontally="false"
             android:text="@string/Total"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textStyle="bold" />
 
         <TextView
@@ -138,14 +138,16 @@
             android:layout_height="wrap_content"
             android:autoText="false"
             android:text="@string/IndicaAntesBoton"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="#00796B"
             android:textStyle="bold" />
 
     <Spinner
         android:id="@+id/spnIncidencia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:tag="@string/incidencia" />
+        android:tag="@string/incidencia"
+        android:padding="0dp"
+        android:layout_margin="0dp"/>
 
     </LinearLayout>
 </FrameLayout>

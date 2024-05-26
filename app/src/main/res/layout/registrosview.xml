@@ -9,20 +9,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B" />
 
     <TextView
         android:id="@+id/tipoTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B" />
 
     <TextView
         android:id="@+id/incidenciaTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="TextView" />
+        android:text="TextView"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B" />
 
 </LinearLayout>

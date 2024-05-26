@@ -2,6 +2,7 @@ package ctj.celia.calculadorhoras;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -20,11 +21,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -254,6 +257,14 @@ public class RegistroUsuarios extends Fragment implements DatePickerDialog.OnDat
         } else if (editTextConFoco == etUFechaFin) {
             fechaFin = fechaSeleccionada;
         }
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Inicializar aplicación de Firebase
+        FirebaseApp.initializeApp(getActivity().getApplicationContext());
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseDatabase.getInstance();
     }
     private void setAppLocale(String localeCode) {
         Locale myLocale = new Locale(localeCode);

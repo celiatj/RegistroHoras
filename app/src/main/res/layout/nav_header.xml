@@ -8,13 +8,13 @@
         android:padding="16dp">
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nombre de usuario"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B"
+        android:textSize="18sp" />
 
     </LinearLayout>
 

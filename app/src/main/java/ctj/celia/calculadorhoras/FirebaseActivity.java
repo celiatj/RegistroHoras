@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -17,7 +18,9 @@ import android.provider.Settings;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -47,6 +50,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -94,6 +98,10 @@ public class FirebaseActivity extends AppCompatActivity {
     public static boolean validarCorreo(String correo) {
         Matcher matcher = pattern.matcher(correo);
         return matcher.matches();
+    }
+    public static boolean validarContraseña(String cont) {
+        if(cont.length() < 6) return false;
+        return true;
     }
 
     @Override
@@ -177,13 +185,39 @@ public class FirebaseActivity extends AppCompatActivity {
         imgOjo = findViewById(R.id.imgOjo);
 
         // Rellenamos el Spinner
-        spEmpresas =  findViewById(R.id.spnEmpresas);
+        spEmpresas = findViewById(R.id.spnEmpresas);
         Resources res = getResources();
         emp = res.getStringArray(R.array.array_empresas);
-        adaptadorEmp = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_dropdown_item, emp);
+
+       // Obtener el color desde los recursos
+        final int customColor = res.getColor(R.color.ic_launcher_background);
+
+        ArrayAdapter<String> adaptadorEmp = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, emp) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                TextView textView = (TextView) super.getView(position, convertView, parent);
+                textView.setBackgroundColor(Color.TRANSPARENT); // Fondo transparente
+                textView.setTextColor(customColor); // Usar color personalizado
+                textView.setPadding(6, 6, 6, 6); // Agregar padding
+                return textView;
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView == null) {
+                    LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    convertView = inflater.inflate(R.layout.dropdown_item, parent, false);
+                }
+
+                TextView textView = (TextView) convertView.findViewById(R.id.dropdown_item_text);
+                textView.setText(getItem(position).toString());
+
+                return convertView;
+            }
+        };
+
         spEmpresas.setAdapter(adaptadorEmp);
         spEmpresas.setVisibility(View.GONE);
-
         imgOjo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -232,7 +266,6 @@ public class FirebaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
@@ -249,6 +282,9 @@ public class FirebaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Inicializar aplicación de Firebase
+        FirebaseApp.initializeApp(getApplicationContext());
+        db = FirebaseDatabase.getInstance();
 
         // Verificar si el servicio de ubicación está habilitado
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);

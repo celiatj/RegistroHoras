@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="colorDisabled">#FFBB86FC</color>
     <color name="colorBottom">#2241F1</color>
+    <color name="foundSpiner">#48169C8D</color>
 </resources>

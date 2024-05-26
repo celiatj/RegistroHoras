@@ -8,16 +8,16 @@
                 android:title="@string/InformeRegistror" />
             <item
                 android:id="@+id/nav_daily_reports"
-                android:icon="?android:attr/actionModeFindDrawable"
+                android:icon="@android:drawable/ic_menu_day"
                 android:title="@string/InformesDiarios" />
             <item
                 android:id="@+id/nav_month_reports"
-                android:icon="@android:drawable/ic_menu_week"
-                android:title="@string/InformesSemanales" />
+                android:icon="@android:drawable/ic_menu_month"
+                android:title="@string/InformesMensuales" />
 
             <item
                 android:id="@+id/nav_changeUbi"
-                android:icon="@android:drawable/ic_menu_week"
+                android:icon="@android:drawable/ic_dialog_map"
                 android:title="@string/CambiarUbicación" />
         </group>
 </menu>

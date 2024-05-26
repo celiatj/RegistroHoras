@@ -23,6 +23,8 @@
             android:layout_marginTop="40dp"
             android:padding="10dp"
             android:text="@string/InfoBtnUbi"
+            android:textColor="#00796B"
+            android:textColorHint="#00796B"
             android:textSize="18sp" />
 
         <Button

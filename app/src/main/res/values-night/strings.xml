@@ -2,4 +2,5 @@
 <resources>
     <string name="configuracion">Configuración</string>
     <string name="registro">Registro</string>
+    <string name="InformesMensuales">Informes Mensuales</string>
 </resources>

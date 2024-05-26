@@ -17,7 +17,7 @@
     <string name="toast_introducir_password">Enter a password</string>
     <string name="toast_identificacion_fallo">Identification failure</string>
     <string name="toast_identificacion_exito">Correct identification</string>
-    <string name="toast_introducir_email">" Enter an email"</string>
+    <string name="toast_introducir_email">"Enter an email"</string>
     <string name="name">Name</string>
     <string name="ap">Last name</string>
     <string name="correo">Email</string>
@@ -58,9 +58,9 @@
     <string name="selector_fecha_fin">Select End date</string>
     <string name="btn_Buscar">Search</string>
     <string name="InfoBtnUbi">Press the Button to save the work location</string>
-    <string name="HoraDeEntrada">Entry Time:</string>
-    <string name="HoraDeSalida">Departure time :</string>
-    <string name="Total">Equal :</string>
+    <string name="HoraDeEntrada">Entry time: </string>
+    <string name="HoraDeSalida">Departure time: </string>
+    <string name="Total">Equal: </string>
     <string name="Guardar">Save</string>
     <string name="GuardarUbi">Save current location</string>
     <string name="Empleados">Employees</string>
@@ -76,4 +76,5 @@
     <string name="FechaFin">End Date (YYYY/MM/DD)</string>
     <string name="Nombre">First Name</string>
     <string name="Apellido">Last Name</string>
+    <string name="InformesMensuales">Monthly reports</string>
 </resources>

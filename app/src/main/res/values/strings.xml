@@ -18,6 +18,7 @@
     </string-array>
 
     <string-array name="array_empresas">
+        <item>Sin Empresa</item>
         <item>Empresa_A</item>
         <item>Empresa_B</item>
         <item>Empresa_C</item>
@@ -40,7 +41,7 @@
     <string name="ap">Apellidos</string>
     <string name="correo">Correo electronico</string>
     <string name="contrasenya">Contraseña</string>
-    <string name="configuracion">configuración</string>
+    <string name="configuracion">Configuración</string>
     <string name="registro">Registro</string>
     <string name="entrada">Entrada</string>
     <string name="incidencia">Incidencia</string>
@@ -50,7 +51,7 @@
     <string name="toast_introducir_longitud">La contrasela tiene que tener 6 caracteres</string>
     <string name="correo_Invalido">Correo invalido</string>
     <string name="salida">Salida</string>
-    <string name="login">" Acceso"</string>
+    <string name="login">"Acceso"</string>
     <string name="toast_introducir_email">Introduce un correo</string>
     <string name="nav_close">Cerrar</string>
     <string name="nav_open">Abrir</string>
@@ -67,11 +68,11 @@
     <string name="btn_Buscar">Buscar</string>
     <string name="HoraDeEntrada">Hora de Entrada :</string>
     <string name="HoraDeSalida">Hora de Salida :</string>
-    <string name="Total">"Total : "</string>
+    <string name="Total">"Total: "</string>
     <string name="Guardar">Guardar</string>
     <string name="GuardarUbi">Guardar ubicacion actual</string>
     <string name="Empleados">Empleados</string>
-    <string name="InfoBtnUbi">"Pulsa el Boton para guardar la ubicacion del trabajo"</string>
+    <string name="InfoBtnUbi">"Pulsa el Boton para guardar la ubicación del trabajo"</string>
     <string name="EligeEmpresa">Elige una empresa</string>
     <string name="empresas">Empresas</string>
     <string name="RegistroDia">Registros por Dia</string>
@@ -84,5 +85,6 @@
     <string name="FechaFin">Fecha fin (YYYY/MM/DD)</string>
     <string name="Nombre">Nombre</string>
     <string name="Apellido">Apellido</string>
+    <string name="InformesMensuales">Informes Mensuales</string>
 
 </resources>

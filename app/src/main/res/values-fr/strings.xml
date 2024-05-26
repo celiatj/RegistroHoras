@@ -17,14 +17,14 @@
     <string name="toast_introducir_password">Enter a mot de passe</string>
     <string name="toast_identificacion_fallo">Échec d\'identification</string>
     <string name="toast_identificacion_exito">Pièce d\'identité correcte</string>
-    <string name="toast_introducir_email">" Entrez un e-mail"</string>
+    <string name="toast_introducir_email">"Entrez un e-mail"</string>
     <string name="name">Nom</string>
     <string name="ap">Nom de famille</string>
-    <string name="correo">" e-mail"</string>
+    <string name="correo">"E-mail"</string>
     <string name="contrasenya">Mot de passe</string>
-    <string name="login">" Accès"</string>
+    <string name="login">"Accès"</string>
     <string name="configuracion">Paramètre</string>
-    <string name="registro">" Enregistrer"</string>
+    <string name="registro">"Enregistrer"</string>
     <string name="salida">Sortie</string>
     <string name="entrada">Entrée</string>
     <string name="incidencia">Incidence</string>
@@ -46,7 +46,7 @@
         <item>Inglés</item>
         <item>Francés</item>
     </string-array>
-    <string name="salir">sortir</string>
+    <string name="salir">Sortir</string>
     <string name="falloEnLaBase">Échec de la base de données</string>
     <string name="IndicaAntesBoton"> "Indique avant d'appuyer sur le bouton le type d'incident"</string>
     <string name="toast_sin_conexion">Pas de connexion Internet</string>
@@ -76,4 +76,5 @@
     <string name="FechaFin">Date de Fin (YYYY/MM/DD)</string>
     <string name="Nombre">Prénom</string>
     <string name="Apellido">Nom de Famille</string>
+    <string name="InformesMensuales">Rapports mensuels</string>
 </resources>

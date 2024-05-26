@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/Nombre"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B" />
 
     <EditText
         android:id="@+id/etAp1"
@@ -28,7 +30,9 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/Apellido"
-        android:inputType="textPersonName" />
+        android:inputType="textPersonName"
+        android:textColor="#00796B"
+        android:textColorHint="#00796B" />
 
     <Button
         android:id="@+id/guardar"
